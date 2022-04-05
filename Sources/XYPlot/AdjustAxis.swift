@@ -6,8 +6,8 @@
 //
 import Foundation
 
-func pow10(_ x: Double ) -> Double { pow(10.0,x) }
-typealias MajorMinor = (Int,Int)
+public func pow10(_ x: Double ) -> Double { pow(10.0,x) }
+public typealias MajorMinor = (Int,Int)
 
 let safe=0.999; // allow 0.1% out of axes.
 
@@ -146,12 +146,12 @@ func adjustAxis( _ lower: inout Double, _ upper: inout Double) -> MajorMinor {
 
 extension PlotData {
     
-    mutating func scaleAxes() {//}-> PlotData {
+    mutating public func scaleAxes() {//}-> PlotData {
         if settings.autoScale { return axesScale() }
         //return self
     }
     
-    mutating func axesScale() {//}-> PlotData {
+    mutating public  func axesScale() {//}-> PlotData {
         var newData = self // new copy (COW)
         // Get X range and Y ranges of all plots
         let hasPrimary = newData.hasPrimaryLines
