@@ -33,26 +33,26 @@ public struct AxisParameters : Equatable  {
 /// PlotSettings is used by PlotData to define axes and axes labels
 public struct PlotSettings : Equatable  {
     /// Parameters
-    var title  = AttributedString()
+    public var title  = AttributedString()
     
-    var xAxis : AxisParameters? = nil
-    var yAxis : AxisParameters? = nil
-    var sAxis : AxisParameters? = nil
+    public var xAxis : AxisParameters? = nil
+    public var yAxis : AxisParameters? = nil
+    public var sAxis : AxisParameters? = nil
 
     // Computed properties for minimizing code changes when adding title to AxisParameters
     var xTitle : AttributedString { get { xAxis?.title ?? ""} set { xAxis?.title = newValue } }
     var yTitle : AttributedString { get { yAxis?.title ?? ""} set { yAxis?.title = newValue } }
     var sTitle : AttributedString { get { sAxis?.title ?? ""} set { sAxis?.title = newValue } }
     // -----------------------------------------------------------------------------------
-    var sizeMinor = 0.005
-    var sizeMajor = 0.01
-    var format = "%g" //"%.1f"//
-    var showSecondaryAxis : Bool = false
-    var autoScale : Bool = true
-    var independentTics : Bool = false
-    var legendPos = CGPoint(x: 0, y: 0)
-    var legend = true
-    var selection : Int?
+    public var sizeMinor = 0.005
+    public var sizeMajor = 0.01
+    public var format = "%g" //"%.1f"//
+    public var showSecondaryAxis : Bool = false
+    public var autoScale : Bool = true
+    public var independentTics : Bool = false
+    public var legendPos = CGPoint(x: 0, y: 0)
+    public var legend = true
+    public var selection : Int?
     public init(title: AttributedString = .init(), xAxis: AxisParameters? = nil, yAxis: AxisParameters? = nil,
                 sAxis: AxisParameters? = nil, sizeMinor: Double = 0.005, sizeMajor: Double = 0.01,
                 format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
