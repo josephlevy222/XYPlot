@@ -515,7 +515,7 @@ struct XYPlot_Previews: PreviewProvider {
     }
 }
 // Some test lines
-var testPlotLines : PlotData = {
+public var testPlotLines : PlotData = {
     var line1 = PlotLine()
     var line2 = PlotLine()
     let π = Double.pi
