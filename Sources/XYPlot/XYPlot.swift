@@ -53,10 +53,12 @@ public struct PlotSettings : Equatable  {
     var legendPos = CGPoint(x: 0, y: 0)
     var legend = true
     var selection : Int?
+    public init() {}
 }
 
 /// An element of a PlotLIne with an (x,y) point
-public struct PlotPoint : Equatable { //CGPoint?
+public struct PlotPoint : Equatable {
+    //CGPoint?
     var x: Double
     var y: Double
     var label: String?  // not implemented to display
