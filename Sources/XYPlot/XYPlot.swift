@@ -92,14 +92,14 @@ public extension PlotPoint { /// Makes x: and y: designation unnecessary
 /// PlotLine array is used by PlotData to define multiple  lines
 public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
 {
-    var values: [PlotPoint]
-    var lineColor : Color
-    var lineStyle: StrokeStyle
-    var pointShape: ShapeParameters
-    var secondary: Bool
-    var legend: String?
+    public var values: [PlotPoint]
+    public var lineColor : Color
+    public var lineStyle: StrokeStyle
+    public var pointShape: ShapeParameters
+    public var secondary: Bool
+    public var legend: String?
     
-    var pointColor: Color { pointShape.color } // added to ShapeParameters
+    public var pointColor: Color { pointShape.color } // added to ShapeParameters
     
     /// - Parameters:
     ///   - values: PlotPoint array of line
@@ -129,13 +129,13 @@ public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
         self.legend = legend
     }
     /// add array append and clear -- other Array methods can be added similarly
-    mutating func append(_ plotPoint: PlotPoint) { values.append(plotPoint)}
-    mutating func clear() { values = [] }
+    mutating public func append(_ plotPoint: PlotPoint) { values.append(plotPoint)}
+    mutating public func clear() { values = [] }
     
     /// Collection protocols make it work with higher order functions ( like map)
-    var startIndex: Int { values.startIndex }
-    var endIndex: Int { values.endIndex}
-    subscript(_ position: Int) -> PlotPoint {
+    public var startIndex: Int { values.startIndex }
+    public var endIndex: Int { values.endIndex}
+    public subscript(_ position: Int) -> PlotPoint {
         get { values[position] }
         set(newValue) { values[position] = newValue }
     }
