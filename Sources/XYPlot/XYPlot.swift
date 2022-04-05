@@ -53,7 +53,23 @@ public struct PlotSettings : Equatable  {
     var legendPos = CGPoint(x: 0, y: 0)
     var legend = true
     var selection : Int?
-    public init() {}
+    public init(title: AttributedString = .init(), xAxis: AxisParameters? = nil, yAxis: AxisParameters? = nil,
+                sAxis: AxisParameters? = nil, sizeMinor: Double = 0.005, sizeMajor: Double = 0.01,
+                format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
+                independentTics: Bool = false, legendPos: CGPoint = .zero, legend: Bool = true, selection: Int? = nil) {
+        self.title = title
+        self.xAxis = xAxis
+        self.yAxis = yAxis
+        self.sAxis = sAxis
+        self.sizeMajor = sizeMajor
+        self.sizeMinor = sizeMinor
+        self.format = format
+        self.showSecondaryAxis = showSecondaryAxis
+        self.autoScale = autoScale
+        self.independentTics = independentTics
+        self.legendPos = legendPos
+        self.selection = selection
+    }
 }
 
 /// An element of a PlotLIne with an (x,y) point

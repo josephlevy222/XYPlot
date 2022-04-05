@@ -10,7 +10,9 @@ import SwiftUI
 
 public struct LegendView: View {
     @Binding public var data: PlotData
-    
+    public init(data: Binding<PlotData>) { self._data = data
+        
+    }
     var lines : [PlotLine] {  data.plotLines }
     
     private var lineNumber : Int { data.settings.selection ?? 0}
