@@ -5,13 +5,15 @@ import PackageDescription
 
 let package = Package(
     name: "XYPlot",
+    platforms: [.macOS(.v12), .iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "XYPlot",
             targets: ["XYPlot"]),
     ],
-    dependencies: [
+    dependencies: [.package(url: "https://github.com/josephlevy222/Utilities.git", from: "1.0.0"),
+                   .package(url: "https://github.com/josephlevy222/NumericTextField.git", from: "1.0.0"),
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
