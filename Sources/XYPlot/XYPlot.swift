@@ -12,6 +12,17 @@ import Utilities
 
 /// Axis Parameters is an x, y or secondary (s) axis extent, tics, and tile
 public struct AxisParameters : Equatable  {
+    public init(min: Double = 0.0,
+         max: Double = 1.0,
+         majorTics: Int = 10,
+         minorTics: Int = 5
+         title:  AttributedString? = nil ) {
+        self.min = min
+        self.max = max
+        self.majorTics = majorTics
+        self.minorTics = minorTics
+        self.title = title
+    }
     var min = 0.0
     var max = 1.0
     var majorTics = 10
