@@ -8,8 +8,8 @@
 import SwiftUI
 
 
-struct LegendView: View {
-    @Binding var data: PlotData
+public struct LegendView: View {
+    @Binding public var data: PlotData
     
     var lines : [PlotLine] {  data.plotLines }
     
@@ -17,13 +17,13 @@ struct LegendView: View {
 
     @State private var isPresented = false
     
-    @ViewBuilder func arrow(show: Bool, left: Bool = true) -> some View {
+    @ViewBuilder public func arrow(show: Bool, left: Bool = true) -> some View {
         if !data.noSecondary {
             ShapeView(shape: .init(shape: Arrow(left: left).path, color: show ? .black : .white))}
         else { EmptyView() }
     }
     
-    var body: some View {
+    public var body: some View {
         if (data.settings.legend ) {
             Group {
             VStack(spacing: 0) {

@@ -11,7 +11,7 @@ import SwiftUI
 import Utilities
 
 /// Axis Parameters is an x, y or secondary (s) axis extent, tics, and tile
-struct AxisParameters : Equatable  {
+public struct AxisParameters : Equatable  {
     var min = 0.0
     var max = 1.0
     var majorTics = 10
@@ -20,7 +20,7 @@ struct AxisParameters : Equatable  {
 }
 
 /// PlotSettings is used by PlotData to define axes and axes labels
-struct PlotSettings : Equatable  {
+public struct PlotSettings : Equatable  {
     /// Parameters
     var title  = AttributedString()
     
@@ -45,7 +45,7 @@ struct PlotSettings : Equatable  {
 }
 
 /// An element of a PlotLIne with an (x,y) point
-struct PlotPoint : Equatable { //CGPoint?
+public struct PlotPoint : Equatable { //CGPoint?
     var x: Double
     var y: Double
     var label: String?  // not implemented to display
@@ -56,12 +56,12 @@ struct PlotPoint : Equatable { //CGPoint?
     ///   - label: unimplemented point label
 }
 
-extension PlotPoint { /// Makes x: and y: designation unnecessary
+public extension PlotPoint { /// Makes x: and y: designation unnecessary
     init(_ x: Double, _ y: Double, label: String? = nil) { self.x = x; self.y = y; self.label = label }
 }
 
 /// PlotLine array is used by PlotData to define multiple  lines
-struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
+public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
 {
     var values: [PlotPoint]
     var lineColor : Color
@@ -83,7 +83,7 @@ struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
     ///
     // Consider removing pointColor and custom init
     
-    init(values: [PlotPoint] = [],
+    public init(values: [PlotPoint] = [],
          lineColor: Color = .black,
          lineStyle: StrokeStyle = StrokeStyle(lineWidth: 2),
          pointColor: Color = .clear,
@@ -112,9 +112,9 @@ struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
     }
 }
 
-struct PlotData : Equatable {
-    var plotLines: [PlotLine]
-    var settings : PlotSettings
+public struct PlotData : Equatable {
+    public var plotLines: [PlotLine]
+    public var settings : PlotSettings
     
     static func == (lhs: PlotData, rhs: PlotData) -> Bool {
         lhs.plotLines == rhs.plotLines && lhs.settings == rhs.settings
@@ -133,7 +133,7 @@ struct PlotData : Equatable {
     ///   - scaleAxes(): Adjusts settings to make plot fix in axes if autoscale is true
     ///   - axesScale(): Adjust setting to make plot fit in axes (regardlless of autoScale)
     ///   
-    init(plotLines: [PlotLine] = .init(), settings: PlotSettings)  {
+    public init(plotLines: [PlotLine] = .init(), settings: PlotSettings)  {
         self.plotLines = plotLines; self.settings = settings
     }
     // func scaleAxes() -> PlotData .. defined in AdjustAxis.swift
@@ -144,7 +144,7 @@ struct PlotData : Equatable {
 }
 
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
-struct XYPlot: View {
+public struct XYPlot: View {
     
     @Binding var data : PlotData
     
@@ -162,7 +162,7 @@ struct XYPlot: View {
     @State private var lastYLabelHeight: CGFloat
     @State private var legendSize: CGSize
     
-    init(data: Binding<PlotData>) { // Because onAppear has bugs ??
+    public init(data: Binding<PlotData>) { // Because onAppear has bugs ??
         self._data = data
         var settings : PlotSettings { data.wrappedValue.settings }
         _isPresented = State(initialValue: false)
@@ -233,7 +233,7 @@ struct XYPlot: View {
         if text.characters.count == 0 { EmptyView() } else { Text(text) }
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 Title(settings.title) // Title centered on plot area
@@ -442,7 +442,7 @@ struct XYPlot: View {
 }
 
 // Invisible space holder
-struct Invisible: View {
+public struct Invisible: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
     var body: some View {
@@ -450,7 +450,7 @@ struct Invisible: View {
             .frame(width: width, height: height)
     }
 }
-struct BackgroundView: View {
+public struct BackgroundView: View {
     var body: some View {
         Color.white
         //Rectangle().foregroundColor(.white)

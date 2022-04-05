@@ -22,7 +22,7 @@ struct fieldView : ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     func fieldViewStyle(disable: Bool) -> some View {
         modifier(fieldView(disable: disable))
     }
@@ -49,7 +49,7 @@ struct HorizontalPair : View {
 
 let intStyle = NumericStringStyle(decimalSeparator: false, negatives: false, exponent: false)
 
-struct PlotSettingsView: View {  // Not for smaller screens
+public struct PlotSettingsView: View {  // Not for smaller screens
     @Environment(\.dismiss) var dismiss
     
     @Binding var data: PlotData
@@ -72,7 +72,7 @@ struct PlotSettingsView: View {  // Not for smaller screens
     @State private var showLegend = true
     @State private var legendPos : CGPoint = .zero
     
-    init(data: Binding<PlotData>) { // Because onAppear has bug
+    public init(data: Binding<PlotData>) { // Because onAppear has bug
         self._data = data
         var settings : PlotSettings { data.wrappedValue.settings }
         
@@ -102,7 +102,7 @@ struct PlotSettingsView: View {  // Not for smaller screens
         }
     }
     
-    var body: some View {
+    public var body: some View {
         VStack {
             Text("Plot Parameters").font(.title2).padding() // 1
             HStack {//2
@@ -214,7 +214,7 @@ struct PlotSettingsView: View {  // Not for smaller screens
     }
 }
 
-struct RoundedCorners: ButtonStyle {
+public struct RoundedCorners: ButtonStyle {
     var color: Color
     var lineColor: Color = .black
     var shadow: CGFloat = 0

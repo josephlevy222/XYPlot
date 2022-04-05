@@ -8,10 +8,10 @@
 import SwiftUI
 import Utilities
 
-struct PlotLineDialog: View {
+public struct PlotLineDialog: View {
     @Environment(\.dismiss) var dismiss
     
-    @Binding var plotData: PlotData
+    @Binding public var plotData: PlotData
 
     @State private var i : Int = 0
     @State private var lineName : String = ""
@@ -39,7 +39,7 @@ struct PlotLineDialog: View {
     @State private var savedLineColor: Color = .red
     @State private var savedPointColor: Color = .red
     @State private var useSecondary = false
-    var body: some View {
+    public var body: some View {
         VStack {
             List {
                 HStack {
@@ -174,7 +174,7 @@ struct PlotLineDialog: View {
 }
 
 
-var symbolShapes : [ShapeParameters] = [
+public var symbolShapes : [ShapeParameters] = [
     .init(shape: Polygon(sides: 4).path, filled: false), // Diamond
     .init(shape: Polygon(sides: 4).path, angle: .degrees(45.0), filled: false),// Square
     .init(shape: Circle().path, filled: false), // Circle

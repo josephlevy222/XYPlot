@@ -8,8 +8,8 @@
 import SwiftUI
 import Utilities
 
-struct Arrow : Shape {
-    var left = true
+public struct Arrow : Shape {
+    public var left = true
     func path(in rect : CGRect) -> Path {
         var path = Path()
         let h = sin(atan(0.5))
@@ -24,14 +24,14 @@ struct Arrow : Shape {
     }
 }
 
-struct Polygon : Shape {
+public struct Polygon : Shape {
     /// Modified from a version found on to have openShape ( plus, X, asterix)
     /// https://blog.techchee.com/how-to-create-custom-shapes-in-swiftui/
     /// also see that site for stars which are not implemented 
-    var sides : Int = 5
-    var openShape : Bool = false
-    var cornerStart : Bool = false
-    func path(in rect : CGRect ) -> Path {
+    public var sides : Int = 5
+    public var openShape : Bool = false
+    public var cornerStart : Bool = false
+    public func path(in rect : CGRect ) -> Path {
         // get the center point and the radius
         let center = CGPoint(x: rect.width / 2, y: rect.height / 2)
         let radius = (cornerStart ? sqrt(rect.width * rect.width + rect.height * rect.height) : rect.width) / 2
@@ -70,40 +70,40 @@ struct Polygon : Shape {
     }
 }
 
-struct ShapeParameters : Equatable {
+public struct ShapeParameters : Equatable {
     
-    static func == (lhs: ShapeParameters, rhs: ShapeParameters) -> Bool {
+    static public func == (lhs: ShapeParameters, rhs: ShapeParameters) -> Bool {
         lhs.angle == rhs.angle && lhs.filled == rhs.filled &&  rhs.color == lhs.color //rhs.open == lhs.open &&
         && lhs.shape(CGRect(x: 0, y: 0, width: 10, height: 10)) == rhs.shape(CGRect(x: 0, y: 0, width: 10, height: 10)) && lhs.size == rhs.size // equal paths for equal CGRects
     }
     
-    var shape: (CGRect) -> Path = Polygon(sides: 4).path
-    var angle : Angle = .degrees(0.0)
-    var filled: Bool  = false
-    var color: Color = .black
-    var size: CGFloat = 1.0
+    public var shape: (CGRect) -> Path = Polygon(sides: 4).path
+    public var angle : Angle = .degrees(0.0)
+    public var filled: Bool  = false
+    public var color: Color = .black
+    public var size: CGFloat = 1.0
 }
 
-struct CustomShape : InsettableShape {
+public struct CustomShape : InsettableShape {
     func inset(by amount: CGFloat) -> CustomShape {
-        var shape = self
+        public var shape = self
         shape.insetAmount -= amount
         return shape
     }
     
     typealias InsetShape = CustomShape
     
-    var insetAmount: CGFloat = 0
+    public var insetAmount: CGFloat = 0
      
-    init(_ shape: @escaping (_ in: CGRect) -> Path) { shapePath = shape }
-    var shapePath = Rectangle().path
-    func path(in rect: CGRect) -> Path { shapePath(rect) }
+    public init(_ shape: @escaping (_ in: CGRect) -> Path) { shapePath = shape }
+    public var shapePath = Rectangle().path
+    public func path(in rect: CGRect) -> Path { shapePath(rect) }
 }
 
-struct ShapeView : View {
-    var scale: CGFloat {shape.size}
-    var shape = ShapeParameters()
-    var body: some View {
+public struct ShapeView : View {
+    public var scale: CGFloat {shape.size}
+    public var shape = ShapeParameters()
+    public var body: some View {
         ZStack {
             CustomShape(shape.shape).fill(shape.filled ? shape.color : Color.clear)
                 .rotated(shape.angle).scaleEffect(CGSize(width: scale, height: scale))// anchor is center
@@ -114,7 +114,7 @@ struct ShapeView : View {
     }
 }
 
-var pointSymbols : [ShapeView] = [ // Some ShapeView samples
+public var pointSymbols : [ShapeView] = [ // Some ShapeView samples
     ShapeView(shape: .init(color: .clear)), // None
     ShapeView(shape: ShapeParameters()), // Default Black Diamond
     ShapeView(shape: .init(shape: Polygon(sides: 4).scale(x: 0.7, y: 1.0).path, color: .red)), // Narrowed Red Diamond
