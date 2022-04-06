@@ -71,6 +71,14 @@ public struct Polygon : Shape {
 }
 
 public struct ShapeParameters : Equatable {
+    public init(shape: @escaping (CGRect) -> Path = Polygon(sides: 4).path, angle: Angle = .degrees(0.0), filled: Bool = false, color: Color = .black, size: CGFloat = 1.0) {
+        self.shape = shape
+        self.angle = angle
+        self.filled = filled
+        self.color = color
+        self.size = size
+    }
+    
     
     static public func == (lhs: ShapeParameters, rhs: ShapeParameters) -> Bool {
         lhs.angle == rhs.angle && lhs.filled == rhs.filled &&  rhs.color == lhs.color //rhs.open == lhs.open &&

@@ -145,7 +145,7 @@ public struct PlotData : Equatable {
     public var plotLines: [PlotLine]
     public var settings : PlotSettings
     
-    static func == (lhs: PlotData, rhs: PlotData) -> Bool {
+    static public func == (lhs: PlotData, rhs: PlotData) -> Bool {
         lhs.plotLines == rhs.plotLines && lhs.settings == rhs.settings
     }
 
@@ -474,13 +474,16 @@ public struct XYPlot: View {
 public struct Invisible: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
-    var body: some View {
+    init(width: CGFloat = 0,
+         height: CGFloat = 0) { self.width = width; self.height = height }
+    public var body: some View {
         Color.clear
             .frame(width: width, height: height)
     }
 }
+
 public struct BackgroundView: View {
-    var body: some View {
+    public var body: some View {
         Color.white
         //Rectangle().foregroundColor(.white)
         // Could put grid line paths here
