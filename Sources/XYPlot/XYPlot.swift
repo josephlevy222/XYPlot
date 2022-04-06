@@ -15,7 +15,7 @@ public struct AxisParameters : Equatable  {
     public init(min: Double = 0.0,
          max: Double = 1.0,
          majorTics: Int = 10,
-         minorTics: Int = 5
+         minorTics: Int = 5,
          title:  AttributedString? = nil ) {
         self.min = min
         self.max = max
