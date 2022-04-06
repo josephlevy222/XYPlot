@@ -85,13 +85,13 @@ public struct ShapeParameters : Equatable {
 }
 
 public struct CustomShape : InsettableShape {
-    func inset(by amount: CGFloat) -> CustomShape {
-        public var shape = self
+    public func inset(by amount: CGFloat) -> CustomShape {
+        var shape = self
         shape.insetAmount -= amount
         return shape
     }
     
-    typealias InsetShape = CustomShape
+    public typealias InsetShape = CustomShape
     
     public var insetAmount: CGFloat = 0
      
