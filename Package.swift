@@ -13,7 +13,7 @@ let package = Package(
             targets: ["XYPlot"]),
     ],
     dependencies: [.package(url: "https://github.com/josephlevy222/NumericTextField.git", branch: "main"),
-                   .package(url: "https://github.com/josephlevy222/Utilities.git", branch: "main"),
+                   .package(url: "https://github.com/josephlevy222/Utilities.git", branch: "main")
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
