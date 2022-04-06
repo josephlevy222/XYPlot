@@ -220,7 +220,7 @@ public struct RoundedCorners: ButtonStyle {
     var shadow: CGFloat = 0
     var radius: CGFloat = 4
     let selectedColor: Color = .white
-    func makeBody(configuration: Self.Configuration) -> some View {
+    public func makeBody(configuration: Self.Configuration) -> some View {
         let backgroundColor = configuration.isPressed ? selectedColor : color
         configuration.label
             .horizontalFill()
