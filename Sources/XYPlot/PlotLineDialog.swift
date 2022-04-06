@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+
 import Utilities
 
 public struct PlotLineDialog: View {
     @Environment(\.dismiss) var dismiss
     
     @Binding public var plotData: PlotData
-    init(plotData: Binding<PlotData>) { _plotData = ploData}
+    init(plotData: Binding<PlotData>) { _plotData = plotData}
     @State private var i : Int = 0
     @State private var lineName : String = ""
     @State private var lineColor : Color = .black
