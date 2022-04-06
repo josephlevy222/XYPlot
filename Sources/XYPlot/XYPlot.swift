@@ -116,7 +116,7 @@ public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
          lineColor: Color = .black,
          lineStyle: StrokeStyle = StrokeStyle(lineWidth: 2),
          pointColor: Color = .clear,
-         pointShape: ShapeParameters = .init(),
+         pointShape: ShapeParameters = ShapeParameters(),
          secondary: Bool = false,
          legend: String? = nil) {
         self.values = values
