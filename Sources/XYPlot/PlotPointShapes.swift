@@ -10,7 +10,7 @@ import Utilities
 
 public struct Arrow : Shape {
     public var left = true
-    func path(in rect : CGRect) -> Path {
+    public func path(in rect : CGRect) -> Path {
         var path = Path()
         let h = sin(atan(0.5))
         let startPoint = CGPoint(x: left ? 0 : rect.width, y: rect.height*0.5)
