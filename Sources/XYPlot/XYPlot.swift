@@ -40,9 +40,9 @@ public struct PlotSettings : Equatable  {
     public var sAxis : AxisParameters? = nil
 
     // Computed properties for minimizing code changes when adding title to AxisParameters
-    var xTitle : AttributedString { get { xAxis?.title ?? ""} set { xAxis?.title = newValue } }
-    var yTitle : AttributedString { get { yAxis?.title ?? ""} set { yAxis?.title = newValue } }
-    var sTitle : AttributedString { get { sAxis?.title ?? ""} set { sAxis?.title = newValue } }
+    public var xTitle : AttributedString { get { xAxis?.title ?? ""} set { xAxis?.title = newValue } }
+    public var yTitle : AttributedString { get { yAxis?.title ?? ""} set { yAxis?.title = newValue } }
+    public var sTitle : AttributedString { get { sAxis?.title ?? ""} set { sAxis?.title = newValue } }
     // -----------------------------------------------------------------------------------
     public var sizeMinor = 0.005
     public var sizeMajor = 0.01
