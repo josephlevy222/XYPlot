@@ -25,6 +25,12 @@ public struct Arrow : Shape {
 }
 
 public struct Polygon : Shape {
+    public init(sides: Int = 5, openShape: Bool = false, cornerStart: Bool = false) {
+        self.sides = sides
+        self.openShape = openShape
+        self.cornerStart = cornerStart
+    }
+    
     /// Modified from a version found on to have openShape ( plus, X, asterix)
     /// https://blog.techchee.com/how-to-create-custom-shapes-in-swiftui/
     /// also see that site for stars which are not implemented 
