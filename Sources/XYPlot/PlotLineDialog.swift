@@ -184,7 +184,7 @@ public var symbolShapes : [ShapeParameters] = [
     .init(shape: Polygon(sides: 4, openShape: true).path) // +
 ]
 
-
+#if DEBUG
 struct PlotLineDialog_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -195,3 +195,4 @@ struct PlotLineDialog_Previews: PreviewProvider {
         }
     }
 }
+#endif

@@ -517,6 +517,7 @@ struct XYPlot_Previews: PreviewProvider {
         }
     }
 }
+#endif
 // Some test lines
 public var testPlotLines : PlotData = {
     var line1 = PlotLine()
@@ -539,5 +540,5 @@ public var testPlotLines : PlotData = {
     var data = PlotData(plotLines:  [line1,line2], settings: .init()); data.scaleAxes()
     return data
 }()
-#endif
+
 

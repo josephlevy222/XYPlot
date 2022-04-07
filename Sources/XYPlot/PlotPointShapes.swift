@@ -152,7 +152,7 @@ public var pointSymbols : [ShapeView] = [ // Some ShapeView samples
     ShapeView(shape: .init(shape: Arrow(left: false).path))
 ]
 
-
+#if DEBUG
 struct PlotShapesView_Previews: PreviewProvider {
     static var previews: some View {
         HStack {
@@ -162,6 +162,6 @@ struct PlotShapesView_Previews: PreviewProvider {
         }
     }
 }
-
+#endif
 
 

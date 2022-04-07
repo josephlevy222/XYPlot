@@ -237,11 +237,11 @@ public struct RoundedCorners: ButtonStyle {
             .padding()
     }
 }
-
+#if DEBUG
 struct PlotSettingsView_Previews: PreviewProvider {
     @State static var isShowingSettings: Bool = false
     static var previews: some View {
         PlotSettingsView(data: .constant(testPlotLines) ).border(.green)
     }
 }
-
+#endif

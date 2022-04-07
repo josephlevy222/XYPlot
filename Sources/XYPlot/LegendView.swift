@@ -10,9 +10,7 @@ import SwiftUI
 
 public struct LegendView: View {
     @Binding public var data: PlotData
-    public init(data: Binding<PlotData>) { self._data = data
-        
-    }
+    public init(data: Binding<PlotData>) { self._data = data }
     var lines : [PlotLine] {  data.plotLines }
     
     private var lineNumber : Int { data.settings.selection ?? 0}
@@ -73,7 +71,7 @@ public struct LegendView: View {
         } else { EmptyView() }
     }
 }
-
+#if DEBUG
 struct LegendView_Previews: PreviewProvider {
     static var previews: some View {
             StatefulPreviewWrapper(testPlotLines) {
@@ -81,6 +79,6 @@ struct LegendView_Previews: PreviewProvider {
     }
 }
 
-
+#endif
 
 
