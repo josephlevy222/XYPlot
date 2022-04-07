@@ -22,7 +22,8 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "XYPlot",
-            dependencies: []),
+            dependencies: [.package(url: "https://github.com/josephlevy222/Utilities.git", branch: "main"),
+                           .package(url: "https://github.com/josephlevy222/NumericTextField.git", branch: "main")]),
         .testTarget(
             name: "XYPlotTests",
             dependencies: ["XYPlot"]),
