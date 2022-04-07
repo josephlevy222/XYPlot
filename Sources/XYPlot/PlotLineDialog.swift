@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 import Utilities
 
 public struct PlotLineDialog: View {
