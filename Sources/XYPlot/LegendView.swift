@@ -67,7 +67,7 @@ public struct LegendView: View {
                 }
                 Color.clear.frame(width: 50, height: 10)
             }.background(Color.white).contentShape(Rectangle()).border(Color.black)
-            }.sheet(isPresented:  $isPresented )  { PlotLineDialog(plotData: $data)  }
+            }.popover(isPresented: $isPresented, attachmentAnchor: .rect(.bounds) ) { PlotLineDialog(plotData: $data)  }
         } else { EmptyView() }
     }
 }
