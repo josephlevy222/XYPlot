@@ -90,7 +90,7 @@ func adjustAxis( _ lower: inout Double, _ upper: inout Double) -> MajorMinor {
     }
     var exponent: Double? {
         let nabs=max(abs(lower),abs(upper));
-        if nabs==Double.infinity || nabs==0.0 || lower == upper { return nil }
+        if nabs==Double.infinity || nabs==0.0 { return nil }
         return pow10(floor(log10(nabs*safe))-1.0);
     }
     
