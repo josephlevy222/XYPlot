@@ -23,11 +23,11 @@ public struct AxisParameters : Equatable  {
         self.minorTics = minorTics
         self.title = title
     }
-    var min = 0.0
-    var max = 1.0
-    var majorTics = 10
-    var minorTics = 5
-    var title:  AttributedString? = nil
+    public var min = 0.0
+    public var max = 1.0
+    public var majorTics = 10
+    public var minorTics = 5
+    public var title:  AttributedString? = nil
 }
 
 /// PlotSettings is used by PlotData to define axes and axes labels
