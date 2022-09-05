@@ -279,8 +279,8 @@ public struct XYPlot: View {
                             .rotated()
                             .padding(.trailing, pad)
                         VStack(spacing: 0) {
-                            ForEach(yLabels, id: \.self) { yLabel in
-                                Text(yLabel)
+                            ForEach(yLabels.indices, id: \.self) { i in
+                                Text(yLabels[i])
                                     .captureHeight(in: $lastYLabelHeight)
                                     .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
                                 
@@ -322,8 +322,8 @@ public struct XYPlot: View {
                         }
                         .overlay( //  xLabels
                             HStack(spacing: 0) {
-                                ForEach(xLabels, id: \.self) { xLabel in
-                                    Text(xLabel)
+                                ForEach(xLabels.indices, id: \.self) { i in
+                                    Text(xLabels[i])
                                         .captureWidth(in: $lastXLabelWidth)
                                         .fixedSize()
                                         .frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
@@ -338,8 +338,8 @@ public struct XYPlot: View {
                     if showSecondary {
                         HStack(spacing: 0) {
                             VStack(spacing: 0) {
-                                ForEach(sLabels, id: \.self) { sLabel in
-                                    Text(sLabel)
+                                ForEach(sLabels.indices, id: \.self) { i in
+                                    Text(sLabels[i])
                                         .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
                                 }
                             }.captureWidth(in: $sLabelsWidth)
