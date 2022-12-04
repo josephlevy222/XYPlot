@@ -12,9 +12,13 @@ public struct PlotLineDialog: View {
     @Environment(\.dismiss) var dismiss
     
     @Binding public var plotData: PlotData
+    
     init(plotData: Binding<PlotData>) { _plotData = plotData}
     @State private var i : Int = 0
     @State private var lineName : String = ""
+    {
+        didSet { plotData.plotLines[self.i].legend = lineName }
+    }
     @State private var lineColor : Color = .black
     @State private var lineWidth : CGFloat = 1.0
     @State private var lineStyle : Int = 0
@@ -31,9 +35,8 @@ public struct PlotLineDialog: View {
     @State private var pointOff = false
     let lineStyles: [[CGFloat]] = [[], [15,5], [5], [15,5,5,5]]
     let lineStyleNames = ["Solid", "Dashed", "Dotted", "Dashdot"].map { HTMLParser($0).attributedString }
-    var lines : [PlotLine] { plotData.plotLines }
-    var legend : String { lineName == "" ? "Trace \(i)" : lineName
-    }
+    
+    var legend : String { lineName }
     var newPointColor: Color  { pointOff ? Color.clear : pointColor }
     var newLineColor: Color { lineOff ? Color.clear : lineColor }
     @State private var savedLineColor: Color = .red
@@ -137,7 +140,7 @@ public struct PlotLineDialog: View {
             HStack {
                 Button("Cancel") { dismiss() }.foregroundColor(.accentColor)
                 Spacer()
-                Button(action: {
+                Button(action: { // put it into plotData
                     var plotLine = plotData.plotLines[i]
                     plotLine.lineColor = lineColor
                     plotLine.lineStyle = StrokeStyle(lineWidth: lineWidth, dash: lineStyles[lineStyle])
@@ -178,7 +181,7 @@ public var symbolShapes : [ShapeParameters] = [
     .init(shape: Polygon(sides: 4).path, filled: false), // Diamond
     .init(shape: Polygon(sides: 4).path, angle: .degrees(45.0), filled: false),// Square
     .init(shape: Circle().path, filled: false), // Circle
-    .init(shape: Polygon(sides: 3).path, angle: .degrees(-90.0), filled: false),
+    .init(shape: Polygon(sides: 3).path, angle: .degrees(-90.0), filled: false),// Triangle
     .init(shape: Polygon(sides: 6, openShape: true).path),// Asterix
     .init(shape: Polygon(sides: 4, openShape: true).path, angle: .degrees(45.0)), // X
     .init(shape: Polygon(sides: 4, openShape: true).path) // +

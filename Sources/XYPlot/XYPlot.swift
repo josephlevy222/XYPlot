@@ -33,6 +33,7 @@ public struct AxisParameters : Equatable  {
 /// PlotSettings is used by PlotData to define axes and axes labels
 public struct PlotSettings : Equatable  {
     /// Parameters
+    
     public var title  = AttributedString()
     
     public var xAxis : AxisParameters? = nil
@@ -90,14 +91,20 @@ public extension PlotPoint { /// Makes x: and y: designation unnecessary
 }
 
 /// PlotLine array is used by PlotData to define multiple  lines
-public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
+public class PlotLine : RandomAccessCollection, MutableCollection, Equatable
 {
-    public var values: [PlotPoint]
-    public var lineColor : Color
-    public var lineStyle: StrokeStyle
-    public var pointShape: ShapeParameters
-    public var secondary: Bool
-    public var legend: String?
+    public static func == (lhs: PlotLine, rhs: PlotLine) -> Bool {
+        lhs.values == rhs.values && lhs.lineColor == rhs.lineColor &&
+        lhs.lineStyle == rhs.lineStyle && lhs.secondary == rhs.secondary &&
+        lhs.pointShape == rhs.pointShape && lhs.legend == rhs.legend
+    }
+    
+    @Published public var values: [PlotPoint]
+    @Published public var lineColor : Color
+    @Published public var lineStyle: StrokeStyle
+    @Published public var pointShape: ShapeParameters
+    @Published public var secondary: Bool
+    @Published public var legend: String?
     
     public var pointColor: Color { pointShape.color } // added to ShapeParameters
     
@@ -122,15 +129,14 @@ public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
         self.values = values
         self.lineColor = lineColor
         self.lineStyle = lineStyle
-        //self.pointColor = pointColor
         self.pointShape = pointShape
-        self.pointShape.color = pointColor
         self.secondary = secondary
         self.legend = legend
+        self.pointShape.color = pointColor
     }
     /// add array append and clear -- other Array methods can be added similarly
-    mutating public func append(_ plotPoint: PlotPoint) { values.append(plotPoint)}
-    mutating public func clear() { values = [] }
+    public func append(_ plotPoint: PlotPoint) { values.append(plotPoint)}
+    public func clear() { values = [] }
     
     /// Collection protocols make it work with higher order functions ( like map)
     public var startIndex: Int { values.startIndex }
@@ -327,7 +333,6 @@ public struct XYPlot: View {
                                         .captureWidth(in: $lastXLabelWidth)
                                         .fixedSize()
                                         .frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
-                                    
                                 }
                             }
                                 .captureHeight(in: $xLabelsHeight)

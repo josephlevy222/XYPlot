@@ -23,8 +23,5 @@ let package = Package(
         .target(
             name: "XYPlot",
             dependencies: ["Utilities","NumericTextField"]),
-        .testTarget(
-            name: "XYPlotTests",
-            dependencies: ["XYPlot"]),
     ]
 )
