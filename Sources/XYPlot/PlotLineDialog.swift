@@ -148,7 +148,7 @@ public struct PlotLineDialog: View {
                     plotLine.pointShape = ShapeParameters(shape: shape.shape, angle: shape.angle, filled: pointFill, color: pointColor, size: pointSize )
                     plotLine.legend = lineName
                     plotLine.secondary = useSecondary
-                    //plotData.plotLines[i] = PlotLine() // needed to insure copy (see LegendView)
+                    plotData.plotLines[i] = PlotLine() // needed to insure refresh (see LegendView)
                     plotData.plotLines[i] = plotLine
                     plotData.scaleAxes()
                     dismiss()
