@@ -90,24 +90,27 @@ public extension PlotPoint { /// Makes x: and y: designation unnecessary
     init(_ x: Double, _ y: Double, label: String? = nil) { self.x = x; self.y = y; self.label = label }
 }
 
+import CoreData
+import Combine
 /// PlotLine array is used by PlotData to define multiple  lines
-public class PlotLine : RandomAccessCollection, MutableCollection, Equatable
+public class PlotLine : RandomAccessCollection, MutableCollection, Equatable, ObservableObject
 {
+    var moc: NSManagedObjectContext { XYPlot.CoreDataManager.shared.moc }
     public static func == (lhs: PlotLine, rhs: PlotLine) -> Bool {
         lhs.values == rhs.values && lhs.lineColor == rhs.lineColor &&
         lhs.lineStyle == rhs.lineStyle && lhs.secondary == rhs.secondary &&
         lhs.pointShape == rhs.pointShape && lhs.legend == rhs.legend
     }
-    
+    public var id: NSManagedObjectID? // nil if not assigned
     @Published public var values: [PlotPoint]
     @Published public var lineColor : Color
     @Published public var lineStyle: StrokeStyle
     @Published public var pointShape: ShapeParameters
     @Published public var secondary: Bool
     @Published public var legend: String?
-    
     public var pointColor: Color { pointShape.color } // added to ShapeParameters
-    
+    public var onChangeAction: () -> Void = { }
+    var subscriptions = Set<AnyCancellable>()
     /// - Parameters:
     ///   - values: PlotPoint array of line
     ///   - lineColor: line color
@@ -133,7 +136,25 @@ public class PlotLine : RandomAccessCollection, MutableCollection, Equatable
         self.secondary = secondary
         self.legend = legend
         self.pointShape.color = pointColor
+        self.$pointShape.removeDuplicates().sink { newPointShape in self.onChangeAction() }.store(in: &subscriptions)
+        self.$lineColor.removeDuplicates().sink { newLineColor in self.onChangeAction() }.store(in: &subscriptions)
+//        if self.id == nil { // Create a managed entity
+//            let newLine = Line(context: moc)
+//            newLine.lineStyle = 0
+//            newLine.lineColor = Int64(lineColor.sARGB)
+//            newLine.lineName = legend
+//            newLine.symbolColor = Int64(pointColor.sARGB)
+//            newLine.symbolShape = 0
+//            newLine.symbolSize = 1.0
+//            newLine.symbolFilled = false
+//            newLine.lineWidth = 2
+//            newLine.useRightAxis = false
+//            self.id = newLine.objectID
+//        }
     }
+    
+//    func onChange<T>(action: @escaping () -> Void ) { onChangeAction = action } // good place to hook up core data
+    
     /// add array append and clear -- other Array methods can be added similarly
     public func append(_ plotPoint: PlotPoint) { values.append(plotPoint)}
     public func clear() { values = [] }
@@ -187,7 +208,7 @@ public struct XYPlot: View {
     @State private var xyLegendPos : CGPoint
     @State private var newLegendPos : CGPoint
     
-    // State vars to use with captureWidth,Height
+    // State vars used with captureWidth,Height,Size
     @State private var plotAreaHeight: CGFloat
     @State private var yLabelsWidth: CGFloat
     @State private var sLabelsWidth: CGFloat
