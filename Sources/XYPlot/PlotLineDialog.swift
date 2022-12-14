@@ -141,14 +141,14 @@ public struct PlotLineDialog: View {
                 Button("Cancel") { dismiss() }.foregroundColor(.accentColor)
                 Spacer()
                 Button(action: { // put it into plotData
-                    var plotLine = plotData.plotLines[i]
+                    let plotLine = plotData.plotLines[i]
                     plotLine.lineColor = lineColor
                     plotLine.lineStyle = StrokeStyle(lineWidth: lineWidth, dash: lineStyles[lineStyle])
                     let shape = symbolShapes[pointStyle]
                     plotLine.pointShape = ShapeParameters(shape: shape.shape, angle: shape.angle, filled: pointFill, color: pointColor, size: pointSize )
                     plotLine.legend = lineName
                     plotLine.secondary = useSecondary
-                    plotData.plotLines[i] = PlotLine() // needed to insure copy (see LegendView)
+                    //plotData.plotLines[i] = PlotLine() // needed to insure copy (see LegendView)
                     plotData.plotLines[i] = plotLine
                     plotData.scaleAxes()
                     dismiss()
