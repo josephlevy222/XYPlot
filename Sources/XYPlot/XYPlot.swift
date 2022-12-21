@@ -6,6 +6,7 @@
 //  First version with lines 12/6/21
 //  Version with point symbols set up 12/21/21
 //  Improved scaleAxes() & changed titles to AttributedStrings 2/10/22
+//  Added support for saving plot settings and line settings to Core Data 12/13/22 ***INCOMPLETE***
 
 import SwiftUI
 import Utilities
@@ -138,19 +139,19 @@ public class PlotLine : RandomAccessCollection, MutableCollection, Equatable, Ob
         self.pointShape.color = pointColor
         self.$pointShape.removeDuplicates().sink { newPointShape in self.onChangeAction() }.store(in: &subscriptions)
         self.$lineColor.removeDuplicates().sink { newLineColor in self.onChangeAction() }.store(in: &subscriptions)
-//        if self.id == nil { // Create a managed entity
-//            let newLine = Line(context: moc)
-//            newLine.lineStyle = 0
-//            newLine.lineColor = Int64(lineColor.sARGB)
-//            newLine.lineName = legend
-//            newLine.symbolColor = Int64(pointColor.sARGB)
-//            newLine.symbolShape = 0
-//            newLine.symbolSize = 1.0
-//            newLine.symbolFilled = false
-//            newLine.lineWidth = 2
-//            newLine.useRightAxis = false
-//            self.id = newLine.objectID
-//        }
+        if self.id == nil { // Create a managed entity
+            let newLine = Line(context: moc)
+            newLine.lineStyle = 0
+            newLine.lineColor = Int64(lineColor.sARGB)
+            newLine.lineName = legend
+            newLine.symbolColor = Int64(pointColor.sARGB)
+            newLine.symbolShape = 0
+            newLine.symbolSize = 1.0
+            newLine.symbolFilled = false
+            newLine.lineWidth = 2
+            newLine.useRightAxis = false
+            self.id = newLine.objectID
+        }
     }
     
 //    func onChange<T>(action: @escaping () -> Void ) { onChangeAction = action } // good place to hook up core data
@@ -536,11 +537,12 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
 
 struct XYPlot_Previews: PreviewProvider {
     static var previews: some View {
+        
         Group {
            StatefulPreviewWrapper(testPlotLines) {
                XYPlot(data: $0 ) }//testPlotLines ) //}
                 .frame(width: 700, height: 500).border(Color.green)
-        }
+        }//.environment(\.managedObjectContext, XYPlot.CoreDataManager.shared.persistentContainer.viewContext)
     }
 }
 #endif

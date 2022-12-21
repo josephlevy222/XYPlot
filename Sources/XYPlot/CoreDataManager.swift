@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 extension XYPlot { //use XYPlot namespace
     class CoreDataManager {
+        static let shared = CoreDataManager() // singleton 
         let persistentContainer: NSPersistentContainer
         private init(inMemory: Bool = false) {
             persistentContainer = NSPersistentContainer(name: "XYPlot")
@@ -23,8 +24,6 @@ extension XYPlot { //use XYPlot namespace
             }
             persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         }
-        
-        static let shared = CoreDataManager()
         
         var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
