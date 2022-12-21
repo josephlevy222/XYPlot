@@ -139,19 +139,19 @@ public class PlotLine : RandomAccessCollection, MutableCollection, Equatable, Ob
         self.pointShape.color = pointColor
         self.$pointShape.removeDuplicates().sink { newPointShape in self.onChangeAction() }.store(in: &subscriptions)
         self.$lineColor.removeDuplicates().sink { newLineColor in self.onChangeAction() }.store(in: &subscriptions)
-        if self.id == nil { // Create a managed entity
-            let newLine = Line(context: moc)
-            newLine.lineStyle = 0
-            newLine.lineColor = Int64(lineColor.sARGB)
-            newLine.lineName = legend
-            newLine.symbolColor = Int64(pointColor.sARGB)
-            newLine.symbolShape = 0
-            newLine.symbolSize = 1.0
-            newLine.symbolFilled = false
-            newLine.lineWidth = 2
-            newLine.useRightAxis = false
-            self.id = newLine.objectID
-        }
+//        if self.id == nil { // Create a managed entity
+//            let newLine = Line(context: moc)
+//            newLine.lineStyle = 0
+//            newLine.lineColor = Int64(lineColor.sARGB)
+//            newLine.lineName = legend
+//            newLine.symbolColor = Int64(pointColor.sARGB)
+//            newLine.symbolShape = 0
+//            newLine.symbolSize = 1.0
+//            newLine.symbolFilled = false
+//            newLine.lineWidth = 2
+//            newLine.useRightAxis = false
+//            self.id = newLine.objectID
+//        }
     }
     
 //    func onChange<T>(action: @escaping () -> Void ) { onChangeAction = action } // good place to hook up core data
