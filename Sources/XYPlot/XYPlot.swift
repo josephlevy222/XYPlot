@@ -148,7 +148,7 @@ public class PlotLine : RandomAccessCollection, MutableCollection, Equatable, Ob
             newLine.symbolShape = 0
             newLine.symbolSize = 1.0
             newLine.symbolFilled = false
-            newLine.lineWidth = 2
+            newLine.lineWidth = 2.0
             newLine.useRightAxis = false
             self.id = newLine.objectID
         }
