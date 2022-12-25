@@ -26,7 +26,7 @@ extension XYPlot { //use XYPlot namespace
             persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         }
         
-        var moc: NSManagedObjectContext { persistentContainer.viewContext }
+        public var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
         public func getSettings() -> Settings {
             let request: NSFetchRequest<Settings> = Settings.fetchRequest()
