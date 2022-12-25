@@ -28,7 +28,7 @@ extension XYPlot { //use XYPlot namespace
         
         var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
-        func getSettings() -> Settings {
+        public func getSettings() -> Settings {
             let request: NSFetchRequest<Settings> = Settings.fetchRequest()
             do { return try moc.fetch(request)[0] }
             catch {
@@ -38,13 +38,13 @@ extension XYPlot { //use XYPlot namespace
             }
         }
         
-        func getLines() -> [Line] {
+        public func getLines() -> [Line] {
             let request: NSFetchRequest<Line> = Line.fetchRequest()
             do { return try moc.fetch(request)}
             catch { return [] }
         }
         
-        func getLineById(id: NSManagedObjectID) -> Line? {
+        public func getLineById(id: NSManagedObjectID) -> Line? {
             do {
                 return try moc.existingObject(with: id) as? Line
             } catch {
@@ -52,7 +52,15 @@ extension XYPlot { //use XYPlot namespace
             }
         }
         
-        func save() {
+        public func getSettingsById(id: NSManagedObjectID) -> Settings? {
+            do {
+                return try moc.existingObject(with: id) as? Settings
+            } catch {
+                return nil
+            }
+        }
+        
+        public func save() {
             do { try moc.save() }
             catch {
                 moc.rollback()
