@@ -13,7 +13,7 @@ extension XYPlot { //use XYPlot namespace
     public class CoreDataManager {
         public static let shared = CoreDataManager() // singleton
         let persistentContainer: NSPersistentContainer
-        private init(inMemory: Bool = false) {
+        init(inMemory: Bool = false) {
             persistentContainer = NSPersistentContainer(name: "XYPlot")
             if inMemory {
                 persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -28,14 +28,10 @@ extension XYPlot { //use XYPlot namespace
         
         public var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
-        public func getSettings() -> Settings {
+        public func getSettings() -> [Settings] {
             let request: NSFetchRequest<Settings> = Settings.fetchRequest()
-            do { return try moc.fetch(request)[0] }
-            catch {
-                defer { save() }
-                let newSettings = Settings(context: moc)
-                return newSettings
-            }
+            do { return try moc.fetch(request) }
+            catch { return [] }
         }
         
         public func getLines() -> [Line] {
