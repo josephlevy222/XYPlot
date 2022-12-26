@@ -56,6 +56,8 @@ extension XYPlot { //use XYPlot namespace
             }
         }
         
+        public func getID(_ object: NSManagedObject) -> NSManagedObjectID { object.objectID }
+        
         public func save() {
             do { try moc.save() }
             catch {

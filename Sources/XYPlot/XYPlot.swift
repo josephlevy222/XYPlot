@@ -34,12 +34,14 @@ public struct AxisParameters : Equatable  {
 /// PlotSettings is used by PlotData to define axes and axes labels
 public struct PlotSettings : Equatable  {
     /// Parameters
+    /// 
+    public var settingsID: UUID?
     
     public var title  = AttributedString()
     
-    public var xAxis : AxisParameters? = nil
-    public var yAxis : AxisParameters? = nil
-    public var sAxis : AxisParameters? = nil
+    public var xAxis : AxisParameters?
+    public var yAxis : AxisParameters?
+    public var sAxis : AxisParameters?
 
     // Computed properties for minimizing code changes when adding title to AxisParameters
     public var xTitle : AttributedString { get { xAxis?.title ?? ""} set { xAxis?.title = newValue } }
