@@ -31,7 +31,7 @@ extension XYPlot { //use XYPlot namespace
         public func getSettings() -> [Settings] {
             let request: NSFetchRequest<Settings> = Settings.fetchRequest()
             do { return try moc.fetch(request) }
-            catch { return [] }
+            catch { return [] } 
         }
         
         public func getLines() -> [Line] {
