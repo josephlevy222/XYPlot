@@ -24,7 +24,7 @@ extension Settings {
     @NSManaged public var sMinor: Int64
     @NSManaged public var title: NSAttributedString?
     @NSManaged public var useSecondary: Bool
-    @NSManaged public var xAxisTitle: String?
+    @NSManaged public var xAxisTitle: NSAttributedString?
     @NSManaged public var xMajor: Int64
     @NSManaged public var xMax: Double
     @NSManaged public var xMin: Double
