@@ -37,7 +37,7 @@ public struct PlotSettings : Equatable  {
     /// 
     public var settingsID: UUID?
     
-    public var title  = AttributedString()
+    public var title  = String()
     
     public var xAxis : AxisParameters?
     public var yAxis : AxisParameters?
