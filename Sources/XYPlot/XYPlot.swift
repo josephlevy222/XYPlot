@@ -288,7 +288,7 @@ public struct XYPlot: View {
     
     private let pad : CGFloat = 4 // Make platform dependent?
     
-    @ViewBuilder private func Title(_ text: AttributedString) ->  some View {
+    @ViewBuilder private func Title(_ text: String) ->  some View {
         if text.characters.count == 0 { EmptyView() } else { Text(text) }
     }
     
