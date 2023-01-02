@@ -17,7 +17,7 @@ public struct AxisParameters : Equatable  {
          max: Double = 1.0,
          majorTics: Int = 10,
          minorTics: Int = 5,
-         title:  AttributedString? = nil ) {
+         title: String? = nil ) {
         self.min = min
         self.max = max
         self.majorTics = majorTics
@@ -28,7 +28,7 @@ public struct AxisParameters : Equatable  {
     public var max = 1.0
     public var majorTics = 10
     public var minorTics = 5
-    public var title:  AttributedString? = nil
+    public var title: String? = nil
 }
 
 /// PlotSettings is used by PlotData to define axes and axes labels
@@ -44,9 +44,9 @@ public struct PlotSettings : Equatable  {
     public var sAxis : AxisParameters?
 
     // Computed properties for minimizing code changes when adding title to AxisParameters
-    public var xTitle : AttributedString { get { xAxis?.title ?? ""} set { xAxis?.title = newValue } }
-    public var yTitle : AttributedString { get { yAxis?.title ?? ""} set { yAxis?.title = newValue } }
-    public var sTitle : AttributedString { get { sAxis?.title ?? ""} set { sAxis?.title = newValue } }
+    public var xTitle : String { get { xAxis?.title ?? ""} set { xAxis?.title = newValue } }
+    public var yTitle : String { get { yAxis?.title ?? ""} set { yAxis?.title = newValue } }
+    public var sTitle : String { get { sAxis?.title ?? ""} set { sAxis?.title = newValue } }
     // -----------------------------------------------------------------------------------
     public var sizeMinor = 0.005
     public var sizeMajor = 0.01
@@ -57,7 +57,7 @@ public struct PlotSettings : Equatable  {
     public var legendPos = CGPoint(x: 0, y: 0)
     public var legend = true
     public var selection : Int?
-    public init(title: AttributedString = .init(), xAxis: AxisParameters? = nil, yAxis: AxisParameters? = nil,
+    public init(title: String = .init(), xAxis: AxisParameters? = nil, yAxis: AxisParameters? = nil,
                 sAxis: AxisParameters? = nil, sizeMinor: Double = 0.005, sizeMajor: Double = 0.01,
                 format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
                 independentTics: Bool = false, legendPos: CGPoint = .zero, legend: Bool = true, selection: Int? = nil) {
