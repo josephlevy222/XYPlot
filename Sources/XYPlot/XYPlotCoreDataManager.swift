@@ -1,5 +1,5 @@
 //
-//  CoreDataManager.swift
+//  XYPlotCoreDataManager.swift
 //  for XYPlot settings and line settings
 //  
 //
@@ -8,6 +8,12 @@
 
 import Foundation
 import CoreData
+
+@objc(Line)
+public class Line: NSManagedObject { }
+@objc(Settings)
+public class Settings: NSManagedObject { }
+
 extension XYPlot { //use XYPlot namespace
     //public static var coreDataManager: CoreDataManager { CoreDataManager.shared }
     public class CoreDataManager {
@@ -29,13 +35,13 @@ extension XYPlot { //use XYPlot namespace
         public var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
         public func getSettings() -> [Settings] {
-            let request: NSFetchRequest<Settings> = Settings.fetchRequest()
+            let request: NSFetchRequest<Settings> = NSFetchRequest<Settings>(entityName: "Settings")
             do { return try moc.fetch(request) }
             catch { return [] } 
         }
         
         public func getLines() -> [Line] {
-            let request: NSFetchRequest<Line> = Line.fetchRequest()
+            let request: NSFetchRequest<Line> = NSFetchRequest<Line>(entityName: "Line")
             do { return try moc.fetch(request)}
             catch { return [] }
         }
