@@ -9,11 +9,6 @@
 import Foundation
 import CoreData
 
-@objc(Line)
-public class Line: NSManagedObject { }
-@objc(Settings)
-public class Settings: NSManagedObject { }
-
 extension XYPlot { //use XYPlot namespace
     //public static var coreDataManager: CoreDataManager { CoreDataManager.shared }
     public class CoreDataManager {
