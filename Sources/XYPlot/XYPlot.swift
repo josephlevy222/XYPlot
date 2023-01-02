@@ -289,7 +289,7 @@ public struct XYPlot: View {
     private let pad : CGFloat = 4 // Make platform dependent?
     
     @ViewBuilder private func Title(_ text: String) ->  some View {
-        if text.count == 0 { EmptyView() } else { Text(text) } 
+        if text.count == 0 { EmptyView() } else { Text(AttributedString(markdown: text)) } 
     }
     
     public var body: some View {
