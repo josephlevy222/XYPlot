@@ -202,6 +202,15 @@ public struct PlotData : Equatable {
     var noSecondary : Bool { !hasPrimaryLines || !hasSecondaryLines || !settings.showSecondaryAxis}
 }
 
+extension String {
+    func markdownToAttributed() -> AttributedString {
+        do {
+            return try AttributedString(markdown: self)
+        } catch {
+            return AttributedString("Error parsing markdown \(error)")
+        }
+    }
+}
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
     
@@ -289,7 +298,11 @@ public struct XYPlot: View {
     private let pad : CGFloat = 4 // Make platform dependent?
     
     @ViewBuilder private func Title(_ text: String) ->  some View {
-        if text.count == 0 { EmptyView() } else { Text(AttributedString(markdown: text)) } 
+        if text.count == 0 {
+            EmptyView()
+        } else {
+            Text( text.markdownToAttributed()) 
+        }
     }
     
     public var body: some View {
