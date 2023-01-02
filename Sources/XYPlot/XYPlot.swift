@@ -7,7 +7,7 @@
 //  Version with point symbols set up 12/21/21
 //  Improved scaleAxes() & changed titles to AttributedStrings 2/10/22
 //  Added support for saving plot settings and line settings to Core Data 12/13/22 ***INCOMPLETE***
-
+//  Changed AttributedString to String everywhere with intention to use markdown 1/2/23 
 import SwiftUI
 import Utilities
 
@@ -289,7 +289,7 @@ public struct XYPlot: View {
     private let pad : CGFloat = 4 // Make platform dependent?
     
     @ViewBuilder private func Title(_ text: String) ->  some View {
-        if text.characters.count == 0 { EmptyView() } else { Text(text) }
+        if text.count == 0 { EmptyView() } else { Text(text) } 
     }
     
     public var body: some View {
