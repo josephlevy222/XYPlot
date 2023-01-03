@@ -485,6 +485,7 @@ public struct XYPlot: View {
                         let oldPos: CGPoint
                         if let id = data.settings.settingsID {
                             data.settings.copySettingsFromCoreData(id: id)
+                            data = PlotData(plotLines: data.plotLines, settings: data.settings)
                             oldPos = data.settings.legendPos
                         } else { oldPos = .zero }
                         xyLegendPos = oldPos
