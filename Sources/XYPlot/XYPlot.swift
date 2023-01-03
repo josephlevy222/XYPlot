@@ -11,6 +11,53 @@
 import SwiftUI
 import Utilities
 
+extension AttributedString {
+    init(styledMarkdown markdownString: String) throws {
+        var output = try AttributedString(
+            markdown: markdownString,
+            options: .init(
+                allowsExtendedAttributes: true,
+                interpretedSyntax: .full,
+                failurePolicy: .returnPartiallyParsedIfPossible
+            ),
+            baseURL: nil
+        )
+        
+        for (intentBlock, intentRange) in output.runs[AttributeScopes.FoundationAttributes.PresentationIntentAttribute.self].reversed() {
+            guard let intentBlock = intentBlock else { continue }
+            for intent in intentBlock.components {
+                switch intent.kind {
+                case .header(level: let level):
+                    switch level {
+                    case 1:
+                        output[intentRange].font = .system(.title).bold()
+                    case 2:
+                        output[intentRange].font = .system(.title2).bold()
+                    case 3:
+                        output[intentRange].font = .system(.title3).bold()
+                    default:
+                        break
+                    }
+                default:
+                    break
+                }
+            }
+            
+            if intentRange.lowerBound != output.startIndex {
+                output.characters.insert(contentsOf: "\n", at: intentRange.lowerBound)
+            }
+        }
+        self = output
+    }
+    
+    func setFont(to: Font) -> AttributedString {
+        var a = self
+        a.font = to
+        return a
+    }
+    
+}
+
 /// Axis Parameters is an x, y or secondary (s) axis extent, tics, and tile
 public struct AxisParameters : Equatable  {
     public init(min: Double = 0.0,
@@ -205,7 +252,7 @@ public struct PlotData : Equatable {
 extension String {
     func markdownToAttributed() -> AttributedString {
         do {
-            return try AttributedString(markdown: self)
+            return try AttributedString(styledMarkdown: self)
         } catch {
             return AttributedString("Error parsing markdown \(error)")
         }
@@ -301,7 +348,7 @@ public struct XYPlot: View {
         if text.count == 0 {
             EmptyView()
         } else {
-            Text( text.markdownToAttributed()) 
+            Text( text.markdownToAttributed())
         }
     }
     
