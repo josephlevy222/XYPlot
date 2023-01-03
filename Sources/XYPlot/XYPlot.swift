@@ -29,12 +29,20 @@ extension AttributedString {
                 switch intent.kind {
                 case .header(level: let level):
                     switch level {
+                    case 0:
+                        output[intentRange].font = .body
                     case 1:
-                        output[intentRange].font = .title
+                        output[intentRange].font = .largeTitle
                     case 2:
-                        output[intentRange].font = .title2
+                        output[intentRange].font = .title
                     case 3:
+                        output[intentRange].font = .title2
+                    case 4:
                         output[intentRange].font = .title3
+                    case 5:
+                        output[intentRange].font = .headline
+                    case 6:
+                        output[intentRange].font = .subheadline
                     default:
                         break
                     }
