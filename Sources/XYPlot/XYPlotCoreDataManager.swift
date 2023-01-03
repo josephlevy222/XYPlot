@@ -96,6 +96,7 @@ extension PlotSettings {
         let settings = coreDataManager.getSettingsById(id: settingsID!)
         print("ID: \(String(describing: settings?.objectID))")
         guard let settings = settings else { return }
+        print("Copying settings to Coredata")
         settings.title = title
         settings.xAxisTitle = xAxis?.title
         settings.yAxisTitle = yAxis?.title
