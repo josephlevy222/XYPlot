@@ -87,7 +87,7 @@ extension PlotSettings {
     
     mutating public func copyPlotSettingsToCoreData() {
         let coreDataManager = XYPlot.CoreDataManager.shared
-        if settingsID == nil {
+        if settingsID == nil { print("Creating new Settings entity")
             // Create new CoreData Entity
             let newSettings = Settings(context: coreDataManager.moc)
             settingsID = newSettings.objectID
