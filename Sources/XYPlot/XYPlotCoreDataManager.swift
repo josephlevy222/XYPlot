@@ -93,7 +93,7 @@ extension PlotSettings {
             // Create new CoreData Entity
             settings = Settings(context: coreDataManager.moc)
             settingsID = settings.objectID
-        } else { settings = coreDataManager.getSettingsById(id: settingsID!)!}
+        } else { settings = coreDataManager.getSettingsById(id: settingsID!) ?? Settings(context: coreDataManager.moc )}
         print("ID: \(String(describing: settingsID))")
         //let settings = newSettings//// ?? newSettings
         print("ID: \(String(describing: settings.objectID))")
