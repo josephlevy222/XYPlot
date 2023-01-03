@@ -89,8 +89,8 @@ public struct AxisParameters : Equatable  {
 public struct PlotSettings : Equatable  {
     /// Parameters
     /// 
-    public var settingsID: UUID?
-    
+    public var settingsID: NSManagedObjectID?
+    func saveToCoreData() { }
     public var title  = String()
     
     public var xAxis : AxisParameters?
@@ -108,7 +108,7 @@ public struct PlotSettings : Equatable  {
     public var showSecondaryAxis : Bool = false
     public var autoScale : Bool = true
     public var independentTics : Bool = false
-    public var legendPos = CGPoint(x: 0, y: 0)
+    public var legendPos = CGPoint(x: 0, y: 0) 
     public var legend = true
     public var selection : Int?
     public init(title: String = .init(), xAxis: AxisParameters? = nil, yAxis: AxisParameters? = nil,
@@ -153,6 +153,7 @@ import Combine
 public class PlotLine : RandomAccessCollection, MutableCollection, Equatable, ObservableObject
 {
     static var moc: NSManagedObjectContext { XYPlot.CoreDataManager.shared.moc }
+    
     public static func == (lhs: PlotLine, rhs: PlotLine) -> Bool {
         lhs.values == rhs.values && lhs.lineColor == rhs.lineColor &&
         lhs.lineStyle == rhs.lineStyle && lhs.secondary == rhs.secondary &&
@@ -476,7 +477,10 @@ public struct XYPlot: View {
                                 newLegendPos = xyLegendPos
                             }
                     )
-                    .onChange(of: newLegendPos) { newPos in data.settings.legendPos = newPos }
+                    .onChange(of: newLegendPos) { newPos in
+                        data.settings.legendPos = newPos
+                        data.settings.copyPlotSettingsToCoreData()
+                    }
                     .onAppear {
                         let oldPos = data.settings.legendPos
                         xyLegendPos = oldPos

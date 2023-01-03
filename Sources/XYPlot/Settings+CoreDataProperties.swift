@@ -34,7 +34,14 @@ extension Settings {
     @NSManaged public var yMax: Double
     @NSManaged public var yMin: Double
     @NSManaged public var yMinor: Int64
-
+    @NSManaged public var sMax: Double
+    @NSManaged public var sMin: Double
+    @NSManaged public var sizeMajor: Double
+    @NSManaged public var sizeMinor: Double
+    @NSManaged public var autoScale: Bool
+    @NSManaged public var showLegend: Bool
+    @NSManaged public var format: String?
+    
 }
 
 extension Settings : Identifiable {

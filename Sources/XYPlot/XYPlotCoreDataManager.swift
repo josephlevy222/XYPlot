@@ -68,3 +68,63 @@ extension XYPlot { //use XYPlot namespace
         }
     }
 }
+
+extension PlotSettings {
+    mutating func copySettingsFromCoreData(settings: Settings) {
+        settingsID = settings.objectID
+        title = settings.title ?? title
+        xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: settings.xAxisTitle )
+        yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: settings.yAxisTitle )
+        sAxis = AxisParameters(min: settings.sMin, max: settings.sMax, majorTics: Int(settings.sMajor), minorTics: Int(settings.sMinor), title: settings.sAxisTitle )
+        sizeMinor = settings.sizeMinor
+        sizeMajor = settings.sizeMajor
+        format = settings.format ?? ""
+        autoScale = settings.autoScale
+        independentTics = settings.independentsTics
+        legendPos = CGPoint(x: settings.legendPosX,y: settings.legendPosY)
+        legend = settings.showLegend
+    }
+    
+    mutating func copyPlotSettingsToCoreData() {
+        let coreDataManager = XYPlot.CoreDataManager.shared
+        if settingsID == nil {
+            // Create new CoreData Entity
+            let newSettings = Settings(context: coreDataManager.moc)
+            settingsID = newSettings.objectID
+        }
+        let settings = coreDataManager.getSettingsById(id: settingsID!)
+        guard let settings = settings else { return }
+        settings.title = title
+        settings.xAxisTitle = xAxis?.title
+        settings.yAxisTitle = yAxis?.title
+        settings.sAxisTitle = sAxis?.title
+        settings.autoScale = autoScale
+        settings.format = format
+        settings.independentsTics = independentTics
+        settings.legendPosX = legendPos.x
+        settings.legendPosY = legendPos.y
+        settings.showLegend = legend
+        settings.sizeMajor = sizeMajor
+        settings.sizeMinor = sizeMinor
+        if let axis = xAxis {
+            settings.xMajor = Int64(axis.majorTics)
+            settings.xMinor = Int64(axis.minorTics)
+            settings.xMax = axis.max
+            settings.xMin = axis.min
+        }
+        if let axis = yAxis {
+            settings.yMajor = Int64(axis.majorTics)
+            settings.yMinor = Int64(axis.minorTics)
+            settings.yMax = axis.max
+            settings.yMin = axis.min
+        }
+        if let axis = sAxis {
+            settings.sMajor = Int64(axis.majorTics)
+            settings.sMinor = Int64(axis.minorTics)
+            settings.sMax = axis.max
+            settings.sMin = axis.min
+        }
+        settings.useSecondary = showSecondaryAxis
+        coreDataManager.save()
+    }
+}
