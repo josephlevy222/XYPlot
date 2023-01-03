@@ -87,16 +87,17 @@ extension PlotSettings {
     
     mutating public func copyPlotSettingsToCoreData() {
         let coreDataManager = XYPlot.CoreDataManager.shared
-        if settingsID == nil { print("Creating new Settings entity")
+        var settings: Settings
+        if settingsID == nil  {
+            print("Creating new Settings entity")
             // Create new CoreData Entity
-            let newSettings = Settings(context: coreDataManager.moc)
-            settingsID = newSettings.objectID
-            coreDataManager.save()
-        }
+            settings = Settings(context: coreDataManager.moc)
+            settingsID = settings.objectID
+        } else { settings = coreDataManager.getSettingsById(id: settingsID!)!}
         print("ID: \(String(describing: settingsID))")
-        let settings = coreDataManager.getSettingsById(id: settingsID!)
-        print("ID: \(String(describing: settings?.objectID))")
-        guard let settings = settings else { return }
+        //let settings = newSettings//// ?? newSettings
+        print("ID: \(String(describing: settings.objectID))")
+        //guard let settings = settings else { return }
         print("Copying settings to Coredata")
         settings.title = title
         settings.xAxisTitle = xAxis?.title
