@@ -30,11 +30,11 @@ extension AttributedString {
                 case .header(level: let level):
                     switch level {
                     case 1:
-                        output[intentRange].font = .system(.title).bold()
+                        output[intentRange].font = .title
                     case 2:
-                        output[intentRange].font = .system(.title2).bold()
+                        output[intentRange].font = .title2
                     case 3:
-                        output[intentRange].font = .system(.title3).bold()
+                        output[intentRange].font = .title3
                     default:
                         break
                     }
