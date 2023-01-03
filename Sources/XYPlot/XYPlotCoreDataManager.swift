@@ -70,7 +70,7 @@ extension XYPlot { //use XYPlot namespace
 }
 
 extension PlotSettings {
-    mutating func copySettingsFromCoreData(id: NSManagedObjectID) {
+    mutating public func copySettingsFromCoreData(id: NSManagedObjectID) {
         guard let settings = XYPlot.CoreDataManager.shared.getSettingsById(id: id) else { return }
         title = settings.title ?? title
         xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: settings.xAxisTitle )
@@ -85,7 +85,7 @@ extension PlotSettings {
         legend = settings.showLegend
     }
     
-    mutating func copyPlotSettingsToCoreData() {
+    mutating public func copyPlotSettingsToCoreData() {
         let coreDataManager = XYPlot.CoreDataManager.shared
         if settingsID == nil {
             // Create new CoreData Entity
