@@ -70,8 +70,8 @@ extension XYPlot { //use XYPlot namespace
 }
 
 extension PlotSettings {
-    mutating func copySettingsFromCoreData(settings: Settings) {
-        settingsID = settings.objectID
+    mutating func copySettingsFromCoreData(id: NSManagedObjectID) {
+        guard let settings = XYPlot.CoreDataManager.shared.getSettingsById(id: id) else { return }
         title = settings.title ?? title
         xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: settings.xAxisTitle )
         yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: settings.yAxisTitle )

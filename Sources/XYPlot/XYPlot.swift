@@ -482,7 +482,11 @@ public struct XYPlot: View {
                         data.settings.copyPlotSettingsToCoreData()
                     }
                     .onAppear {
-                        let oldPos = data.settings.legendPos
+                        let oldPos: CGPoint
+                        if let id = data.settings.settingsID {
+                            data.settings.copySettingsFromCoreData(id: id)
+                            oldPos = data.settings.legendPos
+                        } else { oldPos = .zero }
                         xyLegendPos = oldPos
                         newLegendPos = oldPos
                     }
