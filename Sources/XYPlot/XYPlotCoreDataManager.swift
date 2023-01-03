@@ -92,7 +92,9 @@ extension PlotSettings {
             let newSettings = Settings(context: coreDataManager.moc)
             settingsID = newSettings.objectID
         }
+        print("ID: \(String(describing: settingsID))")
         let settings = coreDataManager.getSettingsById(id: settingsID!)
+        print("ID: \(String(describing: settings?.objectID))")
         guard let settings = settings else { return }
         settings.title = title
         settings.xAxisTitle = xAxis?.title
