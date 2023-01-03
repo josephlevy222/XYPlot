@@ -63,7 +63,6 @@ extension AttributedString {
         a.font = to
         return a
     }
-    
 }
 
 /// Axis Parameters is an x, y or secondary (s) axis extent, tics, and tile
