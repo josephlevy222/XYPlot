@@ -239,10 +239,10 @@ extension PlotData {
             if xTics.0 == 0 { xTics = (10,5) }
         }
         // Assign to newData.settings
-        newData.settings.xAxis = AxisParameters(min: xMin, max: xMax, majorTics: xTics.0, minorTics: xTics.1, title: settings.xAxis?.title)
-        newData.settings.yAxis = AxisParameters(min: yMin, max: yMax, majorTics: yTics.0, minorTics: yTics.1, title: settings.yAxis?.title)
-        newData.settings.sAxis = AxisParameters(min: sMin, max: sMax, majorTics: sTics.0, minorTics: sTics.1, title: settings.sAxis?.title)
-    
+        newData.settings.xAxis = AxisParameters(min: xMin, max: xMax, majorTics: xTics.0, minorTics: xTics.1, title: settings.xAxis?.title ?? AttributedString())
+        newData.settings.yAxis = AxisParameters(min: yMin, max: yMax, majorTics: yTics.0, minorTics: yTics.1, title: settings.yAxis?.title ?? AttributedString())
+        newData.settings.sAxis = AxisParameters(min: sMin, max: sMax, majorTics: sTics.0, minorTics: sTics.1, title: settings.sAxis?.title ?? AttributedString())
+        
         newData.settings.legendPos = self.settings.legendPos
        
         self = newData
