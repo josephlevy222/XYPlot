@@ -22,27 +22,15 @@ extension AttributedString {
             ),
             baseURL: nil
         )
-        
+        let styledMarkdownFonts : [Font] = [.body,.largeTitle,.title,.title2,.title3,.headline,.subheadline]
         for (intentBlock, intentRange) in output.runs[AttributeScopes.FoundationAttributes.PresentationIntentAttribute.self].reversed() {
             guard let intentBlock = intentBlock else { continue }
             for intent in intentBlock.components {
                 switch intent.kind {
                 case .header(level: let level):
                     switch level {
-                    case 0:
-                        output[intentRange].font = .body
-                    case 1:
-                        output[intentRange].font = .largeTitle
-                    case 2:
-                        output[intentRange].font = .title
-                    case 3:
-                        output[intentRange].font = .title2
-                    case 4:
-                        output[intentRange].font = .title3
-                    case 5:
-                        output[intentRange].font = .headline
-                    case 6:
-                        output[intentRange].font = .subheadline
+                    case 0-6:
+                        output[intentRange].font = styledMarkdownFonts[level]
                     default:
                         break
                     }
@@ -196,22 +184,10 @@ public class PlotLine : RandomAccessCollection, MutableCollection, Equatable, Ob
         self.pointShape.color = pointColor
         self.$pointShape.removeDuplicates().sink { newPointShape in self.onChangeAction() }.store(in: &subscriptions)
         self.$lineColor.removeDuplicates().sink { newLineColor in self.onChangeAction() }.store(in: &subscriptions)
-//        if self.id == nil { // Create a managed entity
-//            let newLine = Line(context: PlotLine.moc)
-//            newLine.lineStyle = 0
-//            newLine.lineColor = Int64(lineColor.sARGB)
-//            newLine.lineName = legend
-//            newLine.symbolColor = Int64(pointColor.sARGB)
-//            newLine.symbolShape = 0
-//            newLine.symbolSize = 1.0
-//            newLine.symbolFilled = false
-//            newLine.lineWidth = 2.0
-//            newLine.useRightAxis = false
-//            self.id = newLine.objectID
-//        }
+        self.$legend.removeDuplicates().sink { newLegend in self.onChangeAction()}.store(in: &subscriptions)
     }
     
-//    func onChange<T>(action: @escaping () -> Void ) { onChangeAction = action } // good place to hook up core data
+//    func onChange(action: @escaping () -> Void ) {  self.onChangeAction = action } // good place to hook up core data
     
     /// add array append and clear -- other Array methods can be added similarly
     public func append(_ plotPoint: PlotPoint) { values.append(plotPoint)}

@@ -1,6 +1,6 @@
 //
 //  LegendView.swift
-//  Mode Analyzer-1D
+//  XYPlot
 //
 //  Created by Joseph Levy on 3/4/22.
 //
