@@ -146,12 +146,12 @@ func adjustAxis( _ lower: inout Double, _ upper: inout Double) -> MajorMinor {
 
 extension PlotData {
     
-    mutating public func scaleAxes() {//}-> PlotData {
+    mutating public func scaleAxes() {
         if settings.autoScale { return axesScale() }
         //return self
     }
     
-    mutating public  func axesScale() {//}-> PlotData {
+    mutating public  func axesScale() {
         var newData = self // new copy (COW)
         // Get X range and Y ranges of all plots
         let hasPrimary = newData.hasPrimaryLines
@@ -160,7 +160,7 @@ extension PlotData {
         var xMin = Double.infinity, xMax = -xMin
         var yMax = xMax, yMin = xMin
         var sMax = xMax, sMin = xMin
-        if plotLines.isEmpty { return }//newData } // Do nothing
+        if plotLines.isEmpty { return }
 
         for plotLine in plotLines {
             xMin = min(plotLine.values.map { $0.x}.min() ?? xMin, xMin)

@@ -138,7 +138,6 @@ import Combine
 /// PlotLine array is used by PlotData to define multiple  lines
 //public class
 public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable
-//, ObservableObject
 {
     static var moc: NSManagedObjectContext { XYPlot.CoreDataManager.shared.moc }
     
