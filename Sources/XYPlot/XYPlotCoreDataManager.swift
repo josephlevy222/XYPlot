@@ -144,7 +144,7 @@ extension PlotSettings {
 }
 
 extension PlotLine {
-    mutating func copyLineSettingsToCoreData() {
+    mutating public func copyLineSettingsToCoreData() {
         let coreDataManager = XYPlot.CoreDataManager.shared
         var line: Line
         if id == nil  {
@@ -179,7 +179,7 @@ extension PlotLine {
         coreDataManager.save()
     }
     
-    mutating func copyLineSettingsFromCoreData(id: NSManagedObjectID?) {
+    mutating public func copyLineSettingsFromCoreData(id: NSManagedObjectID?) {
         let coreDataManager = XYPlot.CoreDataManager.shared
         guard let id = id else { print("No Line entity");return }
         let line = coreDataManager.getLineById(id: id) ?? Line(context: coreDataManager.moc)
