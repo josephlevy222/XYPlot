@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21512" systemVersion="22A400" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Line" representedClassName="Line" syncable="YES">
+        <attribute name="dash" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[CGFloat]"/>
+        <attribute name="dashPhase" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="lineCap" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lineColor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lineJoin" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lineName" optional="YES" attributeType="String"/>
+        <attribute name="lineStyle" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" customClassName="StrokeStyle"/>
+        <attribute name="lineWidth" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="miterLimit" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="symbolAngle" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="symbolColor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="symbolFilled" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="symbolShape" optional="YES" attributeType="String"/>
+        <attribute name="symbolSize" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="useRightAxis" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Settings" representedClassName="Settings" syncable="YES">
+        <attribute name="autoScale" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="format" optional="YES" attributeType="String"/>
+        <attribute name="independentsTics" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="legendPosX" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="legendPosY" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sAxisTitle" optional="YES" attributeType="Binary" customClassName="NSAttributedString"/>
+        <attribute name="showLegend" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="sizeMajor" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sizeMinor" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sMajor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sMax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sMin" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sMinor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="Binary" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="NSAttributedString"/>
+        <attribute name="useSecondary" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="xAxisTitle" optional="YES" attributeType="Binary" customClassName="NSAttributedString"/>
+        <attribute name="xMajor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="xMax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="xMin" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="xMinor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="yAxisTitle" optional="YES" attributeType="Binary" customClassName="NSAttributedString"/>
+        <attribute name="yMajor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="yMax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="yMin" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="yMinor" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+</model>
