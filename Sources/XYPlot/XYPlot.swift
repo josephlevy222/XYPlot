@@ -119,9 +119,9 @@ public struct PlotSettings : Equatable  {
 /// An element of a PlotLIne with an (x,y) point
 public struct PlotPoint : Equatable {
     //CGPoint?
-    var x: Double
-    var y: Double
-    var label: String?  // not implemented to display
+    public var x: Double
+    public var y: Double
+    public var label: String?  // not implemented to display
     /// Used to place points on a PlotLine
     /// - Parameters:
     ///   - x: x axis point value
