@@ -245,7 +245,7 @@ extension String {
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
     
-    @Binding var data : PlotData
+    @Binding public var data : PlotData
     
     @State private var isPresented: Bool = false
     @State private var xyLegendPos : CGPoint = .zero
