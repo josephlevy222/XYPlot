@@ -309,10 +309,12 @@ public struct XYPlot: View {
     private let pad : CGFloat = 4 // Make platform dependent?
     
     @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
-        if text.wrappedValue.characters.count == 0 {
+        if text.wrappedValue.characters.count == 0 { let _ = print("EmptyView")
             EmptyView()
         } else {
-            TextView(attributedText: text, allowsEditingTextAttributes: true)
+            TextView(attributedText: text, allowsEditingTextAttributes: true).onTapGesture {
+                 
+            }
             //(text)
             
         }
@@ -321,7 +323,10 @@ public struct XYPlot: View {
     public var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Title(Binding( get: { settings.title }, set:  {print($0)}) )// Title centered on plot area
+                Title(Binding(
+                    get: { settings.title },
+                    set: { data.settings.title = $0}) )
+                     // Title centered on plot area
                     .padding(.leading, leadingWidth)
                     .padding(.trailing, trailingWidth)
                     .fixedSize().frame(width: 1)
@@ -331,7 +336,7 @@ public struct XYPlot: View {
                     }
                 HStack(spacing: 0) { // yTitle and room for labels
                     HStack(spacing: 0) {
-                        Title(Binding(get: {settings.yTitle}, set: {print($0)} ) )
+                        Title(Binding(get: {settings.yTitle}, set: {data.settings.title = $0} ) )
                             .rotated()
                             .padding(.trailing, pad)
                         VStack(spacing: 0) {
