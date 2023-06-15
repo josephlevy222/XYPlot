@@ -330,7 +330,7 @@ public struct XYPlot: View {
         ZStack {
             VStack(spacing: 0) {
                 Title(Binding(
-                    get: { settings.title },
+                    get: { data.settings.title },
                     set: { data.settings.title = $0}) )
                      // Title centered on plot area
                     .padding(.leading, leadingWidth)
@@ -342,7 +342,9 @@ public struct XYPlot: View {
                     }
                 HStack(spacing: 0) { // yTitle and room for labels
                     HStack(spacing: 0) {
-                        Title(Binding(get: {settings.yTitle}, set: {data.settings.title = $0} ) )
+                        Title(Binding(
+                            get: {data.settings.yTitle},
+                            set: {data.settings.yTitle = $0} ) )
                             .rotated()
                             .padding(.trailing, pad)
                         VStack(spacing: 0) {
@@ -409,7 +411,9 @@ public struct XYPlot: View {
                                         .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
                                 }
                             }.captureWidth(in: $sLabelsWidth)
-                            Title(Binding(get: {settings.sTitle}, set:  {print($0)}))
+                            Title(Binding(
+                                get: {data.settings.sTitle},
+                                set: {data.settings.sTitle = $0}))
                                 .rotated(Angle(degrees: 90.0))
                                 .captureWidth(in: $sTitleWidth)
                         }
@@ -422,7 +426,9 @@ public struct XYPlot: View {
                 
                 // Invisible space holder for x Labels
                 Invisible(height: xLabelsHeight)
-                Title(Binding(get: {settings.xTitle}, set:  {print($0)}))
+                Title(Binding(
+                    get: {data.settings.xTitle},
+                    set: {data.settings.xTitle = $0 }))
                     .padding(.top, xLabelsHeight/3.0)
                     .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
                     .fixedSize()     // Don't use xTitle width //
