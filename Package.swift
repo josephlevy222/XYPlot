@@ -2,7 +2,9 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
-
+fileprivate func repo(_ repo: String) -> String {
+    return "https://github.com/josephlevy222/" + repo + ".git"
+}
 let package = Package(
     name: "XYPlot",
     platforms: [.macOS(.v12), .iOS(.v15)],
@@ -12,8 +14,9 @@ let package = Package(
             name: "XYPlot",
             targets: ["XYPlot"]),
     ],
-    dependencies: [.package(url: "https://github.com/josephlevy222/Utilities.git", branch: "main"),
-                   .package(url: "https://github.com/josephlevy222/NumericTextField.git", branch: "main")
+    dependencies: [.package(url: repo("Utilities"), branch: "main"),
+                   .package(url: repo("NumericTextField"), branch: "main"),
+                   .package(url: repo("TextView"), branch: "main")
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -22,6 +25,6 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "XYPlot",
-            dependencies: ["Utilities","NumericTextField"]),
+            dependencies: ["Utilities","NumericTextField","TextView"]),
     ]
 )

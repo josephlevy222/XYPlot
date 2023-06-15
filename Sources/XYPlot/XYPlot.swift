@@ -16,6 +16,7 @@
 
 import SwiftUI
 import Utilities
+import TextView
 
 fileprivate let defaultHeaderFonts: [Font] = [.largeTitle,.title,.title2,.title3,.headline,.subheadline]
 extension AttributedString {
@@ -307,18 +308,20 @@ public struct XYPlot: View {
     
     private let pad : CGFloat = 4 // Make platform dependent?
     
-    @ViewBuilder private func Title(_ text: AttributedString) ->  some View {
-        if text.characters.count == 0 {
+    @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
+        if text.wrappedValue.characters.count == 0 {
             EmptyView()
         } else {
-            Text(text)
+            TextView(attributedText: text, allowsEditingTextAttributes: true)
+            //(text)
+            
         }
     }
     
     public var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Title(settings.title) // Title centered on plot area
+                Title(Binding( get: { settings.title }, set:  {print($0)}) )// Title centered on plot area
                     .padding(.leading, leadingWidth)
                     .padding(.trailing, trailingWidth)
                     .fixedSize().frame(width: 1)
@@ -328,7 +331,7 @@ public struct XYPlot: View {
                     }
                 HStack(spacing: 0) { // yTitle and room for labels
                     HStack(spacing: 0) {
-                        Title(settings.yTitle)
+                        Title(Binding(get: {settings.yTitle}, set: {print($0)} ) )
                             .rotated()
                             .padding(.trailing, pad)
                         VStack(spacing: 0) {
@@ -395,7 +398,7 @@ public struct XYPlot: View {
                                         .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
                                 }
                             }.captureWidth(in: $sLabelsWidth)
-                            Title(settings.sTitle)
+                            Title(Binding(get: {settings.sTitle}, set:  {print($0)}))
                                 .rotated(Angle(degrees: 90.0))
                                 .captureWidth(in: $sTitleWidth)
                         }
@@ -408,7 +411,7 @@ public struct XYPlot: View {
                 
                 // Invisible space holder for x Labels
                 Invisible(height: xLabelsHeight)
-                Title(settings.xTitle)
+                Title(Binding(get: {settings.xTitle}, set:  {print($0)}))
                     .padding(.top, xLabelsHeight/3.0)
                     .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
                     .fixedSize()     // Don't use xTitle width //
