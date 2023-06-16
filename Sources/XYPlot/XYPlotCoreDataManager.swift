@@ -16,7 +16,7 @@ extension XYPlot { //use XYPlot namespace
         public static let shared = CoreDataManager() // singleton
         let persistentContainer: NSPersistentContainer
         init(inMemory: Bool = false) {
-            persistentContainer = NSPersistentContainer(name: "XYPlot")
+            persistentContainer = NSPersistentContainer(name: "XYPlot.PlotDataModel")
             if inMemory {
                 persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
