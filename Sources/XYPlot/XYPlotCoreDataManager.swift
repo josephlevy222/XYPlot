@@ -40,7 +40,7 @@ extension XYPlot { //use XYPlot namespace
         
         public func getLines() -> [Line] {
             let request: NSFetchRequest<Line> = NSFetchRequest<Line>(entityName: "Line")
-             return ( try? moc.fetch(request) ?? [] )
+             return ( try? moc.fetch(request)) ?? [] 
         }
         
         public func getLineById(id: NSManagedObjectID) -> Line? {
