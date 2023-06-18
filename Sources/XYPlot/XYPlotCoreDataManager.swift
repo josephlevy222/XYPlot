@@ -22,7 +22,7 @@ extension XYPlot { //use XYPlot namespace
             else {
                 fatalError("Failed to retrieve PlotDataModel")
             }
-            persistentContainer = NSPersistentContainer(name: "PlotDataModel", managedObjectModel: objectModel)  //(name: "PlotDataModel")
+            persistentContainer = NSPersistentContainer(name: "XYPlot", managedObjectModel: objectModel)  //(name: "PlotDataModel")
             if inMemory {
                 persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
