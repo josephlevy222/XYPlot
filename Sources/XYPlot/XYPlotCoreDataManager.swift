@@ -17,7 +17,7 @@ extension XYPlot { //use XYPlot namespace
         let persistentContainer: NSPersistentContainer
         init(inMemory: Bool = false) {
             guard
-                let objectModelURL = Bundle.module.url(forResource: "PlotDataModel", withExtension: "momd"),
+                let objectModelURL = Bundle.module.url(forResource: "XYPlot", withExtension: "momd"),
                 let objectModel = NSManagedObjectModel(contentsOf: objectModelURL)
             else {
                 fatalError("Failed to retrieve PlotDataModel")
