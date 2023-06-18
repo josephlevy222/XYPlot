@@ -16,9 +16,13 @@ extension XYPlot { //use XYPlot namespace
         public static let shared = CoreDataManager() // singleton
         let persistentContainer: NSPersistentContainer
         init(inMemory: Bool = false) {
-//            let bundle = Bundle.main
-//            let modeURL = bundle.url(forResource: NSManagedObjectModel()., withExtension: self.<#T##String?#>)
-            persistentContainer = NSPersistentContainer(name: "PlotDataModel")//, managedObjectModel: NSManagedObjectModel())  //(name: "PlotDataModel")
+            guard
+                let objectModelURL = Bundle.module.url(forResource: "PlotDataModel", withExtension: "momd"),
+                let objectModel = NSManagedObjectModel(contentsOf: objectModelURL)
+            else {
+                fatalError("Failed to retrieve PlotDataModel")
+            }
+            persistentContainer = NSPersistentContainer(name: "PlotDataModel", managedObjectModel: objectModel)  //(name: "PlotDataModel")
             if inMemory {
                 persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
