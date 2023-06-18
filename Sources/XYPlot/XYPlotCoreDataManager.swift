@@ -38,12 +38,12 @@ extension XYPlot { //use XYPlot namespace
         
         public func getSettings() -> [Settings] {
             let request: NSFetchRequest<Settings> = NSFetchRequest<Settings>(entityName: "Settings")
-            return (try? moc.fetch(request)) ?? []
+            return (try? moc.fetch(request)) ?? [Settings]()
         }
         
         public func getLines() -> [Line] {
             let request: NSFetchRequest<Line> = NSFetchRequest<Line>(entityName: "Line")
-             return ( try? moc.fetch(request)) ?? [] 
+             return ( try? moc.fetch(request)) ?? [Line]()
         }
         
         public func getLineById(id: NSManagedObjectID) -> Line? {
