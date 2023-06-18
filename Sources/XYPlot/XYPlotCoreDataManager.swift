@@ -22,7 +22,7 @@ extension XYPlot { //use XYPlot namespace
             else {
                 fatalError("Failed to retrieve PlotDataModel")
             }
-            persistentContainer = NSPersistentContainer(name: "XYPlot", managedObjectModel: objectModel)  //(name: "PlotDataModel")
+            persistentContainer = NSPersistentContainer(name: "XYPlot", managedObjectModel: objectModel)
             if inMemory {
                 persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
@@ -37,7 +37,7 @@ extension XYPlot { //use XYPlot namespace
         public var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
         public func getSettings() -> [Settings] {
-            let request: NSFetchRequest<Settings> = NSFetchRequest<Settings>(entityName: "Settings")
+            let request: NSFetchRequest<Settings> = NSFetchRequest<Settings>(entityName: "Settings") as! NSFetchRequest<Settings>
             return (try? moc.fetch(request)) ?? [Settings]()
         }
         
