@@ -37,7 +37,7 @@ extension XYPlot { //use XYPlot namespace
         public var moc: NSManagedObjectContext { persistentContainer.viewContext }
         
         public func getSettings() -> [Settings] {
-            let request: NSFetchRequest<Settings> = NSFetchRequest<Settings>(entityName: "Settings") as! NSFetchRequest<Settings>
+            let request: NSFetchRequest<Settings> = NSFetchRequest<Settings>(entityName: "Settings") //as! NSFetchRequest<Settings>
             return (try? moc.fetch(request)) ?? [Settings]()
         }
         
