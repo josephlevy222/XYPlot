@@ -318,9 +318,9 @@ public struct XYPlot: View {
                         print("Text tapped on Text")
                     }
                 TextView(attributedText: text, allowsEditingTextAttributes: true)
-                    .onTapGesture {
-                        print("Text tapped on TextView")
-                    }
+//                    .onTapGesture {
+//                        print("Text tapped on TextView")
+//                    }
             }
         }
     }
