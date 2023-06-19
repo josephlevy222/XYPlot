@@ -312,18 +312,16 @@ public struct XYPlot: View {
         if text.wrappedValue.characters.count == 0 { let _ = print("EmptyView")
             EmptyView()
         } else {
-//            ZStack {
-//                Text(text.wrappedValue)
-//                    .onTapGesture {
-//                        print("Text tapped on Text")
-//                    }
+            ZStack {
+                Text(text.wrappedValue)
+                    .onTapGesture {
+                        print("Text tapped on Text")
+                    }
                 TextView(attributedText: text, allowsEditingTextAttributes: true)
                     .onTapGesture {
                         print("Text tapped on TextView")
                     }
-//            }
-            //(text)
-            
+            }
         }
     }
     
