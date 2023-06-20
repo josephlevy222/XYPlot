@@ -353,138 +353,138 @@ public struct XYPlot: View {
                     .popover(isPresented: $isPresented) {
                         PlotSettingsView(data: $data)
                     }
-                
-                HStack(spacing: 0) { // the yAxis Title and Labels
-                    Title(Binding(
-                        get: {data.settings.yTitle},
-                        set: {data.settings.yTitle = $0} ) )
-                    .rotated()
-                    .padding(.trailing, pad)
-                    VStack(spacing: 0) {
-                        ForEach(yLabels.indices, id: \.self) { i in
-                            Text(yLabels[i])
-                                .captureHeight(in: $lastYLabelHeight)
-                                .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
-                            
-                        }
-                    }
-                }.captureWidth(in: $yLabelsWidth)
-                    .fixedSize()      // Avoid using the yLabels height to size //
-                    .frame(height: 1) // plot area, 1 is arbitrary small no.    //
-                GeometryReader { geo in // the plotArea
-                    let size = CGSize(width: geo.size.width, height: geo.size.height)
-                    ZStack { // This is the plot area
-                        BackgroundView() /// add size to this view as parameter for gridlines
-                        /// Display the axes on layer on top of Background of ZStack
-                        Path { path in path.addLines(axesPath(size))}
-                            .stroke(.black, lineWidth: max(size.width, size.height)/500.0+0.5)
-                        /// Display the plotLines
-                        ForEach(lines.indices, id: \.self) { i in
-                            let plotLine = lines[i]
-                            let line = transform(plotLine: plotLine, size: size)
-                            if plotLine.lineColor != .clear {
-                                Path { path in path.addLines(line)}
-                                    .stroke(plotLine.lineColor, style: plotLine.lineStyle)
-                                    .clipShape(Rectangle().size(size)) // don't draw out of bounds
+                HStack(spacing: 0) {
+                    HStack(spacing: 0) { // the yAxis Title and Labels
+                        Title(Binding(
+                            get: {data.settings.yTitle},
+                            set: {data.settings.yTitle = $0} ) )
+                        .rotated()
+                        .padding(.trailing, pad)
+                        VStack(spacing: 0) {
+                            ForEach(yLabels.indices, id: \.self) { i in
+                                Text(yLabels[i])
+                                    .captureHeight(in: $lastYLabelHeight)
+                                    .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
+                                
                             }
-                            if plotLine.pointColor != .clear { // for efficiency
-                                ForEach(line.indices, id: \.self) { j in
-                                    let point = line[j]
-                                    let inBounds = 0.0 <= point.x && point.x <= size.width &&
-                                    0.0 <= point.y && point.y <= size.height
-                                    if inBounds {
-                                        let x0 = size.width/2.0  // offset is from center
-                                        let y0 = size.height/2.0 // w an h are divided by 2
-                                        ShapeView(shape: plotLine.pointShape)
-                                            .offset(x: point.x - x0, y: point.y - y0)
+                        }
+                    }.captureWidth(in: $yLabelsWidth)
+                        .fixedSize()      // Avoid using the yLabels height to size //
+                        .frame(height: 1) // plot area, 1 is arbitrary small no.    //
+                    GeometryReader { geo in // the plotArea
+                        let size = CGSize(width: geo.size.width, height: geo.size.height)
+                        ZStack { // This is the plot area
+                            BackgroundView() /// add size to this view as parameter for gridlines
+                            /// Display the axes on layer on top of Background of ZStack
+                            Path { path in path.addLines(axesPath(size))}
+                                .stroke(.black, lineWidth: max(size.width, size.height)/500.0+0.5)
+                            /// Display the plotLines
+                            ForEach(lines.indices, id: \.self) { i in
+                                let plotLine = lines[i]
+                                let line = transform(plotLine: plotLine, size: size)
+                                if plotLine.lineColor != .clear {
+                                    Path { path in path.addLines(line)}
+                                        .stroke(plotLine.lineColor, style: plotLine.lineStyle)
+                                        .clipShape(Rectangle().size(size)) // don't draw out of bounds
+                                }
+                                if plotLine.pointColor != .clear { // for efficiency
+                                    ForEach(line.indices, id: \.self) { j in
+                                        let point = line[j]
+                                        let inBounds = 0.0 <= point.x && point.x <= size.width &&
+                                        0.0 <= point.y && point.y <= size.height
+                                        if inBounds {
+                                            let x0 = size.width/2.0  // offset is from center
+                                            let y0 = size.height/2.0 // w an h are divided by 2
+                                            ShapeView(shape: plotLine.pointShape)
+                                                .offset(x: point.x - x0, y: point.y - y0)
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    .overlay( //  xLabels
+                        .overlay( //  xLabels
+                            HStack(spacing: 0) {
+                                ForEach(xLabels.indices, id: \.self) { i in
+                                    Text(xLabels[i])
+                                        .captureWidth(in: $lastXLabelWidth)
+                                        .fixedSize()
+                                        .frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
+                                }
+                            }
+                                .captureHeight(in: $xLabelsHeight)
+                                .offset(y: (size.height+xLabelsHeight)/2.0+pad)
+                        )
+                    }.captureHeight(in: $plotAreaHeight) // End of GeometryReader geo
+                    
+                    if showSecondary {
                         HStack(spacing: 0) {
-                            ForEach(xLabels.indices, id: \.self) { i in
-                                Text(xLabels[i])
-                                    .captureWidth(in: $lastXLabelWidth)
-                                    .fixedSize()
-                                    .frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
-                            }
+                            VStack(spacing: 0) {
+                                ForEach(sLabels.indices, id: \.self) { i in
+                                    Text(sLabels[i])
+                                        .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
+                                }
+                            }.captureWidth(in: $sLabelsWidth)
+                            Title(Binding(
+                                get: {data.settings.sTitle},
+                                set: {data.settings.sTitle = $0}))
+                            .rotated(Angle(degrees: 90.0))
+                            .captureWidth(in: $sTitleWidth)
                         }
-                            .captureHeight(in: $xLabelsHeight)
-                            .offset(y: (size.height+xLabelsHeight)/2.0+pad)
-                    )
-                }.captureHeight(in: $plotAreaHeight) // End of GeometryReader geo
-                
-                if showSecondary {
-                    HStack(spacing: 0) {
-                        VStack(spacing: 0) {
-                            ForEach(sLabels.indices, id: \.self) { i in
-                                Text(sLabels[i])
-                                    .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
-                            }
-                        }.captureWidth(in: $sLabelsWidth)
-                        Title(Binding(
-                            get: {data.settings.sTitle},
-                            set: {data.settings.sTitle = $0}))
-                        .rotated(Angle(degrees: 90.0))
-                        .captureWidth(in: $sTitleWidth)
+                        .fixedSize()      // Don't use sTitle height //
+                        .frame(height: 1) // to size plot area       //
+                    } else { // leave room for last x axis label
+                        Invisible(width: lastXLabelWidth/2.0)
                     }
-                    .fixedSize()      // Don't use sTitle height //
-                    .frame(height: 1) // to size plot area       //
-                } else { // leave room for last x axis label
-                    Invisible(width: lastXLabelWidth/2.0)
-                }
-            } // End of HStack yAxis - Plot - sAxis
-            
-            // Invisible space holder for x Labels
-            Invisible(height: xLabelsHeight)
-            Title(Binding(
-                get: {data.settings.xTitle},
-                set: {data.settings.xTitle = $0 }))
-            .padding(.top, xLabelsHeight/3.0)
-            .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
-            .fixedSize()     // Don't use xTitle width //
-            .frame(width: 1) // to size plot area       //
-        }// end of VStack
-        GeometryReader { g in
-            let offsets = scalePos(xyLegendPos,size: g.size)
-            LegendView(data: $data)
-                .offset(x: offsets.x, y: offsets.y)
-                .captureSize(in: $legendSize)
-                .highPriorityGesture(
-                    DragGesture()
-                        .onChanged { value in
-                            let position = maxmin(
-                                CGPoint(x: value.translation.width + newLegendPos.x*g.size.width,
-                                        y: value.translation.height + newLegendPos.y*g.size.height),
-                                size: CGSize(width: g.size.width-legendSize.width, height: g.size.height-legendSize.height))
-                            xyLegendPos = scalePos(position, size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
-                        }
-                        .onEnded { value in
-                            newLegendPos = xyLegendPos
-                        }
-                )
-                .onChange(of: newLegendPos) { newPos in
-                    data.settings.legendPos = newPos
-                    data.settings.copyPlotSettingsToCoreData()
-                }
-                .onAppear {
-                    let oldPos: CGPoint
-                    if let id = data.settings.settingsID {
-                        data.settings.copySettingsFromCoreData(id: id)
-                        data = PlotData(plotLines: data.plotLines, settings: data.settings)
-                        oldPos = data.settings.legendPos
-                    } else { oldPos = .zero }
-                    xyLegendPos = oldPos
-                    newLegendPos = oldPos
-                    data.scaleAxes()
-                }
-                .onDisappear {
-                    data.settings.copyPlotSettingsToCoreData()
-                }
-        }
-        //}// end of ZStack
+                } // End of HStack yAxis - Plot - sAxis
+                
+                // Invisible space holder for x Labels
+                Invisible(height: xLabelsHeight)
+                Title(Binding(
+                    get: {data.settings.xTitle},
+                    set: {data.settings.xTitle = $0 }))
+                .padding(.top, xLabelsHeight/3.0)
+                .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
+                .fixedSize()     // Don't use xTitle width //
+                .frame(width: 1) // to size plot area       //
+            }// end of VStack
+            GeometryReader { g in
+                let offsets = scalePos(xyLegendPos,size: g.size)
+                LegendView(data: $data)
+                    .offset(x: offsets.x, y: offsets.y)
+                    .captureSize(in: $legendSize)
+                    .highPriorityGesture(
+                        DragGesture()
+                            .onChanged { value in
+                                let position = maxmin(
+                                    CGPoint(x: value.translation.width + newLegendPos.x*g.size.width,
+                                            y: value.translation.height + newLegendPos.y*g.size.height),
+                                    size: CGSize(width: g.size.width-legendSize.width, height: g.size.height-legendSize.height))
+                                xyLegendPos = scalePos(position, size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
+                            }
+                            .onEnded { value in
+                                newLegendPos = xyLegendPos
+                            }
+                    )
+                    .onChange(of: newLegendPos) { newPos in
+                        data.settings.legendPos = newPos
+                        data.settings.copyPlotSettingsToCoreData()
+                    }
+                    .onAppear {
+                        let oldPos: CGPoint
+                        if let id = data.settings.settingsID {
+                            data.settings.copySettingsFromCoreData(id: id)
+                            data = PlotData(plotLines: data.plotLines, settings: data.settings)
+                            oldPos = data.settings.legendPos
+                        } else { oldPos = .zero }
+                        xyLegendPos = oldPos
+                        newLegendPos = oldPos
+                        data.scaleAxes()
+                    }
+                    .onDisappear {
+                        data.settings.copyPlotSettingsToCoreData()
+                    }
+            }
+        }// end of ZStack
         .onTapGesture {
             isPresented = true
         }
