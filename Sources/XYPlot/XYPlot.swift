@@ -353,43 +353,24 @@ public struct XYPlot: View {
                     .popover(isPresented: $isPresented) {
                         PlotSettingsView(data: $data)
                     }
-//                    .popover(isPresented: $showTitlePopover) {
-//                        VStack {
-//                            Button("Done") { showTitlePopover = false }
-//                            Text(data.settings.title)
-//                        }
-//                    }
-                HStack(spacing: 0) {
-                    Title(Binding(
-                        get: {data.settings.yTitle},
-                        set: {data.settings.yTitle = $0} ) )
-                    .rotated()
-                    .padding(.trailing, pad)
-                    VStack(spacing: 0) {
-                        ForEach(yLabels.indices, id: \.self) { i in
-                            Text(yLabels[i])
-                                .captureHeight(in: $lastYLabelHeight)
-                                .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
-                            
-                        }
+            }
+            HStack(spacing: 0) { // the yAxis Title and Labels
+                Title(Binding(
+                    get: {data.settings.yTitle},
+                    set: {data.settings.yTitle = $0} ) )
+                .rotated()
+                .padding(.trailing, pad)
+                VStack(spacing: 0) {
+                    ForEach(yLabels.indices, id: \.self) { i in
+                        Text(yLabels[i])
+                            .captureHeight(in: $lastYLabelHeight)
+                            .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
+                        
                     }
-                HStack(spacing: 0) {
-                    Title(Binding(
-                        get: {data.settings.yTitle},
-                        set: {data.settings.yTitle = $0} ) )
-                    .rotated()
-                    .padding(.trailing, pad)
-                    VStack(spacing: 0) {
-                        ForEach(yLabels.indices, id: \.self) { i in
-                            Text(yLabels[i])
-                                .captureHeight(in: $lastYLabelHeight)
-                                .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
-                            
-                        }
-                    }
-                }.captureWidth(in: $yLabelsWidth)
-                    .fixedSize()      // Avoid using the yLabels height to size //
-                    .frame(height: 1) // plot area, 1 is arbitrary small no.    //
+                }
+                .captureWidth(in: $yLabelsWidth)
+                .fixedSize()      // Avoid using the yLabels height to size //
+                .frame(height: 1) // plot area, 1 is arbitrary small no.    //
                 GeometryReader { geo in // the plotArea
                     let size = CGSize(width: geo.size.width, height: geo.size.height)
                     ZStack { // This is the plot area
@@ -585,85 +566,85 @@ public struct XYPlot: View {
         }
     }
 }
-    
-    // Invisible space holder
-    public struct Invisible: View {
-        var width: CGFloat = 0
-        var height: CGFloat = 0
-        init(width: CGFloat = 0,
-             height: CGFloat = 0) { self.width = width; self.height = height }
-        public var body: some View {
-            Color.clear
-                .frame(width: width, height: height)
-        }
+
+// Invisible space holder
+public struct Invisible: View {
+    var width: CGFloat = 0
+    var height: CGFloat = 0
+    init(width: CGFloat = 0,
+         height: CGFloat = 0) { self.width = width; self.height = height }
+    public var body: some View {
+        Color.clear
+            .frame(width: width, height: height)
     }
-    
-    public struct BackgroundView: View {
-        public var body: some View {
-            Color.white
-            //Rectangle().foregroundColor(.white)
-            // Could put grid line paths here
-        }
+}
+
+public struct BackgroundView: View {
+    public var body: some View {
+        Color.white
+        //Rectangle().foregroundColor(.white)
+        // Could put grid line paths here
     }
+}
 #if DEBUG
-    // From Jim Dovey on Apple Developers Forum
-    // used this allow the use of State var in preview
-    // https://developer.apple.com/forums/thread/118589
-    // seems slow...
-    struct StatefulPreviewWrapper<Value, Content: View>: View {
-        @State var value: Value
-        var content: (Binding<Value>) -> Content
-        
-        var body: some View {
-            content($value)
-        }
-        
-        init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
-            self._value = State(wrappedValue: value)
-            self.content = content
-        }
+// From Jim Dovey on Apple Developers Forum
+// used this allow the use of State var in preview
+// https://developer.apple.com/forums/thread/118589
+// seems slow...
+struct StatefulPreviewWrapper<Value, Content: View>: View {
+    @State var value: Value
+    var content: (Binding<Value>) -> Content
+    
+    var body: some View {
+        content($value)
     }
     
-    struct XYPlot_Previews: PreviewProvider {
-        static var previews: some View {
-            
-            Group {
-                StatefulPreviewWrapper(testPlotLines) {
-                    XYPlot(data: $0 ) }//testPlotLines ) //}
-                .frame(width: 700, height: 500).border(Color.green)
-            }//.environment(\.managedObjectContext, XYPlot.CoreDataManager.shared.persistentContainer.viewContext)
-        }
+    init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
+        self._value = State(wrappedValue: value)
+        self.content = content
     }
+}
+
+struct XYPlot_Previews: PreviewProvider {
+    static var previews: some View {
+        
+        Group {
+            StatefulPreviewWrapper(testPlotLines) {
+                XYPlot(data: $0 ) }//testPlotLines ) //}
+            .frame(width: 700, height: 500).border(Color.green)
+        }//.environment(\.managedObjectContext, XYPlot.CoreDataManager.shared.persistentContainer.viewContext)
+    }
+}
 #endif
-    // Some test lines
-    
-    var settings  = PlotSettings(
-        title: "# **Also a very very long plot title**".markdownToAttributed(),
-        xAxis: AxisParameters(title: "## Much Longer Horizontal Axis Title".markdownToAttributed()),
-        yAxis: AxisParameters(title: "## Incredibly Long Vertical Axis Title".markdownToAttributed()),
-        sAxis: AxisParameters(title: "### Smaller Font Secondary Axis Title".markdownToAttributed())
-    )
-    
-    public var testPlotLines : PlotData = {
-        var line1 = PlotLine()
-        var line2 = PlotLine()
-        let π = Double.pi
-        var x : Double
-        var y : Double
-        var y2: Double
-        for i in 0...100 {
-            x = Double(i)*0.03
-            y = 2.9*exp(-(x-1.0)*(x-1.0)*16.0)
-            line1.append(PlotPoint(x,y))
-            y2 = 0.3*(sin(x*π)+1.0)
-            line2.append(PlotPoint(x,y2))
-        }
-        line1.lineColor = .red;
-        line1.pointShape = ShapeParameters(path: Polygon(sides: 4, openShape: true).path, angle: .degrees(45.0), color: .red)
-        line2.lineColor = .blue
-        line2.lineStyle.dash = [15,5]; line2.lineStyle.lineWidth = 2; line2.secondary = true
-        var data = PlotData(plotLines:  [line1,line2], settings: settings); data.scaleAxes()
-        return data
-    }()
-    
+// Some test lines
+
+var settings  = PlotSettings(
+    title: "# **Also a very very long plot title**".markdownToAttributed(),
+    xAxis: AxisParameters(title: "## Much Longer Horizontal Axis Title".markdownToAttributed()),
+    yAxis: AxisParameters(title: "## Incredibly Long Vertical Axis Title".markdownToAttributed()),
+    sAxis: AxisParameters(title: "### Smaller Font Secondary Axis Title".markdownToAttributed())
+)
+
+public var testPlotLines : PlotData = {
+    var line1 = PlotLine()
+    var line2 = PlotLine()
+    let π = Double.pi
+    var x : Double
+    var y : Double
+    var y2: Double
+    for i in 0...100 {
+        x = Double(i)*0.03
+        y = 2.9*exp(-(x-1.0)*(x-1.0)*16.0)
+        line1.append(PlotPoint(x,y))
+        y2 = 0.3*(sin(x*π)+1.0)
+        line2.append(PlotPoint(x,y2))
+    }
+    line1.lineColor = .red;
+    line1.pointShape = ShapeParameters(path: Polygon(sides: 4, openShape: true).path, angle: .degrees(45.0), color: .red)
+    line2.lineColor = .blue
+    line2.lineStyle.dash = [15,5]; line2.lineStyle.lineWidth = 2; line2.secondary = true
+    var data = PlotData(plotLines:  [line1,line2], settings: settings); data.scaleAxes()
+    return data
+}()
+
 
