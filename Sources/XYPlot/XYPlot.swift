@@ -242,6 +242,31 @@ extension String {
         }
     }
 }
+
+public struct TitleView: View {
+    @Binding public var text: AttributedString
+    @State var isPresented = false
+    public init(_ text: Binding<AttributedString>) {
+        _text = text
+    }
+    public var body: some View {
+        if text.characters.count == 0 { let _ = print("EmptyView")
+            EmptyView()
+        } else {
+            Text(text)
+                .onTapGesture {
+                    print("Text tapped on Text")
+                    isPresented = true
+                }
+                .popover(isPresented: $isPresented) {
+                    VStack {
+                        Button("Done") { isPresented = false }
+                        Text(text).foregroundColor(.red)
+                    }
+                }
+        }
+    }
+}
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
     public init(data: Binding<PlotData>) { self._data = data }
@@ -309,17 +334,9 @@ public struct XYPlot: View {
     private let pad : CGFloat = 4 // Make platform dependent?
     
     @State private var showTitlePopover = false
-    @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
-        if text.wrappedValue.characters.count == 0 { let _ = print("EmptyView")
-            EmptyView()
-        } else {
-                Text(text.wrappedValue)
-                    .onTapGesture {
-                        print("Text tapped on Text")
-                        showTitlePopover = true
-                    }
-        }
     
+    @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
+        TitleView(text)
     }
     
     public var body: some View {
@@ -328,10 +345,10 @@ public struct XYPlot: View {
                 Title(Binding(
                     get: { data.settings.title },
                     set: { data.settings.title = $0}) )
-                     // Title centered on plot area
-                    .padding(.leading, leadingWidth)
-                    .padding(.trailing, trailingWidth)
-                    .fixedSize().frame(width: 1)
+                // Title centered on plot area
+                .padding(.leading, leadingWidth)
+                .padding(.trailing, trailingWidth)
+                .fixedSize().frame(width: 1)
                 Invisible(height: topHeight)
                     .popover(isPresented: $isPresented) {
                         PlotSettingsView(data: $data)
@@ -342,137 +359,137 @@ public struct XYPlot: View {
                             Text(data.settings.title)
                         }
                     }
-                    HStack(spacing: 0) {
-                        Title(Binding(
-                            get: {data.settings.yTitle},
-                            set: {data.settings.yTitle = $0} ) )
-                            .rotated()
-                            .padding(.trailing, pad)
-                        VStack(spacing: 0) {
-                            ForEach(yLabels.indices, id: \.self) { i in
-                                Text(yLabels[i])
-                                    .captureHeight(in: $lastYLabelHeight)
-                                    .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
-                                
-                            }
+                HStack(spacing: 0) {
+                    Title(Binding(
+                        get: {data.settings.yTitle},
+                        set: {data.settings.yTitle = $0} ) )
+                    .rotated()
+                    .padding(.trailing, pad)
+                    VStack(spacing: 0) {
+                        ForEach(yLabels.indices, id: \.self) { i in
+                            Text(yLabels[i])
+                                .captureHeight(in: $lastYLabelHeight)
+                                .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
+                            
                         }
-                    }.captureWidth(in: $yLabelsWidth)
-                        .fixedSize()      // Avoid using the yLabels height to size //
-                        .frame(height: 1) // plot area, 1 is arbitrary small no.    //
-                    GeometryReader { geo in // the plotArea
-                        let size = CGSize(width: geo.size.width, height: geo.size.height)
-                        ZStack { // This is the plot area
-                            BackgroundView() /// add size to this view as parameter for gridlines
-                            /// Display the axes on layer on top of Background of ZStack
-                            Path { path in path.addLines(axesPath(size))}
-                                .stroke(.black, lineWidth: max(size.width, size.height)/500.0+0.5)
-                            /// Display the plotLines
-                            ForEach(lines.indices, id: \.self) { i in
-                                let plotLine = lines[i]
-                                let line = transform(plotLine: plotLine, size: size)
-                                if plotLine.lineColor != .clear {
-                                    Path { path in path.addLines(line)}
-                                        .stroke(plotLine.lineColor, style: plotLine.lineStyle)
-                                        .clipShape(Rectangle().size(size)) // don't draw out of bounds
-                                }
-                                if plotLine.pointColor != .clear { // for efficiency
-                                    ForEach(line.indices, id: \.self) { j in
-                                        let point = line[j]
-                                        let inBounds = 0.0 <= point.x && point.x <= size.width &&
-                                        0.0 <= point.y && point.y <= size.height
-                                        if inBounds {
-                                            let x0 = size.width/2.0  // offset is from center
-                                            let y0 = size.height/2.0 // w an h are divided by 2
-                                            ShapeView(shape: plotLine.pointShape)
-                                                .offset(x: point.x - x0, y: point.y - y0)
-                                        }
+                    }
+                }.captureWidth(in: $yLabelsWidth)
+                    .fixedSize()      // Avoid using the yLabels height to size //
+                    .frame(height: 1) // plot area, 1 is arbitrary small no.    //
+                GeometryReader { geo in // the plotArea
+                    let size = CGSize(width: geo.size.width, height: geo.size.height)
+                    ZStack { // This is the plot area
+                        BackgroundView() /// add size to this view as parameter for gridlines
+                        /// Display the axes on layer on top of Background of ZStack
+                        Path { path in path.addLines(axesPath(size))}
+                            .stroke(.black, lineWidth: max(size.width, size.height)/500.0+0.5)
+                        /// Display the plotLines
+                        ForEach(lines.indices, id: \.self) { i in
+                            let plotLine = lines[i]
+                            let line = transform(plotLine: plotLine, size: size)
+                            if plotLine.lineColor != .clear {
+                                Path { path in path.addLines(line)}
+                                    .stroke(plotLine.lineColor, style: plotLine.lineStyle)
+                                    .clipShape(Rectangle().size(size)) // don't draw out of bounds
+                            }
+                            if plotLine.pointColor != .clear { // for efficiency
+                                ForEach(line.indices, id: \.self) { j in
+                                    let point = line[j]
+                                    let inBounds = 0.0 <= point.x && point.x <= size.width &&
+                                    0.0 <= point.y && point.y <= size.height
+                                    if inBounds {
+                                        let x0 = size.width/2.0  // offset is from center
+                                        let y0 = size.height/2.0 // w an h are divided by 2
+                                        ShapeView(shape: plotLine.pointShape)
+                                            .offset(x: point.x - x0, y: point.y - y0)
                                     }
                                 }
                             }
                         }
-                        .overlay( //  xLabels
-                            HStack(spacing: 0) {
-                                ForEach(xLabels.indices, id: \.self) { i in
-                                    Text(xLabels[i])
-                                        .captureWidth(in: $lastXLabelWidth)
-                                        .fixedSize()
-                                        .frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
-                                }
-                            }
-                                .captureHeight(in: $xLabelsHeight)
-                                .offset(y: (size.height+xLabelsHeight)/2.0+pad)
-                        )
-                    }.captureHeight(in: $plotAreaHeight) // End of GeometryReader geo
-                    
-                    if showSecondary {
+                    }
+                    .overlay( //  xLabels
                         HStack(spacing: 0) {
-                            VStack(spacing: 0) {
-                                ForEach(sLabels.indices, id: \.self) { i in
-                                    Text(sLabels[i])
-                                        .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
-                                }
-                            }.captureWidth(in: $sLabelsWidth)
-                            Title(Binding(
-                                get: {data.settings.sTitle},
-                                set: {data.settings.sTitle = $0}))
-                                .rotated(Angle(degrees: 90.0))
-                                .captureWidth(in: $sTitleWidth)
+                            ForEach(xLabels.indices, id: \.self) { i in
+                                Text(xLabels[i])
+                                    .captureWidth(in: $lastXLabelWidth)
+                                    .fixedSize()
+                                    .frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
+                            }
                         }
-                        .fixedSize()      // Don't use sTitle height //
-                        .frame(height: 1) // to size plot area       //
-                    } else { // leave room for last x axis label
-                        Invisible(width: lastXLabelWidth/2.0)
-                    }
-                } // End of HStack yAxis - Plot - sAxis
-                
-                // Invisible space holder for x Labels
-                Invisible(height: xLabelsHeight)
-                Title(Binding(
-                    get: {data.settings.xTitle},
-                    set: {data.settings.xTitle = $0 }))
-                    .padding(.top, xLabelsHeight/3.0)
-                    .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
-                    .fixedSize()     // Don't use xTitle width //
-                    .frame(width: 1) // to size plot area       //
-            }// end of VStack
-            GeometryReader { g in
-                let offsets = scalePos(xyLegendPos,size: g.size)
-                LegendView(data: $data)
-                    .offset(x: offsets.x, y: offsets.y)
-                    .captureSize(in: $legendSize)
-                    .highPriorityGesture(
-                        DragGesture()
-                            .onChanged { value in
-                                let position = maxmin(
-                                    CGPoint(x: value.translation.width + newLegendPos.x*g.size.width,
-                                            y: value.translation.height + newLegendPos.y*g.size.height),
-                                    size: CGSize(width: g.size.width-legendSize.width, height: g.size.height-legendSize.height))
-                                xyLegendPos = scalePos(position, size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
-                            }
-                            .onEnded { value in
-                                newLegendPos = xyLegendPos
-                            }
+                            .captureHeight(in: $xLabelsHeight)
+                            .offset(y: (size.height+xLabelsHeight)/2.0+pad)
                     )
-                    .onChange(of: newLegendPos) { newPos in
-                        data.settings.legendPos = newPos
-                        data.settings.copyPlotSettingsToCoreData()
+                }.captureHeight(in: $plotAreaHeight) // End of GeometryReader geo
+                
+                if showSecondary {
+                    HStack(spacing: 0) {
+                        VStack(spacing: 0) {
+                            ForEach(sLabels.indices, id: \.self) { i in
+                                Text(sLabels[i])
+                                    .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
+                            }
+                        }.captureWidth(in: $sLabelsWidth)
+                        Title(Binding(
+                            get: {data.settings.sTitle},
+                            set: {data.settings.sTitle = $0}))
+                        .rotated(Angle(degrees: 90.0))
+                        .captureWidth(in: $sTitleWidth)
                     }
-                    .onAppear {
-                        let oldPos: CGPoint
-                        if let id = data.settings.settingsID {
-                            data.settings.copySettingsFromCoreData(id: id)
-                            data = PlotData(plotLines: data.plotLines, settings: data.settings)
-                            oldPos = data.settings.legendPos
-                        } else { oldPos = .zero }
-                        xyLegendPos = oldPos
-                        newLegendPos = oldPos
-                        data.scaleAxes()
-                    }
-                    .onDisappear {
-                        data.settings.copyPlotSettingsToCoreData()
-                    }
-            }
-        }// end of ZStack
+                    .fixedSize()      // Don't use sTitle height //
+                    .frame(height: 1) // to size plot area       //
+                } else { // leave room for last x axis label
+                    Invisible(width: lastXLabelWidth/2.0)
+                }
+            } // End of HStack yAxis - Plot - sAxis
+            
+            // Invisible space holder for x Labels
+            Invisible(height: xLabelsHeight)
+            Title(Binding(
+                get: {data.settings.xTitle},
+                set: {data.settings.xTitle = $0 }))
+            .padding(.top, xLabelsHeight/3.0)
+            .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
+            .fixedSize()     // Don't use xTitle width //
+            .frame(width: 1) // to size plot area       //
+        }// end of VStack
+        GeometryReader { g in
+            let offsets = scalePos(xyLegendPos,size: g.size)
+            LegendView(data: $data)
+                .offset(x: offsets.x, y: offsets.y)
+                .captureSize(in: $legendSize)
+                .highPriorityGesture(
+                    DragGesture()
+                        .onChanged { value in
+                            let position = maxmin(
+                                CGPoint(x: value.translation.width + newLegendPos.x*g.size.width,
+                                        y: value.translation.height + newLegendPos.y*g.size.height),
+                                size: CGSize(width: g.size.width-legendSize.width, height: g.size.height-legendSize.height))
+                            xyLegendPos = scalePos(position, size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
+                        }
+                        .onEnded { value in
+                            newLegendPos = xyLegendPos
+                        }
+                )
+                .onChange(of: newLegendPos) { newPos in
+                    data.settings.legendPos = newPos
+                    data.settings.copyPlotSettingsToCoreData()
+                }
+                .onAppear {
+                    let oldPos: CGPoint
+                    if let id = data.settings.settingsID {
+                        data.settings.copySettingsFromCoreData(id: id)
+                        data = PlotData(plotLines: data.plotLines, settings: data.settings)
+                        oldPos = data.settings.legendPos
+                    } else { oldPos = .zero }
+                    xyLegendPos = oldPos
+                    newLegendPos = oldPos
+                    data.scaleAxes()
+                }
+                .onDisappear {
+                    data.settings.copyPlotSettingsToCoreData()
+                }
+        }
+        //}// end of ZStack
         .onTapGesture {
             isPresented = true
         }
@@ -554,84 +571,85 @@ public struct XYPlot: View {
         }
     }
 }
-
-// Invisible space holder
-public struct Invisible: View {
-    var width: CGFloat = 0
-    var height: CGFloat = 0
-    init(width: CGFloat = 0,
-         height: CGFloat = 0) { self.width = width; self.height = height }
-    public var body: some View {
-        Color.clear
-            .frame(width: width, height: height)
+    
+    // Invisible space holder
+    public struct Invisible: View {
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+        init(width: CGFloat = 0,
+             height: CGFloat = 0) { self.width = width; self.height = height }
+        public var body: some View {
+            Color.clear
+                .frame(width: width, height: height)
+        }
     }
-}
-
-public struct BackgroundView: View {
-    public var body: some View {
-        Color.white
-        //Rectangle().foregroundColor(.white)
-        // Could put grid line paths here
+    
+    public struct BackgroundView: View {
+        public var body: some View {
+            Color.white
+            //Rectangle().foregroundColor(.white)
+            // Could put grid line paths here
+        }
     }
-}
 #if DEBUG
-// From Jim Dovey on Apple Developers Forum
-// used this allow the use of State var in preview
-// https://developer.apple.com/forums/thread/118589
-// seems slow...
-struct StatefulPreviewWrapper<Value, Content: View>: View {
-    @State var value: Value
-    var content: (Binding<Value>) -> Content
-    
-    var body: some View {
-        content($value)
-    }
-    
-    init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
-        self._value = State(wrappedValue: value)
-        self.content = content
-    }
-}
-
-struct XYPlot_Previews: PreviewProvider {
-    static var previews: some View {
+    // From Jim Dovey on Apple Developers Forum
+    // used this allow the use of State var in preview
+    // https://developer.apple.com/forums/thread/118589
+    // seems slow...
+    struct StatefulPreviewWrapper<Value, Content: View>: View {
+        @State var value: Value
+        var content: (Binding<Value>) -> Content
         
-        Group {
-            StatefulPreviewWrapper(testPlotLines) {
-                XYPlot(data: $0 ) }//testPlotLines ) //}
-            .frame(width: 700, height: 500).border(Color.green)
-        }//.environment(\.managedObjectContext, XYPlot.CoreDataManager.shared.persistentContainer.viewContext)
+        var body: some View {
+            content($value)
+        }
+        
+        init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
+            self._value = State(wrappedValue: value)
+            self.content = content
+        }
     }
-}
+    
+    struct XYPlot_Previews: PreviewProvider {
+        static var previews: some View {
+            
+            Group {
+                StatefulPreviewWrapper(testPlotLines) {
+                    XYPlot(data: $0 ) }//testPlotLines ) //}
+                .frame(width: 700, height: 500).border(Color.green)
+            }//.environment(\.managedObjectContext, XYPlot.CoreDataManager.shared.persistentContainer.viewContext)
+        }
+    }
 #endif
-// Some test lines
-
-var settings  = PlotSettings(
-    title: "# **Also a very very long plot title**".markdownToAttributed(),
-    xAxis: AxisParameters(title: "## Much Longer Horizontal Axis Title".markdownToAttributed()),
-    yAxis: AxisParameters(title: "## Incredibly Long Vertical Axis Title".markdownToAttributed()),
-    sAxis: AxisParameters(title: "### Smaller Font Secondary Axis Title".markdownToAttributed())
-)
-
-public var testPlotLines : PlotData = {
-    var line1 = PlotLine()
-    var line2 = PlotLine()
-    let π = Double.pi
-    var x : Double
-    var y : Double
-    var y2: Double
-    for i in 0...100 {
-        x = Double(i)*0.03
-        y = 2.9*exp(-(x-1.0)*(x-1.0)*16.0)
-        line1.append(PlotPoint(x,y))
-        y2 = 0.3*(sin(x*π)+1.0)
-        line2.append(PlotPoint(x,y2))
-    }
-    line1.lineColor = .red;
-    line1.pointShape = ShapeParameters(path: Polygon(sides: 4, openShape: true).path, angle: .degrees(45.0), color: .red)
-    line2.lineColor = .blue
-    line2.lineStyle.dash = [15,5]; line2.lineStyle.lineWidth = 2; line2.secondary = true
-    var data = PlotData(plotLines:  [line1,line2], settings: settings); data.scaleAxes()
-    return data
-}()
+    // Some test lines
+    
+    var settings  = PlotSettings(
+        title: "# **Also a very very long plot title**".markdownToAttributed(),
+        xAxis: AxisParameters(title: "## Much Longer Horizontal Axis Title".markdownToAttributed()),
+        yAxis: AxisParameters(title: "## Incredibly Long Vertical Axis Title".markdownToAttributed()),
+        sAxis: AxisParameters(title: "### Smaller Font Secondary Axis Title".markdownToAttributed())
+    )
+    
+    public var testPlotLines : PlotData = {
+        var line1 = PlotLine()
+        var line2 = PlotLine()
+        let π = Double.pi
+        var x : Double
+        var y : Double
+        var y2: Double
+        for i in 0...100 {
+            x = Double(i)*0.03
+            y = 2.9*exp(-(x-1.0)*(x-1.0)*16.0)
+            line1.append(PlotPoint(x,y))
+            y2 = 0.3*(sin(x*π)+1.0)
+            line2.append(PlotPoint(x,y2))
+        }
+        line1.lineColor = .red;
+        line1.pointShape = ShapeParameters(path: Polygon(sides: 4, openShape: true).path, angle: .degrees(45.0), color: .red)
+        line2.lineColor = .blue
+        line2.lineStyle.dash = [15,5]; line2.lineStyle.lineWidth = 2; line2.secondary = true
+        var data = PlotData(plotLines:  [line1,line2], settings: settings); data.scaleAxes()
+        return data
+    }()
+    
 
