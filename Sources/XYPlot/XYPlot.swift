@@ -308,24 +308,18 @@ public struct XYPlot: View {
     
     private let pad : CGFloat = 4 // Make platform dependent?
     
+    @State private var showTitlePopover = false
     @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
-        @State var isPresented = false
         if text.wrappedValue.characters.count == 0 { let _ = print("EmptyView")
             EmptyView()
         } else {
                 Text(text.wrappedValue)
                     .onTapGesture {
                         print("Text tapped on Text")
-                        isPresented = true
-                    }
-                    .popover(isPresented: $isPresented) {
-                        VStack {
-                            Text(text.wrappedValue)
-                            Button("Done") { isPresented = false }
-                        }
-                        //TextView(attributedText: text, allowsEditingTextAttributes: true)
+                        showTitlePopover = true
                     }
         }
+    
     }
     
     public var body: some View {
@@ -342,7 +336,12 @@ public struct XYPlot: View {
                     .popover(isPresented: $isPresented) {
                         PlotSettingsView(data: $data)
                     }
-                HStack(spacing: 0) { // yTitle and room for labels
+                    .popover(isPresented: $showTitlePopover) {
+                        VStack {
+                            Button("Done") { showTitlePopover = false }
+                            Text(data.settings.title)
+                        }
+                    }
                     HStack(spacing: 0) {
                         Title(Binding(
                             get: {data.settings.yTitle},
