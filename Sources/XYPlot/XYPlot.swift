@@ -319,7 +319,10 @@ public struct XYPlot: View {
                         isPresented = true
                     }
                     .popover(isPresented: $isPresented) {
-                        Text(text.wrappedValue)
+                        VStack {
+                            Text(text.wrappedValue)
+                            Button("Done") { isPresented = false }
+                        }
                         //TextView(attributedText: text, allowsEditingTextAttributes: true)
                     }
         }
