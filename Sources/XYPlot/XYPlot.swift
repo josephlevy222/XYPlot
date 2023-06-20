@@ -353,10 +353,24 @@ public struct XYPlot: View {
                     .popover(isPresented: $isPresented) {
                         PlotSettingsView(data: $data)
                     }
-                    .popover(isPresented: $showTitlePopover) {
-                        VStack {
-                            Button("Done") { showTitlePopover = false }
-                            Text(data.settings.title)
+//                    .popover(isPresented: $showTitlePopover) {
+//                        VStack {
+//                            Button("Done") { showTitlePopover = false }
+//                            Text(data.settings.title)
+//                        }
+//                    }
+                HStack(spacing: 0) {
+                    Title(Binding(
+                        get: {data.settings.yTitle},
+                        set: {data.settings.yTitle = $0} ) )
+                    .rotated()
+                    .padding(.trailing, pad)
+                    VStack(spacing: 0) {
+                        ForEach(yLabels.indices, id: \.self) { i in
+                            Text(yLabels[i])
+                                .captureHeight(in: $lastYLabelHeight)
+                                .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
+                            
                         }
                     }
                 HStack(spacing: 0) {
