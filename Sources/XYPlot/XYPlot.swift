@@ -319,7 +319,8 @@ public struct XYPlot: View {
                         isPresented = true
                     }
                     .popover(isPresented: $isPresented) {
-                        TextView(attributedText: text, allowsEditingTextAttributes: true)
+                        Text(text.wrappedValue)
+                        //TextView(attributedText: text, allowsEditingTextAttributes: true)
                     }
         }
     }
