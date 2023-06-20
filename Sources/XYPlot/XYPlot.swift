@@ -309,20 +309,18 @@ public struct XYPlot: View {
     private let pad : CGFloat = 4 // Make platform dependent?
     
     @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
+        @State var isPresented = false
         if text.wrappedValue.characters.count == 0 { let _ = print("EmptyView")
             EmptyView()
         } else {
-            ZStack {
                 Text(text.wrappedValue)
                     .onTapGesture {
                         print("Text tapped on Text")
+                        isPresented = true
                     }
-                TextView(attributedText: text, allowsEditingTextAttributes: true)
-                    .onTapGesture {
-                        print("Text tapped on TextView")
-                        
+                    .popover(isPresented: $isPresented) {
+                        TextView(attributedText: text, allowsEditingTextAttributes: true)
                     }
-            }
         }
     }
     
