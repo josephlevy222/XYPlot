@@ -261,7 +261,7 @@ public struct TitleView: View {
                 .popover(isPresented: $isPresented) {
                     VStack {
                         Button("Done") { isPresented = false }
-                        Text(text).foregroundColor(.red)
+                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
                     }
                 }
         }
