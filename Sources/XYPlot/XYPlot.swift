@@ -353,24 +353,24 @@ public struct XYPlot: View {
                     .popover(isPresented: $isPresented) {
                         PlotSettingsView(data: $data)
                     }
-            }
-            HStack(spacing: 0) { // the yAxis Title and Labels
-                Title(Binding(
-                    get: {data.settings.yTitle},
-                    set: {data.settings.yTitle = $0} ) )
-                .rotated()
-                .padding(.trailing, pad)
-                VStack(spacing: 0) {
-                    ForEach(yLabels.indices, id: \.self) { i in
-                        Text(yLabels[i])
-                            .captureHeight(in: $lastYLabelHeight)
-                            .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
-                        
+                
+                HStack(spacing: 0) { // the yAxis Title and Labels
+                    Title(Binding(
+                        get: {data.settings.yTitle},
+                        set: {data.settings.yTitle = $0} ) )
+                    .rotated()
+                    .padding(.trailing, pad)
+                    VStack(spacing: 0) {
+                        ForEach(yLabels.indices, id: \.self) { i in
+                            Text(yLabels[i])
+                                .captureHeight(in: $lastYLabelHeight)
+                                .frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
+                            
+                        }
                     }
-                }
-                .captureWidth(in: $yLabelsWidth)
-                .fixedSize()      // Avoid using the yLabels height to size //
-                .frame(height: 1) // plot area, 1 is arbitrary small no.    //
+                }.captureWidth(in: $yLabelsWidth)
+                    .fixedSize()      // Avoid using the yLabels height to size //
+                    .frame(height: 1) // plot area, 1 is arbitrary small no.    //
                 GeometryReader { geo in // the plotArea
                     let size = CGSize(width: geo.size.width, height: geo.size.height)
                     ZStack { // This is the plot area
