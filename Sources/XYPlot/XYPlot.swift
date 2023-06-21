@@ -248,9 +248,9 @@ public struct Title: View {
     @State var isPresented = false
     @State var textSize = CGSize.zero
     @State var overlayEditor: Bool = false
-    public init(_ text: Binding<AttributedString>, overlay: Bool = false ) {
+    public init(_ text: Binding<AttributedString>, inPlaceEditting: Bool = false ) {
         _text = text
-        overlayEditor = overlay
+        overlayEditor = inPlaceEditting
         print("Overlaying: \(overlayEditor)")
     }
     public var body: some View {
@@ -350,7 +350,7 @@ public struct XYPlot: View {
             VStack(spacing: 0) {
                 Title(Binding(
                     get: { data.settings.title },
-                    set: { data.settings.title = $0}), overlay: true )
+                    set: { data.settings.title = $0}), inPlaceEditting: true )
                 // Title centered on plot area
                 .padding(.leading, leadingWidth)
                 .padding(.trailing, trailingWidth)
