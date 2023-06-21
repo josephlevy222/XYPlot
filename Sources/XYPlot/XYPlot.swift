@@ -247,7 +247,7 @@ public struct Title: View {
     @Binding public var text: AttributedString
     @State var isPresented = false
     @State var textSize = CGSize.zero
-    @State var overlayEditor: Bool = false
+    let overlayEditor: Bool
     public init(_ text: Binding<AttributedString>, inPlaceEditting: Bool = false ) {
         _text = text
         overlayEditor = inPlaceEditting
