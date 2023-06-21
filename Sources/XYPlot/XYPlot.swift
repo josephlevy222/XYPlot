@@ -247,28 +247,33 @@ public struct Title: View {
     @Binding public var text: AttributedString
     @State var isPresented = false
     @State var textSize = CGSize.zero
-    public init(_ text: Binding<AttributedString>) {
+    @State var overlayEditor: Bool = false
+    public init(_ text: Binding<AttributedString>, overlay: Bool = false) {
         _text = text
+        overlayEditor = overlay
     }
     public var body: some View {
-        if text.characters.count == 0 { let _ = print("EmptyView")
+        if text.characters.count == 0 {
             EmptyView()
-        } else {
-            //ZStack {
+        }
+        else if overlayEditor {
+            ZStack {
                 Text(text)
-                    .captureSize(in: $textSize)
-                    .onTapGesture {
-                        print("Text tapped on Text")
-                        isPresented = true
-                    }
-                    .popover(isPresented: $isPresented) {
-                        //                    VStack {
-                        //                        Button("Done") { isPresented = false }
-                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                            .frame(width: textSize.width+50, height: textSize.height)
-                        //                    }
-                    }
-            //}
+                    .captureSize(in: $textSize).hidden()
+                TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                    .frame(width: textSize.width+50, height: textSize.height)
+            }
+        } else {
+            Text(text)
+                .captureSize(in: $textSize)
+                .onTapGesture {
+                    print("Text tapped on Text")
+                    isPresented = true
+                }
+                .popover(isPresented: $isPresented) {
+                    TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                        .frame(width: textSize.width+50, height: textSize.height)
+                }
         }
     }
 }
@@ -349,7 +354,7 @@ public struct XYPlot: View {
             VStack(spacing: 0) {
                 Title(Binding(
                     get: { data.settings.title },
-                    set: { data.settings.title = $0}) )
+                    set: { data.settings.title = $0}), overlay: true )
                 // Title centered on plot area
                 .padding(.leading, leadingWidth)
                 .padding(.trailing, trailingWidth)
