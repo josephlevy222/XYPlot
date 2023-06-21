@@ -260,12 +260,12 @@ public struct Title: View {
             if overlayEditor {
                 ZStack {
                     Text(text)
-                        .captureSize(in: $textSize).hidden()
+                        .captureSize(in: $textSize)
+                        .onTapGesture {
+                            // Do nothing
+                        }.hidden()// for sizing
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
                         .frame(width: textSize.width+50, height: textSize.height)
-                        .onTapGesture {
-                            // Do nothing special
-                        }
                 }
             } else {
                 Text(text)
@@ -287,7 +287,7 @@ public struct XYPlot: View {
     public init(data: Binding<PlotData>) { self._data = data }
     @Binding public var data : PlotData
     
-    @State private var isPresented: Bool = false
+    @State public  var isPresented: Bool = false
     @State private var xyLegendPos : CGPoint = .zero
     @State private var newLegendPos : CGPoint = .zero
     
