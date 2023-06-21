@@ -263,6 +263,9 @@ public struct Title: View {
                         .captureSize(in: $textSize).hidden()
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
                         .frame(width: textSize.width+50, height: textSize.height)
+                        .onTapGesture {
+                            // Do nothing special
+                        }
                 }
             } else {
                 Text(text)
