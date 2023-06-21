@@ -276,16 +276,25 @@ public struct Title: View {
                     }
             }
         } else {
-            Text(text)
-                .captureSize(in: $textSize)
-                .onTapGesture {
-                    print("Text tapped on Text")
-                    isPresented = true
-                }
-                .popover(isPresented: $isPresented) {
+            if overlayEditor {
+                ZStack {
+                    Text(text)
+                        .captureSize(in: $textSize).hidden()
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
                         .frame(width: textSize.width+50, height: textSize.height)
                 }
+            } else {
+                Text(text)
+                    .captureSize(in: $textSize)
+                    .onTapGesture {
+                        print("Text tapped on Text")
+                        isPresented = true
+                    }
+                    .popover(isPresented: $isPresented) {
+                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                            .frame(width: textSize.width+50, height: textSize.height)
+                    }
+            }
         }
     }
 }
