@@ -248,9 +248,10 @@ public struct Title: View {
     @State var isPresented = false
     @State var textSize = CGSize.zero
     @State var overlayEditor: Bool = false
-    public init(_ text: Binding<AttributedString>, overlay: Bool = false) {
+    public init(_ text: Binding<AttributedString>, overlay: Bool = false ) {
         _text = text
         overlayEditor = overlay
+        print("Overlaying: \(overlayEditor)")
     }
     public var body: some View {
         if text.characters.count == 0 {
@@ -343,12 +344,6 @@ public struct XYPlot: View {
     private var topHeight: CGFloat { lastYLabelHeight/2.0}
     
     private let pad : CGFloat = 4 // Make platform dependent?
-    
-    @State private var showTitlePopover = false
-    
-//    @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
-//        TitleView(text)
-//    }
     
     public var body: some View {
         ZStack {
