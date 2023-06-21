@@ -243,7 +243,7 @@ extension String {
     }
 }
 
-public struct TitleView: View {
+public struct Title: View {
     @Binding public var text: AttributedString
     @State var isPresented = false
     @State var textSize = CGSize.zero
@@ -254,19 +254,21 @@ public struct TitleView: View {
         if text.characters.count == 0 { let _ = print("EmptyView")
             EmptyView()
         } else {
-            Text(text)
-                .captureSize(in: $textSize)
-                .onTapGesture {
-                    print("Text tapped on Text")
-                    isPresented = true
-                }
-                .popover(isPresented: $isPresented) {
-                    VStack {
-                        Button("Done") { isPresented = false }
-                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                            .frame(width: textSize.width, height: textSize.height)
+            //ZStack {
+                Text(text)
+                    .captureSize(in: $textSize)
+                    .onTapGesture {
+                        print("Text tapped on Text")
+                        isPresented = true
                     }
-                }
+                    .popover(isPresented: $isPresented) {
+                        //                    VStack {
+                        //                        Button("Done") { isPresented = false }
+                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                            .frame(width: textSize.width+50, height: textSize.height)
+                        //                    }
+                    }
+            //}
         }
     }
 }
@@ -338,9 +340,9 @@ public struct XYPlot: View {
     
     @State private var showTitlePopover = false
     
-    @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
-        TitleView(text)
-    }
+//    @ViewBuilder private func Title(_ text: Binding<AttributedString>) ->  some View {
+//        TitleView(text)
+//    }
     
     public var body: some View {
         ZStack {
