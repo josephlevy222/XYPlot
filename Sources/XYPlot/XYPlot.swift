@@ -246,6 +246,7 @@ extension String {
 public struct TitleView: View {
     @Binding public var text: AttributedString
     @State var isPresented = false
+    @State var textSize = CGSize.zero
     public init(_ text: Binding<AttributedString>) {
         _text = text
     }
@@ -254,6 +255,7 @@ public struct TitleView: View {
             EmptyView()
         } else {
             Text(text)
+                .captureSize(in: $textSize)
                 .onTapGesture {
                     print("Text tapped on Text")
                     isPresented = true
@@ -262,6 +264,7 @@ public struct TitleView: View {
                     VStack {
                         Button("Done") { isPresented = false }
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                            .frame(width: textSize.width, height: textSize.height)
                     }
                 }
         }
