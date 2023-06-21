@@ -255,13 +255,25 @@ public struct Title: View {
     public var body: some View {
         if text.characters.count == 0 {
             EmptyView()
-        }
-        else if overlayEditor {
-            ZStack {
+        } else {
+            if overlayEditor {
+                ZStack {
+                    Text(text)
+                        .captureSize(in: $textSize).hidden()
+                    TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                        .frame(width: textSize.width+50, height: textSize.height)
+                }
+            } else {
                 Text(text)
-                    .captureSize(in: $textSize).hidden()
-                TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                    .frame(width: textSize.width+50, height: textSize.height)
+                    .captureSize(in: $textSize)
+                    .onTapGesture {
+                        print("Text tapped on Text")
+                        isPresented = true
+                    }
+                    .popover(isPresented: $isPresented) {
+                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                            .frame(width: textSize.width+50, height: textSize.height)
+                    }
             }
         } else {
             Text(text)
