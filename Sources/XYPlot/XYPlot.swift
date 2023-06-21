@@ -261,9 +261,7 @@ public struct Title: View {
                 ZStack {
                     Text(text)
                         .captureSize(in: $textSize)
-                        .onTapGesture {
-                            // Do nothing
-                        }.hidden()// for sizing
+                        .hidden()// for sizing
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
                         .frame(width: textSize.width+50, height: textSize.height)
                 }
@@ -445,12 +443,15 @@ public struct XYPlot: View {
                         Invisible(width: lastXLabelWidth/2.0)
                     }
                 } // End of HStack yAxis - Plot - sAxis
-                
+                .onTapGesture {
+                    print("Pop up the dialog here")
+                    isPresented = true
+                }
                 // Invisible space holder for x Labels
                 Invisible(height: xLabelsHeight)
                 Title(Binding(
                     get: {data.settings.xTitle},
-                    set: {data.settings.xTitle = $0 }))
+                    set: {data.settings.xTitle = $0 }), inPlaceEditting: true)
                 .padding(.top, xLabelsHeight/3.0)
                 .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
                 .fixedSize()     // Don't use xTitle width //
@@ -494,9 +495,6 @@ public struct XYPlot: View {
                     }
             }
         }// end of ZStack
-        .onTapGesture {
-            isPresented = true
-        }
     }// End of body
     
     private func scalePos(_ p: CGPoint, size: CGSize) -> CGPoint { CGPoint(x: p.x*size.width, y: p.y*size.height ) }
