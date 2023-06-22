@@ -494,7 +494,7 @@ public struct XYPlot: View {
                     .onDisappear {
                         data.settings.copyPlotSettingsToCoreData()
                     }
-            }.onChange(of: data.settings) { print("data settings changed \($0)"); copyPlotSettingsToCoreData() }
+            }.onChange(of: data.settings) { print("data settings changed \($0)"); data.settings.copyPlotSettingsToCoreData() }
         }// end of ZStack
     }// End of body
     
