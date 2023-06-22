@@ -261,9 +261,10 @@ public struct Title: View {
                 ZStack {
                     Text(text)
                         .captureSize(in: $textSize)
-                        .hidden()// for sizing
+                        .hidden()// for sizing only
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
                         .frame(width: textSize.width+50, height: textSize.height)
+                       
                 }
             } else {
                 Text(text)
@@ -493,7 +494,7 @@ public struct XYPlot: View {
                     .onDisappear {
                         data.settings.copyPlotSettingsToCoreData()
                     }
-            }
+            }.onChange(of: data.settings) { print("data settings changed \($0)"); copyPlotSettingsToCoreData() }
         }// end of ZStack
     }// End of body
     
