@@ -76,11 +76,15 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     var output: AttributedString
     do { output = try JSONDecoder().decode(AttributedString.self, from: data ?? Data() ) }
     catch { output = AttributedString("Could not decode to AttributedString")}
+    print("DecodedAttributedString", output)
     return output.styledHeaders()
 }
 
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
-    try? JSONEncoder().encode(attrString) }
+    let value = try? JSONEncoder().encode(attrString)
+    print("EncodedAttributedString:\n",value)
+    return value
+}
 
 extension PlotSettings {
     mutating public func copySettingsFromCoreData(id: NSManagedObjectID) {
