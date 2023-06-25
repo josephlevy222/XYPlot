@@ -82,7 +82,7 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     let value = try? JSONEncoder().encode(attrString)
-    print("EncodedAttributedString:\n",value)
+    if let value { print("EncodedAttributedString:\n",String(data: value, encoding: .utf8)!)}
     return value
 }
 
