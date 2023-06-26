@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import SwiftUI
+import TextView
 
 extension XYPlot { //use XYPlot namespace
     //public static var coreDataManager: CoreDataManager { CoreDataManager.shared }
@@ -81,7 +82,9 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 }
 
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
-    let value = try? JSONEncoder().encode(attrString)
+    guard let attrString = attrString else { return nil }
+    let aString = attrString.nsAttributedString.attributedString
+    let value = try? JSONEncoder().encode(aString)
     if let value { print("EncodedAttributedString:\n",String(data: value, encoding: .utf8)!)}
     return value
 }
