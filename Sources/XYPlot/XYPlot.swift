@@ -486,7 +486,10 @@ public struct XYPlot: View {
                             data.settings.copySettingsFromCoreData(id: id)
                             data = PlotData(plotLines: data.plotLines, settings: data.settings)
                             oldPos = data.settings.legendPos
-                        } else { oldPos = .zero }
+                        } else {
+                            oldPos = .zero
+                            data.settings.copyPlotSettingsToCoreData()
+                        }
                         xyLegendPos = oldPos
                         newLegendPos = oldPos
                         data.scaleAxes()
