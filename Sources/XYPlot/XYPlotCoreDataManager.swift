@@ -106,7 +106,6 @@ extension PlotSettings {
         legendPos = CGPoint(x: settings.legendPosX,y: settings.legendPosY)
         legend = settings.showLegend
         showSecondaryAxis = settings.useSecondary
-        
     }
     
     mutating public func copyPlotSettingsToCoreData() {
@@ -117,7 +116,7 @@ extension PlotSettings {
             // Create new CoreData Entity
             settings = Settings(context: coreDataManager.moc)
         } else { settings = coreDataManager.getSettingsById(id: settingsID!) }
-        guard let settings = settings else { return }
+        guard let settings = settings else { print("No settings were saved"); return }
         settingsID = settings.objectID
         print("Copying settings to Coredata")
         settings.title = encodeAttributedString(title)
