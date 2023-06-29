@@ -84,7 +84,8 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 let encoder = JSONEncoder()
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     guard let attrString = attrString else { return nil }
-    let aString = attrString//.nsAttributedString.attributedString
+    // convert to NSFonts for storage
+    let aString = attrString.nsAttributedString.attributedString
     let value = try? encoder.encode(aString)
     if let value { print("EncodedAttributedString:\n",String(data: value, encoding: .utf8)!)}
     return value
