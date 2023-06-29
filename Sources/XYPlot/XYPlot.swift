@@ -254,7 +254,9 @@ public struct Title: View {
     }
     public var body: some View {
         if text.characters.count == 0 {
-            Button("Add a Title") { text = "Title"}.font(.footnote)
+            Button("Add a Title") {
+                // Pick size
+                text = AttributedString("Title").setFont(to: .title)}.font(.footnote)
         } else {
             if overlayEditor {
                 ZStack {
