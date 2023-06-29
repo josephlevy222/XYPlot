@@ -349,9 +349,7 @@ public struct XYPlot: View {
     public var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Title(Binding(
-                    get: { data.settings.title },
-                    set: { data.settings.title = $0}), inPlaceEditting: true )
+                Title($data.settings.title, inPlaceEditting: true )
                 // Title centered on plot area
                 .padding(.leading, leadingWidth)
                 .padding(.trailing, trailingWidth)
@@ -362,9 +360,7 @@ public struct XYPlot: View {
                     }
                 HStack(spacing: 0) {
                     HStack(spacing: 0) { // the yAxis Title and Labels
-                        Title(Binding(
-                            get: {data.settings.yTitle},
-                            set: {data.settings.yTitle = $0} ) )
+                        Title($data.settings.yTitle)
                         .rotated()
                         .padding(.trailing, pad)
                         VStack(spacing: 0) {
@@ -431,9 +427,7 @@ public struct XYPlot: View {
                                         .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
                                 }
                             }.captureWidth(in: $sLabelsWidth)
-                            Title(Binding(
-                                get: {data.settings.sTitle},
-                                set: {data.settings.sTitle = $0}))
+                            Title($data.settings.sTitle)
                             .rotated(Angle(degrees: 90.0))
                             .captureWidth(in: $sTitleWidth)
                         }
