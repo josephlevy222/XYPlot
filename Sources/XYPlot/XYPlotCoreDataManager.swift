@@ -24,7 +24,7 @@ extension XYPlot { //use XYPlot namespace
                 fatalError("Failed to retrieve PlotDataModel")
             }
             persistentContainer = NSPersistentContainer(name: "XYPlot", managedObjectModel: objectModel)
-            if inMemory { print("In memory")
+            if inMemory {
                 persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
             persistentContainer.loadPersistentStores { (description, error) in
@@ -87,7 +87,6 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     // convert to NSFonts for storage
     let aString = attrString.nsAttributedString.attributedString
     let value = try? encoder.encode(aString)
-    if let value { print("EncodedAttributedString:\n",String(data: value, encoding: .utf8)!)}
     return value
 }
 
@@ -193,7 +192,7 @@ extension PlotLine {
     
     mutating public func copyLineSettingsFromCoreData(id: NSManagedObjectID?) {
         let coreDataManager = XYPlot.CoreDataManager.shared
-        guard let id = id else { print("No Line entity");return }
+        guard let id = id else { print("No Line entity"); return }
         let line = coreDataManager.getLineById(id: id) ?? Line(context: coreDataManager.moc)
         self.id = line.objectID
         ///   - lineColor: line color

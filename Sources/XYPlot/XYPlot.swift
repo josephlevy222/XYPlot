@@ -269,7 +269,6 @@ public struct Title: View {
                 Text(text)
                     .captureSize(in: $textSize)
                     .onTapGesture {
-                        print("Text tapped on Text")
                         isPresented = true
                     }
                     .popover(isPresented: $isPresented) {
@@ -438,7 +437,6 @@ public struct XYPlot: View {
                     }
                 } // End of HStack yAxis - Plot - sAxis
                 .onTapGesture {
-                    print("Pop up the dialog here")
                     isPresented = true
                 }
                 // Invisible space holder for x Labels
@@ -492,7 +490,7 @@ public struct XYPlot: View {
                     .onDisappear {
                         data.settings.copyPlotSettingsToCoreData()
                     }
-            }.onChange(of: data.settings) { print("data settings changed \($0)"); data.settings.copyPlotSettingsToCoreData() }
+            }.onChange(of: data.settings) { _ in data.settings.copyPlotSettingsToCoreData() }
         }// end of ZStack
     }// End of body
     
