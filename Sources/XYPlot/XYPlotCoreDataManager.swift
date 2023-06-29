@@ -73,9 +73,11 @@ extension XYPlot { //use XYPlot namespace
     }
 }
 
+let encoder = JSONEncoder()
+let decoder = JSONDecoder()
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     var output: AttributedString
-    do { output = try JSONDecoder().decode(AttributedString.self, from: data ?? Data() ) }
+    do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
     catch { output = AttributedString("Could not decode to AttributedString")}
     let returnOutput = output//.styledHeaders()
     print("DecodedAttributedString", returnOutput)
@@ -85,7 +87,7 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     guard let attrString = attrString else { return nil }
     let aString = attrString.nsAttributedString.attributedString
-    let value = try? JSONEncoder().encode(aString)
+    let value = try? encoder.encode(aString)
     if let value { print("EncodedAttributedString:\n",String(data: value, encoding: .utf8)!)}
     return value
 }
