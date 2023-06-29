@@ -251,7 +251,6 @@ public struct Title: View {
     public init(_ text: Binding<AttributedString>, inPlaceEditting: Bool = false ) {
         _text = text
         overlayEditor = inPlaceEditting
-        print("Overlaying: \(overlayEditor)")
     }
     public var body: some View {
         if text.characters.count == 0 {
@@ -450,9 +449,11 @@ public struct XYPlot: View {
                 }
                 // Invisible space holder for x Labels
                 Invisible(height: xLabelsHeight)
-                Title(Binding(
-                    get: {data.settings.xTitle},
-                    set: {data.settings.xTitle = $0 }), inPlaceEditting: true)
+                Title($data.settings.xTitle,
+//                    Binding(
+//                    get: {data.settings.xTitle},
+//                    set: {data.settings.xTitle = $0 }),
+                    inPlaceEditting: true)
                 .padding(.top, xLabelsHeight/3.0)
                 .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
                 .fixedSize()     // Don't use xTitle width //
