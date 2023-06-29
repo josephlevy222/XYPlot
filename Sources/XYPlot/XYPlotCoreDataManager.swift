@@ -77,7 +77,7 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     var output: AttributedString
     do { output = try JSONDecoder().decode(AttributedString.self, from: data ?? Data() ) }
     catch { output = AttributedString("Could not decode to AttributedString")}
-    let returnOutput = output.styledHeaders()
+    let returnOutput = output//.styledHeaders()
     print("DecodedAttributedString", returnOutput)
     return returnOutput
 }
