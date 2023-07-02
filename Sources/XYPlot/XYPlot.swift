@@ -61,6 +61,10 @@ extension AttributedString {
         a.font = to
         return a
     }
+    
+    func convertToNSFonts(traitCollection: UITraitCollection? = nil) -> AttributedString {
+        convertToUIAttributes(traitCollection: traitCollection).attributedString
+    }
 }
 
 /// Axis Parameters is an x, y or secondary (s) axis extent, tics, and tile
@@ -85,9 +89,12 @@ public struct PlotSettings : Equatable  {
     public var sAxis : AxisParameters?
     
     // Computed properties for minimizing code changes when adding title to AxisParameters
-    public var xTitle : AttributedString { get { xAxis?.title ?? AttributedString()} set { xAxis?.title = newValue } }
-    public var yTitle : AttributedString { get { yAxis?.title ?? AttributedString()} set { yAxis?.title = newValue } }
-    public var sTitle : AttributedString { get { sAxis?.title ?? AttributedString()} set { sAxis?.title = newValue } }
+    public var xTitle : AttributedString { get { xAxis?.title ?? AttributedString()}
+                                           set { xAxis?.title = newValue.convertToNSFonts() } }
+    public var yTitle : AttributedString { get { yAxis?.title ?? AttributedString()}
+                                           set { yAxis?.title = newValue.convertToNSFonts() } }
+    public var sTitle : AttributedString { get { sAxis?.title ?? AttributedString()}
+                                           set { sAxis?.title = newValue.convertToNSFonts() } }
     // -----------------------------------------------------------------------------------
     public var sizeMinor = 0.005
     public var sizeMajor = 0.01
@@ -102,7 +109,7 @@ public struct PlotSettings : Equatable  {
                 sAxis: AxisParameters? = nil, sizeMinor: Double = 0.005, sizeMajor: Double = 0.01,
                 format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
                 independentTics: Bool = false, legendPos: CGPoint = .zero, legend: Bool = true, selection: Int? = nil) {
-        self.title = title
+        self.title = title.convertToNSFonts()
         self.xAxis = xAxis
         self.yAxis = yAxis
         self.sAxis = sAxis
