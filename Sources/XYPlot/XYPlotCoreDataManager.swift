@@ -87,10 +87,11 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     let aString = attrString.nsAttributedString.attributedString
     let value = try? encoder.encode(aString)
     guard let output = try? decoder.decode(AttributedString.self, from: value ?? Data() ) else {
-        return value
+        print("encode is not decodable");dump(aString)
+        return nil
     }
-    print("encode is not decodable");dump(aString)
-    return nil
+    
+    return value
 }
 
 extension PlotSettings {
