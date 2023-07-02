@@ -12,7 +12,6 @@ import SwiftUI
 import TextView
 
 extension XYPlot { //use XYPlot namespace
-    //public static var coreDataManager: CoreDataManager { CoreDataManager.shared }
     public class CoreDataManager {
         public static let shared = CoreDataManager() // singleton
         let persistentContainer: NSPersistentContainer
@@ -77,7 +76,7 @@ let decoder = JSONDecoder()
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     var output: AttributedString
     do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
-    catch { output = AttributedString("Could not decode to AttributedString")}
+    catch { output = AttributedString("Could not decode to AttributedString"); dump(data)}
     return output
 }
 

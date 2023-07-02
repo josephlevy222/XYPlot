@@ -12,7 +12,8 @@
 //  Added styledMarkdown: for AttributedString init and styledHeader func to use Headers in markdown 1/8/23
 //  Completed changes back to AttributedString storing as Data to Coredata 1/10/23
 //  Simplied/removed explicit init on a number of struct 1/10/23
-
+//  Added Coredata support and 
+//  Added TextView for editing titles 7/2/23
 
 import SwiftUI
 import Utilities
