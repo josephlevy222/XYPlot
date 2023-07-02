@@ -86,11 +86,10 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     // convert to NSFonts for storage
     let aString = attrString.nsAttributedString.attributedString
     let value = try? encoder.encode(aString)
-    guard let output = try? decoder.decode(AttributedString.self, from: value ?? Data() ) else {
-        print("encode is not decodable");dump(aString)
-        return nil
+    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
+        return value
     }
-    
+    print("encode is not decodable");dump(aString)
     return value
 }
 
