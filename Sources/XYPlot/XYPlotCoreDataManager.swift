@@ -89,7 +89,7 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
         return value
     }
-    print("encode is not decodable");print(aString)
+    print("encode is not decodable");print(aString, "versus\n", attrString)
     return value
 }
 
