@@ -76,7 +76,10 @@ let decoder = JSONDecoder()
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     var output: AttributedString
     do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
-    catch { output = AttributedString("Could not decode to AttributedString"); dump(data)}
+    catch {
+        output = AttributedString("Could not decode to AttributedString").setFont(to: .title)
+        if let data { print(data)}
+    }
     return output
 }
 
