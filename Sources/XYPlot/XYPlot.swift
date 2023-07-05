@@ -274,6 +274,7 @@ public struct Title: View {
                         .hidden()// for sizing only
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
                         .frame(width: textSize.width+50, height: textSize.height)
+                        .onChange(of: text) { _ in print("Text changed so save to coredata"); XYPlot.CoreDataManager.shared.save()}
                        
                 }
             } else {
@@ -285,9 +286,11 @@ public struct Title: View {
                     .popover(isPresented: $isPresented) {
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
+                            .onChange(of: text) { _ in print("Text changed so save to coredata"); XYPlot.CoreDataManager.shared.save()}
                     }
             }
         }
+            
     }
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
