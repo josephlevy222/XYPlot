@@ -44,6 +44,7 @@ extension AttributedString {
                 case .header(level: let level): // assigns intent.kind to level
                     if (1...fonts.count).contains(level) {
                         output[intentRange].font = fonts[level-1]
+                        output[intentRange].inlinePresentationIntent = nil
                     }
                 default:
                     break
