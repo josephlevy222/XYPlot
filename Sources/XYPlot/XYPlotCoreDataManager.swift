@@ -78,7 +78,7 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
     catch {
         output = AttributedString("Could not decode to AttributedString").setFont(to: .title)
-        if let data { print(data)}
+        if let data { print("Here is the data"); print(data)}
     }
     return output
 }
