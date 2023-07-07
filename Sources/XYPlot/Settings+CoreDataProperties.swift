@@ -8,7 +8,14 @@
 
 import Foundation
 import CoreData
+import UIKit
 
+@objc(NSAttributedStringTransformer)
+class NSAttributedStringTransformer: NSSecureUnarchiveFromDataTransformer {
+    override class var allowedTopLevelClasses: [AnyClass] {
+        return super.allowedTopLevelClasses + [NSAttributedString.self]
+    }
+}
 
 extension Settings {
     
