@@ -101,7 +101,8 @@ extension PlotSettings {
     mutating public func copySettingsFromCoreData(id: NSManagedObjectID) {
         guard let settings = XYPlot.CoreDataManager.shared.getSettingsById(id: id) else { print("No Coredata to retrieve"); return }
         settingsID = id
-        title = decodeToAttributedString(settings.title)
+        //title = decodeToAttributedString(settings.title)
+        title = settings.titleNS?.attributedString ?? AttributedString("")
         xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: decodeToAttributedString(settings.xAxisTitle))
         yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: decodeToAttributedString(settings.yAxisTitle))
         sAxis = AxisParameters(min: settings.sMin, max: settings.sMax, majorTics: Int(settings.sMajor), minorTics: Int(settings.sMinor), title: decodeToAttributedString(settings.sAxisTitle))
@@ -127,6 +128,7 @@ extension PlotSettings {
         settingsID = settings.objectID
         print("Copying settings to Coredata")
         settings.title = encodeAttributedString(title)
+        settings.titleNS = title.nsAttributedString
         settings.autoScale = autoScale
         settings.format = format
         settings.independentsTics = independentTics

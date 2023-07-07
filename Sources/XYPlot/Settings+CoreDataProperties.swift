@@ -41,7 +41,7 @@ extension Settings {
     @NSManaged public var autoScale: Bool
     @NSManaged public var showLegend: Bool
     @NSManaged public var format: String?
-    
+    @NSManaged public var titleNS: NSAttributedString?
 }
 
 extension Settings : Identifiable {
