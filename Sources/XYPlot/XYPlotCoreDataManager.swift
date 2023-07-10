@@ -86,9 +86,9 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 let encoder = JSONEncoder()
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     guard let attrString else { return nil }
-    encoder.outputFormatting = .prettyPrinted
+    //encoder.outputFormatting = .prettyPrinted
     // convert to NSFonts for storage
-    let aString = attrString.nsAttributedString.attributedString
+    let aString = attrString.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
     let value = try? encoder.encode(aString)
     if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
         return value
