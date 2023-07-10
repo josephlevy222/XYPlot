@@ -212,7 +212,7 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     var output: AttributedString?
     do {
         if let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) {
-            unarchiver.requiresSecureCoding = false
+            unarchiver.requiresSecureCoding = true
             output = (unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? NSAttributedString)?.attributedString
         }
         //output = try decoder.decode(AttributedString.self, from: data ?? Data() )
@@ -230,7 +230,7 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     guard let attrString else { return nil }
     //encoder.outputFormatting = .prettyPrinted
     // convert to NSAttributedString for storage
-    let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: false)
+    let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: true)
 //    let aString = attrString.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
 //    let value = try? encoder.encode(aString)
 //    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
@@ -239,3 +239,4 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
 //    print("encode is not decodable");print(aString, "versus\n", attrString, " using \n", String(data: value ?? Data(), encoding: .utf8) ?? "nil")
     return data
 }
+
