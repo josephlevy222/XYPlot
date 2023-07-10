@@ -75,13 +75,12 @@ extension XYPlot { //use XYPlot namespace
 extension PlotSettings {
     mutating public func copySettingsFromCoreData(id: NSManagedObjectID) {
         guard let settings = XYPlot.CoreDataManager.shared.getSettingsById(id: id) else { print("No Coredata to retrieve"); return }
-        let empty = AttributedString("")
         settingsID = id
         //title = decodeToAttributedString(settings.title)
-        title = settings.title?.attributedString ?? empty
-        xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: settings.xAxisTitle?.attributedString ?? empty )
-        yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: settings.yAxisTitle?.attributedString ?? empty )
-        sAxis = AxisParameters(min: settings.sMin, max: settings.sMax, majorTics: Int(settings.sMajor), minorTics: Int(settings.sMinor), title: settings.sAxisTitle?.attributedString ?? empty )
+        title = decodeToAttributedString(settings.title)
+        xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: decodeToAttributedString(settings.xAxisTitle))
+        yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: decodeToAttributedString(settings.yAxisTitle))
+        sAxis = AxisParameters(min: settings.sMin, max: settings.sMax, majorTics: Int(settings.sMajor), minorTics: Int(settings.sMinor), title: decodeToAttributedString(settings.sAxisTitle))
         sizeMinor = settings.sizeMinor
         sizeMajor = settings.sizeMajor
         format = settings.format ?? ""
@@ -103,7 +102,7 @@ extension PlotSettings {
         guard let settings = settings else { print("No settings were saved"); return }
         settingsID = settings.objectID
         print("Copying settings to Coredata")
-        settings.title = title.nsAttributedString
+        settings.title = encodeAttributedString(title)
         settings.autoScale = autoScale
         settings.format = format
         settings.independentsTics = independentTics
@@ -117,21 +116,21 @@ extension PlotSettings {
             settings.xMinor = Int64(axis.minorTics)
             settings.xMax = axis.max
             settings.xMin = axis.min
-            settings.xAxisTitle = axis.title.nsAttributedString
+            settings.xAxisTitle = encodeAttributedString(axis.title)
         }
         if let axis = yAxis {
             settings.yMajor = Int64(axis.majorTics)
             settings.yMinor = Int64(axis.minorTics)
             settings.yMax = axis.max
             settings.yMin = axis.min
-            settings.yAxisTitle = axis.title.nsAttributedString
+            settings.yAxisTitle = encodeAttributedString(axis.title)
         }
         if let axis = sAxis {
             settings.sMajor = Int64(axis.majorTics)
             settings.sMinor = Int64(axis.minorTics)
             settings.sMax = axis.max
             settings.sMin = axis.min
-            settings.sAxisTitle = axis.title.nsAttributedString
+            settings.sAxisTitle = encodeAttributedString(axis.title)
         }
         settings.useSecondary = showSecondaryAxis
         coreDataManager.save()
@@ -208,26 +207,35 @@ extension PlotLine {
 
 
 //let decoder = JSONDecoder()
-//func decodeToAttributedString(_ data: Data?) -> AttributedString {
-//    var output: AttributedString
-//    do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
-//    catch {
-//        output = AttributedString("Could not decode to AttributedString").setFont(to: .title)
-//        if let data { print("Here is the data"); print(data)}
-//    }
-//    return output
-//}
-//
+func decodeToAttributedString(_ data: Data?) -> AttributedString {
+    guard let data else { return AttributedString("")}
+    var output: AttributedString?
+    do {
+        if let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) {
+            unarchiver.requiresSecureCoding = false
+            output = (unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? NSAttributedString)?.attributedString
+        }
+        //output = try decoder.decode(AttributedString.self, from: data ?? Data() )
+    }
+    if let output {
+        return output
+    } else {
+        print("Here is the data"); print(data)
+        return AttributedString("Could not decode to AttributedString").setFont(to: .title)
+    }
+}
+
 //let encoder = JSONEncoder()
-//func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
-//    guard let attrString else { return nil }
-//    //encoder.outputFormatting = .prettyPrinted
-//    // convert to NSFonts for storage
+func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
+    guard let attrString else { return nil }
+    //encoder.outputFormatting = .prettyPrinted
+    // convert to NSAttributedString for storage
+    let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: false)
 //    let aString = attrString.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
 //    let value = try? encoder.encode(aString)
 //    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
 //        return value
 //    }
 //    print("encode is not decodable");print(aString, "versus\n", attrString, " using \n", String(data: value ?? Data(), encoding: .utf8) ?? "nil")
-//    return value
-//}
+    return data
+}
