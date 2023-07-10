@@ -4,7 +4,7 @@
 //
 //  Created by Joseph Levy on 7/7/23.
 //
-
+/*
 import Foundation
 import SwiftUI
 //let attributedString: NSAttributedString! // Input -> NSAttributedString
@@ -84,7 +84,6 @@ private func convertAttributesFromJSONToDictionary(_ attributes: Any) -> [NSAttr
                 }
             }
         }
-        
         return attrDict // Return filled dictionary
     }
     
@@ -93,15 +92,15 @@ private func convertAttributesFromJSONToDictionary(_ attributes: Any) -> [NSAttr
 
 public func convertJSONToAttributedString() {
     var dictionary: [String: Any]! // Input -> JSON
-    
+
     // Create attributed string with text string
     guard let string: String = (dictionary["string"] as? String) else {
         print("Incorrect json structure {string}")
         return
     }
-    
+
     let attrString: NSMutableAttributedString = NSMutableAttributedString(string: string)
-    
+
     if let runsDict: [[String: Any]] = (dictionary["runs"] as? [[String: Any]]) { // Check for 'runs' key in JSON data
         /*
          runsDict = [
@@ -117,7 +116,7 @@ public func convertJSONToAttributedString() {
         for run in runsDict { // Loop through each attributes and range section
             var attributes: [NSAttributedString.Key: Any] = [:]
             var range: NSRange?
-            
+
             for (key, value) in run {
                 // Retrieve all attributes and the range
                 if (key == "attributes") {
@@ -129,7 +128,7 @@ public func convertJSONToAttributedString() {
                         range = NSRange(location: rangeValue[0], length: (rangeValue[1] - rangeValue[0]))
                     }
                 }
-                
+
                 // Add retrieved attributes and range to the attributed string
                 if ((key == "attributes" || key == "range") && range != nil) {
                     attrString.addAttributes(attributes, range: range!)
@@ -139,17 +138,17 @@ public func convertJSONToAttributedString() {
     } else {
         print("Incorrect json structure {runs}")
     }
-    
+
     print(attrString) // Output -> NSAttributedString
 }
 
-//struct AttributedString {
-//    let attributedString: NSAttributedString
-//    init(attributedString: NSAttributedString) { self.attributedString = attributedString }
-//    init(string str: String, attributes attrs: [NSAttributedString.Key: Any]? = nil) { attributedString = .init(string: str, attributes: attrs) }
-//}
+struct AttributedString {
+    let attributedString: NSAttributedString
+    init(attributedString: NSAttributedString) { self.attributedString = attributedString }
+    init(string str: String, attributes attrs: [NSAttributedString.Key: Any]? = nil) { attributedString = .init(string: str, attributes: attrs) }
+}
 
-//Archiving / Encoding
+Archiving / Encoding
 
 extension NSAttributedString {
     func data() throws -> Data { try NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false) }
@@ -176,3 +175,4 @@ extension AttributedString  {
         self = attributedString.attributedString
     }
 }
+// */

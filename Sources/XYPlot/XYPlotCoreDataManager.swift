@@ -232,7 +232,7 @@ func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     // convert to NSAttributedString for storage
     //let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: true)
     let aString = attrString//.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
-    let data = try? encoder.encode(aString)
+    let data = try? encoder.encode(aString.nsAttributedString.attributedString)
 //    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
 //        return value
 //    }
