@@ -206,7 +206,7 @@ extension PlotLine {
 }
 
 
-let decoder = JSONDecoder()
+//let decoder = JSONDecoder()
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     guard let data else { return AttributedString("")}
     var output: AttributedString?
@@ -215,7 +215,8 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 //            unarchiver.requiresSecureCoding = true
 //            output = (unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? NSAttributedString)?.attributedString
 //        }
-    output = try? decoder.decode(AttributedString.self, from: data )
+    //output = try? decoder.decode(AttributedString.self, from: data )
+    output = NSData(data: data).toAttributedString()?.attributedString
 //    }
     if let output {
         return output
@@ -225,18 +226,19 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     }
 }
 
-let encoder = JSONEncoder()
+//let encoder = JSONEncoder()
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     guard let attrString else { return nil }
     //encoder.outputFormatting = .prettyPrinted
     // convert to NSAttributedString for storage
     //let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: true)
-    let aString = attrString//.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
-    let data = try? encoder.encode(aString.nsAttributedString.attributedString)
+    let aString = attrString.nsAttributedString//.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
+    //let data = try? encoder.encode(aString)
+    if let data = aString.toNSData() { return Data(data) }
+    else { return nil }
 //    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
 //        return value
 //    }
 //    print("encode is not decodable");print(aString, "versus\n", attrString, " using \n", String(data: value ?? Data(), encoding: .utf8) ?? "nil")
-    return data
 }
 
