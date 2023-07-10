@@ -26,17 +26,17 @@ extension Settings {
     @NSManaged public var independentsTics: Bool
     @NSManaged public var legendPosX: Double
     @NSManaged public var legendPosY: Double
-    @NSManaged public var sAxisTitle: Data?
+    @NSManaged public var sAxisTitle: NSAttributedString?
     @NSManaged public var sMajor: Int64
     @NSManaged public var sMinor: Int64
-    @NSManaged public var title: Data?
+    @NSManaged public var title: NSAttributedString?
     @NSManaged public var useSecondary: Bool
-    @NSManaged public var xAxisTitle: Data?
+    @NSManaged public var xAxisTitle: NSAttributedString?
     @NSManaged public var xMajor: Int64
     @NSManaged public var xMax: Double
     @NSManaged public var xMin: Double
     @NSManaged public var xMinor: Int64
-    @NSManaged public var yAxisTitle: Data?
+    @NSManaged public var yAxisTitle: NSAttributedString?
     @NSManaged public var yMajor: Int64
     @NSManaged public var yMax: Double
     @NSManaged public var yMin: Double
@@ -48,7 +48,6 @@ extension Settings {
     @NSManaged public var autoScale: Bool
     @NSManaged public var showLegend: Bool
     @NSManaged public var format: String?
-    @NSManaged public var titleNS: NSAttributedString?
 }
 
 extension Settings : Identifiable {

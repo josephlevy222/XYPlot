@@ -72,40 +72,16 @@ extension XYPlot { //use XYPlot namespace
     }
 }
 
-let decoder = JSONDecoder()
-func decodeToAttributedString(_ data: Data?) -> AttributedString {
-    var output: AttributedString
-    do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
-    catch {
-        output = AttributedString("Could not decode to AttributedString").setFont(to: .title)
-        if let data { print("Here is the data"); print(data)}
-    }
-    return output
-}
-
-let encoder = JSONEncoder()
-func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
-    guard let attrString else { return nil }
-    //encoder.outputFormatting = .prettyPrinted
-    // convert to NSFonts for storage
-    let aString = attrString.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
-    let value = try? encoder.encode(aString)
-    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
-        return value
-    }
-    print("encode is not decodable");print(aString, "versus\n", attrString, " using \n", String(data: value ?? Data(), encoding: .utf8) ?? "nil")
-    return value
-}
-
 extension PlotSettings {
     mutating public func copySettingsFromCoreData(id: NSManagedObjectID) {
         guard let settings = XYPlot.CoreDataManager.shared.getSettingsById(id: id) else { print("No Coredata to retrieve"); return }
+        let empty = AttributedString("")
         settingsID = id
         //title = decodeToAttributedString(settings.title)
-        title = settings.titleNS?.attributedString ?? AttributedString("")
-        xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: decodeToAttributedString(settings.xAxisTitle))
-        yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: decodeToAttributedString(settings.yAxisTitle))
-        sAxis = AxisParameters(min: settings.sMin, max: settings.sMax, majorTics: Int(settings.sMajor), minorTics: Int(settings.sMinor), title: decodeToAttributedString(settings.sAxisTitle))
+        title = settings.title?.attributedString ?? empty
+        xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: settings.xAxisTitle?.attributedString ?? empty )
+        yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: settings.yAxisTitle?.attributedString ?? empty )
+        sAxis = AxisParameters(min: settings.sMin, max: settings.sMax, majorTics: Int(settings.sMajor), minorTics: Int(settings.sMinor), title: settings.sAxisTitle?.attributedString ?? empty )
         sizeMinor = settings.sizeMinor
         sizeMajor = settings.sizeMajor
         format = settings.format ?? ""
@@ -127,8 +103,7 @@ extension PlotSettings {
         guard let settings = settings else { print("No settings were saved"); return }
         settingsID = settings.objectID
         print("Copying settings to Coredata")
-        settings.title = encodeAttributedString(title)
-        settings.titleNS = title.nsAttributedString
+        settings.title = title.nsAttributedString
         settings.autoScale = autoScale
         settings.format = format
         settings.independentsTics = independentTics
@@ -142,21 +117,21 @@ extension PlotSettings {
             settings.xMinor = Int64(axis.minorTics)
             settings.xMax = axis.max
             settings.xMin = axis.min
-            settings.xAxisTitle = encodeAttributedString(axis.title)
+            settings.xAxisTitle = axis.title.nsAttributedString
         }
         if let axis = yAxis {
             settings.yMajor = Int64(axis.majorTics)
             settings.yMinor = Int64(axis.minorTics)
             settings.yMax = axis.max
             settings.yMin = axis.min
-            settings.yAxisTitle = encodeAttributedString(axis.title)
+            settings.yAxisTitle = axis.title.nsAttributedString
         }
         if let axis = sAxis {
             settings.sMajor = Int64(axis.majorTics)
             settings.sMinor = Int64(axis.minorTics)
             settings.sMax = axis.max
             settings.sMin = axis.min
-            settings.sAxisTitle = encodeAttributedString(axis.title)
+            settings.sAxisTitle = axis.title.nsAttributedString
         }
         settings.useSecondary = showSecondaryAxis
         coreDataManager.save()
@@ -231,3 +206,28 @@ extension PlotLine {
     }
 }
 
+
+//let decoder = JSONDecoder()
+//func decodeToAttributedString(_ data: Data?) -> AttributedString {
+//    var output: AttributedString
+//    do { output = try decoder.decode(AttributedString.self, from: data ?? Data() ) }
+//    catch {
+//        output = AttributedString("Could not decode to AttributedString").setFont(to: .title)
+//        if let data { print("Here is the data"); print(data)}
+//    }
+//    return output
+//}
+//
+//let encoder = JSONEncoder()
+//func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
+//    guard let attrString else { return nil }
+//    //encoder.outputFormatting = .prettyPrinted
+//    // convert to NSFonts for storage
+//    let aString = attrString.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
+//    let value = try? encoder.encode(aString)
+//    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
+//        return value
+//    }
+//    print("encode is not decodable");print(aString, "versus\n", attrString, " using \n", String(data: value ?? Data(), encoding: .utf8) ?? "nil")
+//    return value
+//}
