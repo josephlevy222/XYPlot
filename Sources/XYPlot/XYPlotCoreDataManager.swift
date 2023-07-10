@@ -206,17 +206,17 @@ extension PlotLine {
 }
 
 
-//let decoder = JSONDecoder()
+let decoder = JSONDecoder()
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     guard let data else { return AttributedString("")}
     var output: AttributedString?
-    do {
-        if let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) {
-            unarchiver.requiresSecureCoding = true
-            output = (unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? NSAttributedString)?.attributedString
-        }
-        //output = try decoder.decode(AttributedString.self, from: data ?? Data() )
-    }
+//    do {
+//        if let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) {
+//            unarchiver.requiresSecureCoding = true
+//            output = (unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? NSAttributedString)?.attributedString
+//        }
+    output = try? decoder.decode(AttributedString.self, from: data )
+//    }
     if let output {
         return output
     } else {
@@ -225,14 +225,14 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     }
 }
 
-//let encoder = JSONEncoder()
+let encoder = JSONEncoder()
 func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
     guard let attrString else { return nil }
     //encoder.outputFormatting = .prettyPrinted
     // convert to NSAttributedString for storage
-    let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: true)
-//    let aString = attrString.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
-//    let value = try? encoder.encode(aString)
+    //let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: true)
+    let aString = attrString//.nsAttributedString.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
+    let data = try? encoder.encode(aString)
 //    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
 //        return value
 //    }
