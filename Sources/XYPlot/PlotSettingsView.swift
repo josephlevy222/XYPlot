@@ -175,7 +175,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
                 Button(action: {
                     dismiss()
                 }, label: { Text("Cancel").foregroundColor(.accentColor)}).frame(width: 100).padding(.horizontal)
-                Button(action: {
+                Button(action: { // Ok button
                     // Make copies of data to change since plotLines and settings
                     // need be fetched or stored to data Binding directly
                     var settings = data.settings
@@ -202,6 +202,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
                     
                     data = PlotData(plotLines: plotLines, settings: settings)
                     data.scaleAxes()
+                    XYPlot.CoreDataManager.shared.save()
                     dismiss()
                 }) { Text("Ok").foregroundColor(.accentColor) }
                     .frame(width: 100).padding(.horizontal)

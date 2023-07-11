@@ -460,11 +460,7 @@ public struct XYPlot: View {
                 }
                 // Invisible space holder for x Labels
                 Invisible(height: xLabelsHeight)
-                Title($data.settings.xTitle,
-//                    Binding(
-//                    get: {data.settings.xTitle},
-//                    set: {data.settings.xTitle = $0 }),
-                    inPlaceEditting: true)
+                Title($data.settings.xTitle, inPlaceEditting: true)
                 .padding(.top, xLabelsHeight/3.0)
                 .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
                 .fixedSize()     // Don't use xTitle width //
