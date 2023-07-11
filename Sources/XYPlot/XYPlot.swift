@@ -445,18 +445,6 @@ public struct XYPlot: View {
                                         .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
                                 }
                             }.captureWidth(in: $sLabelsWidth)
-//                            Text(data.settings.sTitle)
-//                                .captureSize(in: $textSize)
-//                                .onTapGesture {
-//                                    isPresented = true
-//                                }
-//                                .popover(isPresented: $isPresented) {
-//                                    TextView(attributedText: $data.settings.sTitle, allowsEditingTextAttributes: true)
-//                                        .frame(width: textSize.width+50, height: textSize.height)
-//                                        .onChange(of: data.settings.sTitle) { _ in
-//                                            debugPrint("sTitle has changed, so save to coredata")
-//                                            XYPlot.CoreDataManager.shared.save()}
-//                                }
                             Title($data.settings.sTitle)
                             .rotated(Angle(degrees: 90.0))
                             .captureWidth(in: $sTitleWidth)
@@ -464,7 +452,10 @@ public struct XYPlot: View {
                         .fixedSize()      // Don't use sTitle height //
                         .frame(height: 1) // to size plot area       //
                     } else { // leave room for last x axis label
-                        Invisible(width: lastXLabelWidth/2.0)
+                        ZStack {
+                            Invisible(width: lastXLabelWidth/2.0)
+                            Title($data.settings.sTitle).frame(width: 1, height: 1).hidden()
+                        }
                     }
                 } // End of HStack yAxis - Plot - sAxis
                 .onTapGesture {
