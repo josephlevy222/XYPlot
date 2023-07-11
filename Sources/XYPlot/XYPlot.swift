@@ -285,9 +285,9 @@ public struct Title: View {
                     .captureSize(in: $textSize)
                     .onTapGesture {
                         isPresented = true
+                        XYPlot.CoreDataManager.shared.save()
                     }
                     .popover(isPresented: $isPresented) {
-                        let _ = print("\(text), \($text)")
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
                             .onChange(of: text) { _ in
