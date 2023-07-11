@@ -224,7 +224,7 @@ extension Data {
         let aString = try? NSAttributedString(data: self,
                                        options: options,
                                        documentAttributes: nil)
-        return aString?.attributedString //?? AttributedString("")
+        return aString?.attributedString 
     }
 }
 
