@@ -224,7 +224,7 @@ extension Data {
         let aString = try? NSAttributedString(data: self,
                                        options: options,
                                        documentAttributes: nil)
-        return aString?.attributedString 
+        return aString?.attributedString
     }
 }
 
@@ -234,12 +234,8 @@ extension AttributedString {
             .documentType: NSAttributedString.DocumentType.rtfd,
             .characterEncoding: String.Encoding.utf8
         ]
-        
         let range = NSRange(location: 0, length: characters.count)
-        guard let data = try? nsAttributedString.data(from: range, documentAttributes: options) else {
-            return nil
-        }
         
-        return data
+        return try? nsAttributedString.data(from: range, documentAttributes: options)
     }
 }
