@@ -202,7 +202,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
                     
                     data = PlotData(plotLines: plotLines, settings: settings)
                     data.scaleAxes()
-                    XYPlot.CoreDataManager.shared.save()
+                    settings.copyPlotSettingsToCoreData()
                     dismiss()
                 }) { Text("Ok").foregroundColor(.accentColor) }
                     .frame(width: 100).padding(.horizontal)
