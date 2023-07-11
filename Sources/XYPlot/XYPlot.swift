@@ -287,6 +287,7 @@ public struct Title: View {
                         isPresented = true
                     }
                     .popover(isPresented: $isPresented) {
+                        let _ = print("\(text), \($text)")
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
                             .onChange(of: text) { _ in
