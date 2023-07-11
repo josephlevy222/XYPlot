@@ -76,7 +76,6 @@ extension PlotSettings {
     mutating public func copySettingsFromCoreData(id: NSManagedObjectID) {
         guard let settings = XYPlot.CoreDataManager.shared.getSettingsById(id: id) else { print("No Coredata to retrieve"); return }
         settingsID = id
-        //title = decodeToAttributedString(settings.title)
         title = decodeToAttributedString(settings.title)
         xAxis = AxisParameters(min: settings.xMin, max: settings.xMax, majorTics: Int(settings.xMajor), minorTics: Int(settings.xMinor), title: decodeToAttributedString(settings.xAxisTitle))
         yAxis = AxisParameters(min: settings.yMin, max: settings.yMax, majorTics: Int(settings.yMajor), minorTics: Int(settings.yMinor), title: decodeToAttributedString(settings.yAxisTitle))
@@ -102,7 +101,7 @@ extension PlotSettings {
         guard let settings = settings else { print("No settings were saved"); return }
         settingsID = settings.objectID
         print("Copying settings to Coredata")
-        settings.title = encodeAttributedStringToData(title)
+        settings.title = title.data
         settings.autoScale = autoScale
         settings.format = format
         settings.independentsTics = independentTics
@@ -116,21 +115,21 @@ extension PlotSettings {
             settings.xMinor = Int64(axis.minorTics)
             settings.xMax = axis.max
             settings.xMin = axis.min
-            settings.xAxisTitle = encodeAttributedStringToData(axis.title)
+            settings.xAxisTitle = axis.title.data
         }
         if let axis = yAxis {
             settings.yMajor = Int64(axis.majorTics)
             settings.yMinor = Int64(axis.minorTics)
             settings.yMax = axis.max
             settings.yMin = axis.min
-            settings.yAxisTitle = encodeAttributedStringToData(axis.title)
+            settings.yAxisTitle = axis.title.data
         }
         if let axis = sAxis {
             settings.sMajor = Int64(axis.majorTics)
             settings.sMinor = Int64(axis.minorTics)
             settings.sMax = axis.max
             settings.sMin = axis.min
-            settings.sAxisTitle = encodeAttributedStringToData(axis.title)
+            settings.sAxisTitle = axis.title.data
         }
         settings.useSecondary = showSecondaryAxis
         coreDataManager.save()
@@ -209,50 +208,10 @@ extension PlotLine {
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     guard let data else { return AttributedString("")}
     if let output = data.attributedString {
-        //NSData(data: data).toNSAttributedString()?.attributedString {
         return output
     } else {
         print("Here is the data"); print(data)
         return AttributedString("Could not decode to AttributedString").setFont(to: .title)
-    }
-}
-
-func encodeAttributedStringToData(_ attrString: AttributedString? ) -> Data? {
-    //guard let attrString else { return nil }
-    // convert to NSAttributedString for storage
-    //let aString = attrString.nsAttributedString
-    return attrString?.data
-    //if let data = aString.toNSData() { return Data(data) }
-    //else { return nil }
-}
-
-extension NSData {
-    func toNSAttributedString() -> NSAttributedString? {
-        let data = Data(referencing: self)
-        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-            .documentType: NSAttributedString.DocumentType.rtfd,
-            .characterEncoding: String.Encoding.utf8
-        ]
-        
-        return try? NSAttributedString(data: data,
-                                       options: options,
-                                       documentAttributes: nil)
-    }
-}
-
-extension NSAttributedString {
-    func toNSData() -> NSData? {
-        let options: [NSAttributedString.DocumentAttributeKey: Any] = [
-            .documentType: NSAttributedString.DocumentType.rtfd,
-            .characterEncoding: String.Encoding.utf8
-        ]
-        
-        let range = NSRange(location: 0, length: length)
-        guard let data = try? data(from: range, documentAttributes: options) else {
-            return nil
-        }
-        
-        return NSData(data: data)
     }
 }
 
@@ -265,16 +224,22 @@ extension Data {
         let aString = try? NSAttributedString(data: self,
                                        options: options,
                                        documentAttributes: nil)
-        return aString?.attributedString
+        return aString?.attributedString //?? AttributedString("")
     }
 }
 
 extension AttributedString {
     var data : Data? {
-        if let nsData = nsAttributedString.toNSData() {
-            return Data(nsData)
-        } else {
+        let options: [NSAttributedString.DocumentAttributeKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.rtfd,
+            .characterEncoding: String.Encoding.utf8
+        ]
+        
+        let range = NSRange(location: 0, length: characters.count)
+        guard let data = try? nsAttributedString.data(from: range, documentAttributes: options) else {
             return nil
         }
+        
+        return data
     }
 }
