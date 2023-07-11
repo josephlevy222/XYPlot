@@ -218,10 +218,10 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
 }
 
 func encodeAttributedStringToData(_ attrString: AttributedString? ) -> Data? {
-    guard let attrString else { return nil }
+    //guard let attrString else { return nil }
     // convert to NSAttributedString for storage
     //let aString = attrString.nsAttributedString
-    return attrString.data
+    return attrString?.data
     //if let data = aString.toNSData() { return Data(data) }
     //else { return nil }
 }
