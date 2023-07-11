@@ -445,19 +445,19 @@ public struct XYPlot: View {
                                         .frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
                                 }
                             }.captureWidth(in: $sLabelsWidth)
-                            Text(data.settings.sTitle)
-                                .captureSize(in: $textSize)
-                                .onTapGesture {
-                                    isPresented = true
-                                }
-                                .popover(isPresented: $isPresented) {
-                                    TextView(attributedText: $data.settings.sTitle, allowsEditingTextAttributes: true)
-                                        .frame(width: textSize.width+50, height: textSize.height)
-                                        .onChange(of: data.settings.sTitle) { _ in
-                                            debugPrint("sTitle has changed, so save to coredata")
-                                            XYPlot.CoreDataManager.shared.save()}
-                                }
-                            //Title($data.settings.sTitle)
+//                            Text(data.settings.sTitle)
+//                                .captureSize(in: $textSize)
+//                                .onTapGesture {
+//                                    isPresented = true
+//                                }
+//                                .popover(isPresented: $isPresented) {
+//                                    TextView(attributedText: $data.settings.sTitle, allowsEditingTextAttributes: true)
+//                                        .frame(width: textSize.width+50, height: textSize.height)
+//                                        .onChange(of: data.settings.sTitle) { _ in
+//                                            debugPrint("sTitle has changed, so save to coredata")
+//                                            XYPlot.CoreDataManager.shared.save()}
+//                                }
+                            Title($data.settings.sTitle)
                             .rotated(Angle(degrees: 90.0))
                             .captureWidth(in: $sTitleWidth)
                         }
