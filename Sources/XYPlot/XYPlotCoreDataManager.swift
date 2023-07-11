@@ -102,7 +102,7 @@ extension PlotSettings {
         guard let settings = settings else { print("No settings were saved"); return }
         settingsID = settings.objectID
         print("Copying settings to Coredata")
-        settings.title = encodeAttributedString(title)
+        settings.title = encodeAttributedStringToData(title)
         settings.autoScale = autoScale
         settings.format = format
         settings.independentsTics = independentTics
@@ -116,21 +116,21 @@ extension PlotSettings {
             settings.xMinor = Int64(axis.minorTics)
             settings.xMax = axis.max
             settings.xMin = axis.min
-            settings.xAxisTitle = encodeAttributedString(axis.title)
+            settings.xAxisTitle = encodeAttributedStringToData(axis.title)
         }
         if let axis = yAxis {
             settings.yMajor = Int64(axis.majorTics)
             settings.yMinor = Int64(axis.minorTics)
             settings.yMax = axis.max
             settings.yMin = axis.min
-            settings.yAxisTitle = encodeAttributedString(axis.title)
+            settings.yAxisTitle = encodeAttributedStringToData(axis.title)
         }
         if let axis = sAxis {
             settings.sMajor = Int64(axis.majorTics)
             settings.sMinor = Int64(axis.minorTics)
             settings.sMax = axis.max
             settings.sMin = axis.min
-            settings.sAxisTitle = encodeAttributedString(axis.title)
+            settings.sAxisTitle = encodeAttributedStringToData(axis.title)
         }
         settings.useSecondary = showSecondaryAxis
         coreDataManager.save()
@@ -206,19 +206,10 @@ extension PlotLine {
 }
 
 
-//let decoder = JSONDecoder()
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
     guard let data else { return AttributedString("")}
-    var output: AttributedString?
-//    do {
-//        if let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) {
-//            unarchiver.requiresSecureCoding = true
-//            output = (unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? NSAttributedString)?.attributedString
-//        }
-    //output = try? decoder.decode(AttributedString.self, from: data )
-    output = NSData(data: data).toAttributedString()?.attributedString
-//    }
-    if let output {
+    if let output = data.attributedString {
+        //NSData(data: data).toNSAttributedString()?.attributedString {
         return output
     } else {
         print("Here is the data"); print(data)
@@ -226,19 +217,64 @@ func decodeToAttributedString(_ data: Data?) -> AttributedString {
     }
 }
 
-//let encoder = JSONEncoder()
-func encodeAttributedString(_ attrString: AttributedString? ) -> Data? {
+func encodeAttributedStringToData(_ attrString: AttributedString? ) -> Data? {
     guard let attrString else { return nil }
-    //encoder.outputFormatting = .prettyPrinted
     // convert to NSAttributedString for storage
-    //let data = try? NSKeyedArchiver.archivedData(withRootObject: attrString.nsAttributedString, requiringSecureCoding: true)
-    let aString = attrString.nsAttributedString//.attributedString//.dictionaryWithValues(forKeys: <#T##[String]#>)
-    //let data = try? encoder.encode(aString)
-    if let data = aString.toNSData() { return Data(data) }
-    else { return nil }
-//    if let _ = try? decoder.decode(AttributedString.self, from: value ?? Data() )  {
-//        return value
-//    }
-//    print("encode is not decodable");print(aString, "versus\n", attrString, " using \n", String(data: value ?? Data(), encoding: .utf8) ?? "nil")
+    //let aString = attrString.nsAttributedString
+    return attrString.data
+    //if let data = aString.toNSData() { return Data(data) }
+    //else { return nil }
 }
 
+extension NSData {
+    func toNSAttributedString() -> NSAttributedString? {
+        let data = Data(referencing: self)
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.rtfd,
+            .characterEncoding: String.Encoding.utf8
+        ]
+        
+        return try? NSAttributedString(data: data,
+                                       options: options,
+                                       documentAttributes: nil)
+    }
+}
+
+extension NSAttributedString {
+    func toNSData() -> NSData? {
+        let options: [NSAttributedString.DocumentAttributeKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.rtfd,
+            .characterEncoding: String.Encoding.utf8
+        ]
+        
+        let range = NSRange(location: 0, length: length)
+        guard let data = try? data(from: range, documentAttributes: options) else {
+            return nil
+        }
+        
+        return NSData(data: data)
+    }
+}
+
+extension Data {
+    var attributedString : AttributedString? {
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.rtfd,
+            .characterEncoding: String.Encoding.utf8
+        ]
+        let aString = try? NSAttributedString(data: self,
+                                       options: options,
+                                       documentAttributes: nil)
+        return aString?.attributedString
+    }
+}
+
+extension AttributedString {
+    var data : Data? {
+        if let nsData = nsAttributedString.toNSData() {
+            return Data(nsData)
+        } else {
+            return nil
+        }
+    }
+}
