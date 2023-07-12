@@ -279,42 +279,42 @@ public struct Title: View {
     @State private var isPresented = false
     @State private var textSize = CGSize.zero
     let overlayEditor: Bool
-    public init(_ text: Binding<AttributedString>, inPlaceEditting: Bool = false ) {
+    public init(_ text: Binding<AttributedString>, inPlaceEditing: Bool = false ) {
         _text = text
-        overlayEditor = inPlaceEditting
+        overlayEditor = inPlaceEditing
     }
+    private var overlayEdit : Bool { overlayEditor && text.characters.count != 0}
     public var body: some View {
-        if text.characters.count == 0 { // empty title
+        ZStack {
             Button("Add a Title") {
-                // Pick size
-                text = AttributedString("Title").setFont(to: .title)}.font(.footnote)
-        }
-        else {
-            ZStack {
-                Text(text)
-                    .captureSize(in: $textSize)
-                    .isHidden(overlayEditor)// for sizing only in overlay mode
-                    .onTapGesture {
-                        isPresented = !overlayEditor // don't use popover in overlay mode
-                    }
-                    .popover(isPresented: $isPresented) {
-                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                            .frame(width: textSize.width+50, height: textSize.height)
-                            .onChange(of: text) { _ in
-                                debugPrint("Text changed so save to coredata")
-                                XYPlot.CoreDataManager.shared.save()}
-                    }
-                TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                    .frame(width: textSize.width+50, height: textSize.height)
-                    .isHidden(!overlayEditor)
-                    .onChange(of: text) { _ in
-                        debugPrint("Text changed so save to coredata")
-                        XYPlot.CoreDataManager.shared.save()
-                    }
-
+                text = AttributedString("Title").setFont(to: .title)
             }
-        }
+            .font(.footnote)
+            .isHidden(text.characters.count != 0)
             
+            Text(text)
+                .captureSize(in: $textSize)
+                .isHidden(overlayEdit)// for sizing only in overlay mode
+                .onTapGesture {
+                    isPresented = !overlayEdit // don't use popover in overlay mode
+                }
+                .popover(isPresented: $isPresented) {
+                    TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                        .frame(width: textSize.width+50, height: textSize.height)
+                        .onChange(of: text) { _ in
+                            debugPrint("Text changed so save to coredata")
+                            XYPlot.CoreDataManager.shared.save()}
+                }
+            
+            TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                .frame(width: textSize.width+50, height: textSize.height)
+                .isHidden(!overlayEdit)
+                .onChange(of: text) { _ in
+                    debugPrint("Text changed so save to coredata")
+                    XYPlot.CoreDataManager.shared.save()
+                }
+        }
+        
     }
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
@@ -386,7 +386,7 @@ public struct XYPlot: View {
     public var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Title($data.settings.title, inPlaceEditting: true )
+                Title($data.settings.title, inPlaceEditing: true )
                 // Title centered on plot area
                 .padding(.leading, leadingWidth)
                 .padding(.trailing, trailingWidth)
@@ -480,7 +480,7 @@ public struct XYPlot: View {
                 }
                 // Invisible space holder for x Labels
                 Invisible(height: xLabelsHeight)
-                Title($data.settings.xTitle, inPlaceEditting: true)
+                Title($data.settings.xTitle, inPlaceEditing: true)
                 .padding(.top, xLabelsHeight/3.0)
                 .padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
                 .fixedSize()     // Don't use xTitle width //
