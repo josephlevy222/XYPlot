@@ -315,7 +315,7 @@ public struct Title: View {
                     debugPrint("Text changed so save to coredata")
                     XYPlot.CoreDataManager.shared.save()
                 }
-            Color.clear.frame(width: textSize.width, height: textSize.height).padding(.leading).border(.gray)
+            Color.clear.frame(width: textSize.width, height: textSize.height).border(.gray)
         }
         
     }
