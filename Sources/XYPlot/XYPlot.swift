@@ -292,8 +292,8 @@ public struct Title: View {
                         TextView(attributedText: $textViewText, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
                             .onChange(of: textViewText) { newText in
-                                text = textViewText
-                                debugPrint("Text changed so save to coredata")
+                                text = newText
+                                debugPrint("Text \(newText) changed so save to coredata")
                                 XYPlot.CoreDataManager.shared.save()}
                     }
             }
@@ -455,8 +455,7 @@ public struct XYPlot: View {
                         .fixedSize()      // Don't use sTitle height //
                         .frame(height: 1) // to size plot area       //
                     } else { // leave room for last x axis label
-                            Invisible(width: lastXLabelWidth/2.0)
-                        }
+                        Invisible(width: lastXLabelWidth/2.0)
                     }
                 } // End of HStack yAxis - Plot - sAxis
                 .onTapGesture {
