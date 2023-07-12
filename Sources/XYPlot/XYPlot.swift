@@ -302,7 +302,7 @@ public struct Title: View {
                 }
                 .popover(isPresented: $isPresented) {
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                        .frame(width: textSize.width, height: textSize.height).padding(.leading)
+                        .frame(width: textSize.width, height: textSize.height)
                         .onChange(of: text) { _ in
                             debugPrint("Text changed so save to coredata")
                             XYPlot.CoreDataManager.shared.save()}
