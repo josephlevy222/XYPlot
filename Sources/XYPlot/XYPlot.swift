@@ -256,7 +256,7 @@ public struct Title: View {
     @Binding public var text: AttributedString
     @State private var isPresented = false
     @State private var textSize = CGSize.zero
-    @State private var textViewText : String
+    @State private var textViewText = AttributedString()
     let overlayEditor: Bool
     public init(_ text: Binding<AttributedString>, inPlaceEditting: Bool = false ) {
         _text = text
@@ -279,7 +279,6 @@ public struct Title: View {
                             debugPrint("Text changed so save to coredata")
                             XYPlot.CoreDataManager.shared.save()
                         }
-                       
                 }
             } else {
                 Text(text)
