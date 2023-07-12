@@ -454,7 +454,7 @@ public struct XYPlot: View {
                     } else { // leave room for last x axis label
                         ZStack {
                             Invisible(width: lastXLabelWidth/2.0)
-                            Title($data.settings.sTitle).frame(width: 1, height: 1).hidden()
+                            Title($data.settings.sTitle).frame(width: 1, height: 1)
                         }
                     }
                 } // End of HStack yAxis - Plot - sAxis
