@@ -130,7 +130,6 @@ extension PlotSettings {
             settings.sMax = axis.max
             settings.sMin = axis.min
             settings.sAxisTitle = axis.title.data
-            print("sAxisTitle set to \(axis.title.characters)")
         }
         settings.useSecondary = showSecondaryAxis
         coreDataManager.save()

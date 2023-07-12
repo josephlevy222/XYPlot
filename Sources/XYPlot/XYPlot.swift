@@ -284,17 +284,18 @@ public struct Title: View {
         overlayEditor = inPlaceEditting
     }
     public var body: some View {
-        if text.characters.count == 0 {
+        if text.characters.count == 0 { // empty title
             Button("Add a Title") {
                 // Pick size
                 text = AttributedString("Title").setFont(to: .title)}.font(.footnote)
-        } else {
+        }
+        else {
             ZStack {
                 Text(text)
                     .captureSize(in: $textSize)
                     .isHidden(overlayEditor)// for sizing only in overlay mode
                     .onTapGesture {
-                        isPresented = !overlayEditor
+                        isPresented = !overlayEditor // don't use popover in overlay mode
                     }
                     .popover(isPresented: $isPresented) {
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
