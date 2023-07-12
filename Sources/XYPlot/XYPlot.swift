@@ -254,8 +254,9 @@ extension String {
 
 public struct Title: View {
     @Binding public var text: AttributedString
-    @State var isPresented = false
-    @State var textSize = CGSize.zero
+    @State private var isPresented = false
+    @State private var textSize = CGSize.zero
+    @State private var textViewText : String
     let overlayEditor: Bool
     public init(_ text: Binding<AttributedString>, inPlaceEditting: Bool = false ) {
         _text = text
@@ -285,11 +286,13 @@ public struct Title: View {
                     .captureSize(in: $textSize)
                     .onTapGesture {
                         isPresented = true
+                        textViewText = text
                     }
                     .popover(isPresented: $isPresented) {
-                        TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                        TextView(attributedText: $textViewText, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
-                            .onChange(of: text) { _ in
+                            .onChange(of: textViewText) { newText in
+                                text = textViewText
                                 debugPrint("Text changed so save to coredata")
                                 XYPlot.CoreDataManager.shared.save()}
                     }
@@ -452,9 +455,7 @@ public struct XYPlot: View {
                         .fixedSize()      // Don't use sTitle height //
                         .frame(height: 1) // to size plot area       //
                     } else { // leave room for last x axis label
-                        ZStack {
                             Invisible(width: lastXLabelWidth/2.0)
-                            Title($data.settings.sTitle).frame(width: 1, height: 1)
                         }
                     }
                 } // End of HStack yAxis - Plot - sAxis
@@ -593,6 +594,7 @@ public struct XYPlot: View {
 public struct Invisible: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
+    
     init(width: CGFloat = 0,
          height: CGFloat = 0) { self.width = width; self.height = height }
     public var body: some View {
