@@ -288,6 +288,7 @@ public struct Title: View {
         ZStack {
             Button("Add a Title") {
                 text = AttributedString("Title").setFont(to: .title)
+                isPresented = !overlayEditor
             }
             .font(.footnote)
             .isHidden(text.characters.count != 0)
