@@ -294,15 +294,16 @@ public struct Title: View {
             .isHidden(text.characters.count != 0)
             
             Text(text)
-                .padding(.horizontal)
+                .padding(.leading)
                 .captureSize(in: $textSize)
+                .padding(.trailing)
                 .isHidden(overlayEdit)// for sizing only in overlay mode
                 .onTapGesture {
                     isPresented = !overlayEdit // don't use popover in overlay mode
                 }
                 .popover(isPresented: $isPresented) {
                     TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                        .frame(width: textSize.width, height: textSize.height)//.padding(.horizontal)
+                        .frame(width: textSize.width, height: textSize.height).padding(.horizontal)
                         .onChange(of: text) { _ in
                             debugPrint("Text changed so save to coredata")
                             XYPlot.CoreDataManager.shared.save()}
