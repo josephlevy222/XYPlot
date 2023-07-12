@@ -294,9 +294,8 @@ public struct Title: View {
             .isHidden(text.characters.count != 0)
             
             Text(text)
-                .padding(.leading)
+                .padding(.horizontal)
                 .captureSize(in: $textSize)
-                .padding(.trailing)
                 .isHidden(overlayEdit)// for sizing only in overlay mode
                 .onTapGesture {
                     isPresented = !overlayEdit // don't use popover in overlay mode
