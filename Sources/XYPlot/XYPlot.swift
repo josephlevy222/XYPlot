@@ -252,6 +252,28 @@ extension String {
     }
 }
 
+extension View {
+    /// Hide or show the view based on a boolean value.
+    /// Example for visibility:
+    ///     Text("Label")
+    ///         .isHidden(true)
+    /// Example for complete removal:
+    ///     Text("Label")
+    ///         .isHidden(true, remove: true)
+    /// - Parameters:
+    ///   - hidden: Set to `false` to show the view. Set to `true` to hide the view.
+    ///   - remove: Boolean value indicating whether or not to remove the view.
+    @ViewBuilder func isHidden(_ hidden: Bool, remove: Bool = false) -> some View {
+        if hidden {
+            if !remove {
+                self.hidden()
+            }
+        } else {
+            self
+        }
+    }
+}
+
 public struct Title: View {
     @Binding public var text: AttributedString
     @State private var isPresented = false
@@ -267,33 +289,28 @@ public struct Title: View {
                 // Pick size
                 text = AttributedString("Title").setFont(to: .title)}.font(.footnote)
         } else {
-            if overlayEditor {
-                ZStack {
-                    Text(text)
-                        .captureSize(in: $textSize)
-                        .hidden()// for sizing only
-                    TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                        .frame(width: textSize.width+50, height: textSize.height)
-                        .onChange(of: text) { _ in
-                            debugPrint("Text changed so save to coredata")
-                            XYPlot.CoreDataManager.shared.save()
-                        }
-                }
-            } else {
+            ZStack {
                 Text(text)
                     .captureSize(in: $textSize)
+                    .isHidden(overlayEditor)// for sizing only in overlay mode
                     .onTapGesture {
-                        isPresented = true
+                        isPresented = !overlayEditor
                     }
                     .popover(isPresented: $isPresented) {
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
-                            .onAppear {
-                                XYPlot.CoreDataManager.shared.save() }
                             .onChange(of: text) { _ in
                                 debugPrint("Text changed so save to coredata")
                                 XYPlot.CoreDataManager.shared.save()}
                     }
+                TextView(attributedText: $text, allowsEditingTextAttributes: true)
+                    .frame(width: textSize.width+50, height: textSize.height)
+                    .isHidden(!overlayEditor)
+                    .onChange(of: text) { _ in
+                        debugPrint("Text changed so save to coredata")
+                        XYPlot.CoreDataManager.shared.save()
+                    }
+
             }
         }
             
@@ -447,9 +464,6 @@ public struct XYPlot: View {
                                 }
                             }.captureWidth(in: $sLabelsWidth)
                             Title($data.settings.sTitle)
-                                .onAppear { print("Appeared with \(data.settings.sTitle.characters)"); data.settings.copyPlotSettingsToCoreData()
-                            
-                                }
                             .rotated(Angle(degrees: 90.0))
                             .captureWidth(in: $sTitleWidth)
                         }
