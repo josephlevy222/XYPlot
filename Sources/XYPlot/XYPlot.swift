@@ -447,6 +447,7 @@ public struct XYPlot: View {
                                 }
                             }.captureWidth(in: $sLabelsWidth)
                             Title($data.settings.sTitle)
+                                .onAppear { print("Appeared"); data.settings.copyPlotSettingsToCoreData()}
                             .rotated(Angle(degrees: 90.0))
                             .captureWidth(in: $sTitleWidth)
                         }
