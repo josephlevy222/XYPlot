@@ -288,6 +288,8 @@ public struct Title: View {
                     .popover(isPresented: $isPresented) {
                         TextView(attributedText: $text, allowsEditingTextAttributes: true)
                             .frame(width: textSize.width+50, height: textSize.height)
+                            .onAppear {
+                                XYPlot.CoreDataManager.shared.save() }
                             .onChange(of: text) { _ in
                                 debugPrint("Text changed so save to coredata")
                                 XYPlot.CoreDataManager.shared.save()}
@@ -445,7 +447,6 @@ public struct XYPlot: View {
                                 }
                             }.captureWidth(in: $sLabelsWidth)
                             Title($data.settings.sTitle)
-                                .onAppear { XYPlot.CoreDataManager.shared.save() }
                             .rotated(Angle(degrees: 90.0))
                             .captureWidth(in: $sTitleWidth)
                         }
