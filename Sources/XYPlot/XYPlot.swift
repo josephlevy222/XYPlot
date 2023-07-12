@@ -307,7 +307,7 @@ public struct Title: View {
                             debugPrint("Text changed so save to coredata")
                             XYPlot.CoreDataManager.shared.save()}
                 }
-            Color.clear.frame(width: textSize.width, height: textSize.height).border(.gray)
+            
             TextView(attributedText: $text, allowsEditingTextAttributes: true)
                 .frame(width: textSize.width, height: textSize.height)
                 .isHidden(!overlayEdit)
@@ -315,6 +315,7 @@ public struct Title: View {
                     debugPrint("Text changed so save to coredata")
                     XYPlot.CoreDataManager.shared.save()
                 }
+            Color.clear.frame(width: textSize.width, height: textSize.height).border(.gray)
         }
         
     }
