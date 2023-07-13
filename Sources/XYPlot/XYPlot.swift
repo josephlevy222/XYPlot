@@ -259,18 +259,15 @@ extension View {
     ///         .isHidden(true)
     /// Example for complete removal:
     ///     Text("Label")
-    ///         .isHidden(true, remove: true)
+    ///         .remove(true)
     /// - Parameters:
     ///   - hidden: Set to `false` to show the view. Set to `true` to hide the view.
     ///   - remove: Boolean value indicating whether or not to remove the view.
-    @ViewBuilder func isHidden(_ hidden: Bool, remove: Bool = false) -> some View {
-        if hidden {
-            if !remove {
-                self.hidden()
-            }
-        } else {
-            self
-        }
+    @ViewBuilder func isHidden(_ hidden: Bool) -> some View {
+        if hidden { self.hidden() } else { self }
+    }
+    @ViewBuilder func remove(_ erase: Bool ) -> some View {
+        if erase { } else { self }
     }
 }
 
@@ -309,7 +306,7 @@ public struct Title: View {
                 }
             
             TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                .frame(width: textSize.width, height: textSize.height).padding(.leading)
+                .frame(width: textSize.width, height: textSize.height)
                 .isHidden(!overlayEdit)
                 .onChange(of: text) { _ in
                     debugPrint("Text changed so save to coredata")
