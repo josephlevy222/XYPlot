@@ -309,7 +309,7 @@ public struct Title: View {
                 }
             
             TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                .frame(width: textSize.width, height: textSize.height).padding(.horizontal)
+                .frame(width: textSize.width, height: textSize.height)//.padding(.horizontal)
                 .isHidden(!overlayEdit)
                 .onChange(of: text) { _ in
                     debugPrint("Text changed so save to coredata")
