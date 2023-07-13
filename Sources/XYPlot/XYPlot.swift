@@ -397,7 +397,7 @@ public struct XYPlot: View {
                     }
                 HStack(spacing: 0) {
                     HStack(spacing: 0) { // the yAxis Title and Labels
-                        Title($data.settings.yTitle)
+                        Title($data.settings.yTitle, inPlaceEditing: true)
                         .rotated()
                         .padding(.trailing, pad)
                         VStack(spacing: 0) {
