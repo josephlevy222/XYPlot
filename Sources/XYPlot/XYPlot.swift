@@ -291,7 +291,7 @@ public struct Title: View {
             .isHidden(text.characters.count != 0)
             
             Text(text)
-                .padding()
+                .padding(.horizontal)
                 .captureSize(in: $textSize)
                 .isHidden(overlayEdit)// for sizing only in overlay mode
                 .onTapGesture {
@@ -306,7 +306,7 @@ public struct Title: View {
                 }
             
             TextView(attributedText: $text, allowsEditingTextAttributes: true)
-                .frame(width: textSize.width, height: textSize.height)
+                .frame(width: textSize.width, height: textSize.height).padding(.leading)
                 .isHidden(!overlayEdit)
                 .onChange(of: text) { _ in
                     debugPrint("Text changed so save to coredata")
