@@ -291,7 +291,7 @@ public struct Title: View {
             .isHidden(text.characters.count != 0)
             
             Text(text)
-                .padding(.horizontal)
+                .padding()
                 .captureSize(in: $textSize)
                 .isHidden(overlayEdit)// for sizing only in overlay mode
                 .onTapGesture {
