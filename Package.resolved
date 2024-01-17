@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "numerictextfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/josephlevy222/NumericTextField.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "5df205350d35c4faa8b5f1daa50d623f39fe9f52"
+      }
+    },
+    {
+      "identity" : "richtexteditor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/josephlevy222/RichTextEditor.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "de1586f61c9d3916dc5b40f18b3fa01e081de60e"
+      }
+    },
+    {
+      "identity" : "utilities",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/josephlevy222/Utilities.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d08a63eaa7ea95857a272f8412e8c6d36286099e"
+      }
+    }
+  ],
+  "version" : 2
+}
