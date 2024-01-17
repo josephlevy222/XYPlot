@@ -208,7 +208,7 @@ public struct PlotData : Equatable, Codable {
 		if let plotName { self.plotName = plotName }
 	}
 	
-	func saveToUserDefaults() {
+	public func saveToUserDefaults() {
 		guard let plotName else { return }
 		let encoder = JSONEncoder()
 		let plotDataToEncode = settings.savePoints ? self
@@ -223,7 +223,7 @@ public struct PlotData : Equatable, Codable {
 		} else { debugPrint("Could not save to UserDefaults")}
 	}
 	
-	func readFromUserDefaults() -> PlotData {
+	public func readFromUserDefaults() -> PlotData {
 		guard let plotName else { return self }
 		let decoder = JSONDecoder()
 		if let data = UserDefaults.standard.data(forKey: plotName),
