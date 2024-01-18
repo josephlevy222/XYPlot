@@ -11,20 +11,23 @@ import SwiftUI
 public struct AxisParameters : Equatable, Codable  {
 	
 	public init(min: Double = 0.0, max: Double = 1.0, majorTics: Int = 10,
-				minorTics: Int = 5, title: AttributedString = AttributedString(), show: Bool = true) {
+				minorTics: Int = 5, title: AttributedString = .init(), show: Bool = true, hideTitle: Bool = false) {
 		self.min = min
 		self.max = max
 		self.majorTics = majorTics
 		self.minorTics = minorTics
 		self.title = title
 		self.show = show
+		self.hideTitle = hideTitle
 	}
+	
 	public var show = true
 	public var min = 0.0
 	public var max = 1.0
 	public var majorTics = 10
 	public var minorTics = 5
 	public var title = AttributedString()
+	public var hideTitle: Bool = false
 }
 
 /// PlotSettings is used by PlotData to define axes and axes labels
@@ -37,12 +40,12 @@ public struct PlotSettings : Equatable, Codable  {
 	public var sAxis : AxisParameters?
 
 	// Computed properties for minimizing code changes when adding title to AxisParameters
-	public var xTitle : AttributedString { get { xAxis?.title ?? AttributedString()}
-		set { xAxis?.title = newValue.convertToNSFonts } }
-	public var yTitle : AttributedString { get { yAxis?.title ?? AttributedString()}
-		set { yAxis?.title = newValue.convertToNSFonts } }
-	public var sTitle : AttributedString { get { sAxis?.title ?? AttributedString()}
-		set { sAxis?.title = newValue.convertToNSFonts } }
+	public var xTitle : AttributedString { 	get { xAxis?.title ?? AttributedString()}
+											set { xAxis?.title = newValue.convertToNSFonts } }
+	public var yTitle : AttributedString { 	get { yAxis?.title ?? AttributedString()}
+											set { yAxis?.title = newValue.convertToNSFonts } }
+	public var sTitle : AttributedString { 	get { sAxis?.title ?? AttributedString()}
+											set { sAxis?.title = newValue.convertToNSFonts } }
 	// -----------------------------------------------------------------------------------
 	public var sizeMinor = 0.005
 	public var sizeMajor = 0.01
@@ -59,7 +62,7 @@ public struct PlotSettings : Equatable, Codable  {
 				format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
 				independentTics: Bool = false, legendPos: CGPoint = .zero, legend: Bool = true, selection: Int? = nil,
 				savePoints: Bool = true) {
-		self.title = title//.convertToNSFonts
+		self.title = title.convertToNSFonts
 		self.xAxis = xAxis
 		self.yAxis = yAxis
 		self.sAxis = sAxis
@@ -191,10 +194,10 @@ public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable, C
 /// - Parameters:
 ///   - plotLines: PlotLine array of the lines to plot
 ///   - plotSettings: scaling, tics, and titles of plot
-///   - plotName: String that is unique to this data set
+///   - plotName: String that is unique to this data set for UserDefaults storage
 ///   Methods:
 ///   - saveToUserDefaults(): Saves to UserDefaults with key in plotName
-///   - readFromUserDefaults(_ plotName: String)  // Retrieves from key plotname and returns PlotData with that plotName set
+///   - readFromUserDefaults()  // Retrieves from key plotname
 ///   - scaleAxes(): Adjusts settings to make plot fix in axes if autoscale is true
 ///   - axesScale(): Adjust setting to make plot fit in axes (regardlless of autoScale)
 public struct PlotData : Equatable, Codable {
@@ -223,23 +226,23 @@ public struct PlotData : Equatable, Codable {
 		} else { debugPrint("Could not save to UserDefaults")}
 	}
 	
-	public func readFromUserDefaults() -> PlotData {
-		guard let plotName else { return self }
+	mutating public func readFromUserDefaults() {//}-> PlotData {
+		guard let plotName else { return }//self }
 		let decoder = JSONDecoder()
 		if let data = UserDefaults.standard.data(forKey: plotName),
-		   var plotDataFromDecode = try? decoder.decode(PlotData.self, from: data) {
-			if !plotDataFromDecode.settings.savePoints { // Put existing point values in plotLines
-				plotDataFromDecode.plotLines = plotDataFromDecode.plotLines.indices.map { i in
-					var newLine = plotDataFromDecode.plotLines[i]
-					if i < plotLines.count  {
-						newLine.values = plotLines[i].values
+			var plotDataFromDecode = try? decoder.decode(PlotData.self, from: data) {
+			 if !plotDataFromDecode.settings.savePoints { // Put existing point values in plotLines
+					plotDataFromDecode.plotLines = plotDataFromDecode.plotLines.indices.map { i in
+						var newLine = plotDataFromDecode.plotLines[i]
+						if i < plotLines.count  {
+							newLine.values = plotLines[i].values
+						}
+						return newLine
 					}
-					return newLine
 				}
-			}
-			return plotDataFromDecode
+				self = plotDataFromDecode
 		}
-		return PlotData(plotLines: plotLines, settings: settings, plotName: plotName)
+		return //PlotData(plotLines: plotLines, settings: settings, plotName: plotName)
 	}
 	
 	static public func == (lhs: PlotData, rhs: PlotData) -> Bool {
