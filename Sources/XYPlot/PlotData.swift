@@ -59,7 +59,7 @@ public struct PlotSettings : Equatable, Codable  {
 				format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
 				independentTics: Bool = false, legendPos: CGPoint = .zero, legend: Bool = true, selection: Int? = nil,
 				savePoints: Bool = true) {
-		self.title = title.convertToNSFonts
+		self.title = title//.convertToNSFonts
 		self.xAxis = xAxis
 		self.yAxis = yAxis
 		self.sAxis = sAxis

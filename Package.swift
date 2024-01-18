@@ -28,7 +28,7 @@ let package = Package(
 		.target(
 			name: "XYPlot",
 			dependencies: ["Utilities","NumericTextField","RichTextEditor"]
-			//resources: [.process("Resources")]
+			//,resources: [.process("Resources")]
 		),
 		//        .testTarget(
 		//            name: "XYPlotTests",
