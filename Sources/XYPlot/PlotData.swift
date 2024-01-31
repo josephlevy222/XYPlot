@@ -226,23 +226,22 @@ public struct PlotData : Equatable, Codable {
 		} else { debugPrint("Could not save to UserDefaults")}
 	}
 	
-	mutating public func readFromUserDefaults() {//}-> PlotData {
-		guard let plotName else { return }//self }
+	mutating public func readFromUserDefaults() {
+		guard let plotName else { return }
 		let decoder = JSONDecoder()
 		if let data = UserDefaults.standard.data(forKey: plotName),
 			var plotDataFromDecode = try? decoder.decode(PlotData.self, from: data) {
-			 if !plotDataFromDecode.settings.savePoints { // Put existing point values in plotLines
-					plotDataFromDecode.plotLines = plotDataFromDecode.plotLines.indices.map { i in
-						var newLine = plotDataFromDecode.plotLines[i]
-						if i < plotLines.count  {
-							newLine.values = plotLines[i].values
-						}
-						return newLine
+			if !plotDataFromDecode.settings.savePoints { // Put existing point values in plotLines
+				plotDataFromDecode.plotLines = plotDataFromDecode.plotLines.indices.map { i in
+					var newLine = plotDataFromDecode.plotLines[i]
+					if i < plotLines.count  {
+						newLine.values = plotLines[i].values
 					}
+					return newLine
 				}
-				self = plotDataFromDecode
+			}
+			self = plotDataFromDecode
 		}
-		return //PlotData(plotLines: plotLines, settings: settings, plotName: plotName)
 	}
 	
 	static public func == (lhs: PlotData, rhs: PlotData) -> Bool {
