@@ -80,21 +80,20 @@ public struct PlotSettings : Equatable, Codable  {
 
 /// An element of a PlotLIne with an (x,y) point
 public struct PlotPoint : Equatable, Codable {
-	public init(x: Double, y: Double, label: String? = nil) {
-		self.x = x
-		self.y = y
-		self.label = label
-	}
-	
-	//CGPoint?
-	public var x: Double
-	public var y: Double
-	public var label: String?  // not implemented to display
 	/// Used to place points on a PlotLine
 	/// - Parameters:
 	///   - x: x axis point value
 	///   - y: y axis point  value
 	///   - label: unimplemented point label
+	public init(x: Double, y: Double, label: String? = nil) {
+		self.x = x
+		self.y = y
+		self.label = label
+	}
+	public var x: Double
+	public var y: Double
+	public var label: String?  // not implemented to display
+
 }
 
 public extension PlotPoint { /// Makes x: and y: designation unnecessary
