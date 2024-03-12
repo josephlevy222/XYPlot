@@ -9,7 +9,7 @@ fileprivate func repo(_ repo: String) -> String {
 
 let package = Package(
 	name: "XYPlot",
-	platforms: [.macOS(.v12), .iOS(.v15)],
+	platforms: [.macOS(.v12), .iOS("15.5")],
 	products: [
 		// Products define the executables and libraries a package produces, and make them visible to other packages.
 		.library(
