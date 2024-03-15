@@ -288,10 +288,12 @@ public struct XYPlot: View {
 	
 	private func gPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
-		let scaledPos = CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
+		let legendUnitSize = CGSize(width: legendSize.width/plotAreaWidth, height: legendSize.height/plotAreaHeight)
+		let scaledPos = CGPoint(x: p.x*plotAreaWidth+legendSize.width/2, y: p.y*plotAreaHeight+legendSize.height/2)
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
 		return CGPoint(x: scaledPos.x + leadingWidth, y: scaledPos.y + topHeight)
 	}
+	
 	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
 		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y - topHeight )
