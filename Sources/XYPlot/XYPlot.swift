@@ -294,7 +294,7 @@ public struct XYPlot: View {
 	}
 	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
-		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y + topHeight )
+		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y - topHeight )
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
 		return CGPoint(x: translatedPoint.x/plotAreaWidth, y: translatedPoint.y/plotAreaHeight)
 	}
