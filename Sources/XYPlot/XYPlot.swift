@@ -262,10 +262,10 @@ public struct XYPlot: View {
 						DragGesture()
 							.onChanged { value in
 								let position = maxmin(
-									CGPoint(x: value.translation.width + newLegendPos.x*g.size.width,
-											y: value.translation.height + newLegendPos.y*g.size.height),
-									size: CGSize(width: g.size.width-legendSize.width*0,
-												 height: g.size.height-legendSize.height*0))
+									CGPoint(x: value.translation.width + newLegendPos.x*g.size.width-legendSize.width/2.0,
+											y: value.translation.height + newLegendPos.y*g.size.height-legendSize.height/2.0),
+									size: CGSize(width: g.size.width-legendSize.width/2.0,
+												 height: g.size.height-legendSize.height/2.0))
 								xyLegendPos = scalePos(position,
 													   size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
 							}
