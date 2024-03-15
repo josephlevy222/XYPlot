@@ -256,7 +256,7 @@ public struct XYPlot: View {
 			GeometryReader { g in
 				let offsets = scalePos(xyLegendPos,size: g.size)
 				LegendView(data: $data)
-					.offset(x: offsets.x, y: offsets.y)
+					.offset(x: offsets.x + legendSize.width/2, y: offsets.y + legendSize.height/2)
 					.captureSize(in: $legendSize)
 					.highPriorityGesture(
 						DragGesture()
