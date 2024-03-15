@@ -264,8 +264,8 @@ public struct XYPlot: View {
 								let position = maxmin(
 									CGPoint(x: value.translation.width + newLegendPos.x*g.size.width,
 											y: value.translation.height + newLegendPos.y*g.size.height),
-									size: CGSize(width: g.size.width-legendSize.width,
-												 height: g.size.height-legendSize.height))
+									size: CGSize(width: g.size.width-legendSize.width*0,
+												 height: g.size.height-legendSize.height*0))
 								xyLegendPos = scalePos(position,
 													   size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
 							}
