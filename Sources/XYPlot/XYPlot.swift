@@ -290,7 +290,7 @@ public struct XYPlot: View {
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
 		let scaledPos = CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
-		return CGPoint(x: scaledPos.x + leadingWidth, y: scaledPos.y)// + xLabelsHeight)
+		return CGPoint(x: scaledPos.x + leadingWidth, y: scaledPos.y + topHeight)
 	}
 	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
