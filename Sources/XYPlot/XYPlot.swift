@@ -288,22 +288,20 @@ public struct XYPlot: View {
 	
 	private func gPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
-		//let legendUnitSize = CGSize(width: legendSize.width/plotAreaWidth, height: legendSize.height/plotAreaHeight)
-		let scaledPos = CGPoint(x: p.x*plotAreaWidth-legendSize.width/2, y: p.y*plotAreaHeight-legendSize.height/2)
+		let scaledPos = CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
 		return CGPoint(x: scaledPos.x + leadingWidth, y: scaledPos.y + topHeight)
 	}
 	
 	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let topHeight = size.height - plotAreaHeight - xLabelsHeight
-		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y - topHeight )
+		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y - topHeight)
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
 		return CGPoint(x: translatedPoint.x/plotAreaWidth, y: translatedPoint.y/plotAreaHeight)
 	}
-	private func scalePos(_ p: CGPoint, size: CGSize) -> CGPoint { CGPoint(x: p.x*size.width, y: p.y*size.height ) }
 	
 	private func maxmin(_ point: CGPoint, size: CGSize) -> CGPoint {
-		CGPoint(x: max(min(point.x,size.width),legendSize.width/2),y:max(min(point.y,size.height),legendSize.height/2))
+		CGPoint(x: max(min(point.x,size.width),0),y:max(min(point.y,size.height),0))
 	}
 	/// Creates the path that is the axes with tic marks set using the parameters in settings: PlotSetting
 	///  size is from the GeometryReader that is the area in which the plot is made
