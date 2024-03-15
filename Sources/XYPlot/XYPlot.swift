@@ -147,7 +147,7 @@ public struct XYPlot: View {
 		showSecondary ? sLabelsWidth + sTitleWidth : lastXLabelWidth/2.0
 	}
 	
-	private var topHeight: CGFloat { lastYLabelHeight/2.0}
+	private var topMostLabelHeight: CGFloat { lastYLabelHeight/2.0}
 	
 	private let pad : CGFloat = 4 // Make platform dependent?
 	
@@ -159,7 +159,7 @@ public struct XYPlot: View {
 					.padding(.leading, leadingWidth)
 					.padding(.trailing, trailingWidth)
 					.fixedSize().frame(width: 1)
-				Invisible(height: topHeight)
+				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
 					}
@@ -253,21 +253,21 @@ public struct XYPlot: View {
 					.fixedSize()     // Don't use xTitle width //
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
-			GeometryReader { g in
-				let offsets = scalePos(xyLegendPos,size: g.size)
+			GeometryReader { g in // topmost of ZStack the whole frame
+				let offsets = gPos(xyLegendPos,size: g.size)
 				LegendView(data: $data)
-					.offset(x: offsets.x - legendSize.width/2, y: offsets.y + legendSize.height/2)
+					.offset(x: offsets.x, y: offsets.y)
 					.captureSize(in: $legendSize)
 					.highPriorityGesture(
 						DragGesture()
 							.onChanged { value in
+								let gPosition =  gPos(newLegendPos,size: g.size)
 								let position = maxmin(
-									CGPoint(x: value.translation.width + newLegendPos.x*g.size.width-legendSize.width/2.0,
-											y: value.translation.height + newLegendPos.y*g.size.height-legendSize.height/2.0),
-									size: CGSize(width: g.size.width-legendSize.width/2.0,
-												 height: g.size.height-legendSize.height/2.0))
-								xyLegendPos = scalePos(position,
-													   size: CGSize(width: 1.0/g.size.width, height: 1.0/g.size.height))
+									CGPoint(x: value.translation.width + gPosition.x,
+											y: value.translation.height + gPosition.y),
+									size: CGSize(width: g.size.width-legendSize.width,
+												 height: g.size.height-legendSize.height))
+								xyLegendPos = xyPos(position, size: g.size)
 							}
 							.onEnded { value in
 								newLegendPos = xyLegendPos
@@ -277,9 +277,8 @@ public struct XYPlot: View {
 						data.settings.legendPos = newPos
 					}
 					.onAppear {
-						let oldPos = data.settings.legendPos
-						xyLegendPos = oldPos
-						newLegendPos = oldPos
+						xyLegendPos = data.settings.legendPos
+						newLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
 			}
@@ -287,6 +286,18 @@ public struct XYPlot: View {
 		}// end of ZStack
 	}// End of body
 	
+	private func gPos(_ p: CGPoint, size: CGSize) -> CGPoint {
+		let plotAreaWidth = size.width - leadingWidth - trailingWidth
+		let scaledPos = CGPoint(x: p.x*plotAreaWidth, y: (1.0-p.y)*(plotAreaHeight))
+		let topHeight = size.height - plotAreaHeight - xLabelsHeight
+		return CGPoint(x: scaledPos.x + leadingWidth, y: scaledPos.y + size.height - plotAreaHeight - xLabelsHeight)
+	}
+	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
+		let topHeight = size.height - plotAreaHeight - xLabelsHeight
+		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y + topHeight )
+		let plotAreaWidth = size.width - leadingWidth - trailingWidth
+		return CGPoint(x: translatedPoint.x/plotAreaWidth, y: translatedPoint.y/plotAreaHeight)
+	}
 	private func scalePos(_ p: CGPoint, size: CGSize) -> CGPoint { CGPoint(x: p.x*size.width, y: p.y*size.height ) }
 	
 	private func maxmin(_ point: CGPoint, size: CGSize) -> CGPoint {
