@@ -261,7 +261,8 @@ public struct XYPlot: View {
 					.highPriorityGesture(
 						DragGesture()
 							.onChanged { value in
-								let gPosition =  gPos(newLegendPos,size: g.size)
+								let plotArea = CGSize(width: g.size.width-leadingWidth-trailingWidth, height: plotAreaHeight)
+								let gPosition =  gPos(newLegendPos, size: plotArea)
 								let position = maxmin(
 									CGPoint(x: value.translation.width + gPosition.x,
 											y: value.translation.height + gPosition.y),
