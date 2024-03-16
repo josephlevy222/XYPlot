@@ -268,7 +268,7 @@ public struct XYPlot: View {
 											y: value.translation.height + gPosition.y),
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
-								xyLegendPos = xyPos(position, size: g.size)
+								xyLegendPos = xyPos(position, size: plotArea)
 							}
 							.onEnded { value in
 								newLegendPos = xyLegendPos
@@ -295,8 +295,8 @@ public struct XYPlot: View {
 	}
 	
 	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
-		let topHeight = size.height - plotAreaHeight - xLabelsHeight
-		let translatedPoint = CGPoint(x: p.x - leadingWidth, y: p.y - topHeight)
+		//let topHeight = size.height - plotAreaHeight - xLabelsHeight
+		let translatedPoint = p //CGPoint(x: p.x - leadingWidth, y: p.y - topHeight)
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
 		return CGPoint(x: translatedPoint.x/plotAreaWidth, y: translatedPoint.y/plotAreaHeight)
 	}
