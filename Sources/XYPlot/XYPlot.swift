@@ -256,55 +256,35 @@ public struct XYPlot: View {
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				LegendView(data: $data)
-					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)// offset from topleading?
+					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
 					.captureSize(in: $legendSize)
 					.highPriorityGesture(
 						DragGesture()
 							.onChanged { value in
 								let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
-								//let gPosition =  CGPoint(x: newLegendPos.x*plotAreaWidth, y: newLegendPos.y*plotAreaHeight) //gPos(newLegendPos, size: g.size)
 								let position = maxmin(
-									CGPoint(x: value.translation.width + newLegendPos.x*plotAreaWidth,
-											y: value.translation.height + newLegendPos.y*plotAreaHeight),
+									CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
+											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
-								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight) //xyPos(position, size: plotArea)
+								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
 							}
 							.onEnded { value in
-								newLegendPos = xyLegendPos
+								data.settings.legendPos = xyLegendPos
 							}
 					)
-					.onChange(of: newLegendPos) { newPos in
-						data.settings.legendPos = newPos
-					}
+//					.onChange(of: newLegendPos) { newPos in
+//						data.settings.legendPos = newPos
+//					}
 					.onAppear {
 						xyLegendPos = data.settings.legendPos
-						newLegendPos = data.settings.legendPos
+						//newLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
 	}// End of body
-	
-	private func legendOffset(_ p: CGPoint, size: CGSize) -> CGPoint {
-		let plotAreaWidth = size.width - leadingWidth - trailingWidth
-		//let plotArea = CGSize(width: size.width - leadingWidth - trailingWidth, height: plotAreaHeight)
-		return CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
-	}
-	private func gPos(_ p: CGPoint, size: CGSize) -> CGPoint {
-		let plotAreaWidth = size.width - leadingWidth - trailingWidth
-		let scaledPos = CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
-		//let topHeight = size.height - plotAreaHeight - xLabelsHeight
-		return scaledPos //CGPoint(x: scaledPos.x + leadingWidth, y: scaledPos.y + topHeight)
-	}
-	
-	private func xyPos(_ p: CGPoint, size: CGSize) -> CGPoint {
-		//let topHeight = size.height - plotAreaHeight - xLabelsHeight
-		let translatedPoint = p //CGPoint(x: p.x - leadingWidth, y: p.y - topHeight)
-		let plotAreaWidth = size.width - leadingWidth - trailingWidth
-		return CGPoint(x: translatedPoint.x/plotAreaWidth, y: translatedPoint.y/plotAreaHeight)
-	}
 	
 	private func maxmin(_ point: CGPoint, size: CGSize) -> CGPoint {
 		CGPoint(x: max(min(point.x,size.width),0),y: max(min(point.y,size.height),0))
