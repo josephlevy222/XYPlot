@@ -272,7 +272,6 @@ public struct XYPlot: View {
 								data.settings.legendPos = xyLegendPos
 							}
 					)
-				}
 					.onAppear {
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
