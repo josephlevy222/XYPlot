@@ -254,21 +254,21 @@ public struct XYPlot: View {
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
 			GeometryReader { g in // topmost of ZStack the whole frame
-				let offsets = gPos(xyLegendPos,size: g.size)
+				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				LegendView(data: $data)
-					.offset(x: offsets.x, y: offsets.y)
+					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)// offset from topleading?
 					.captureSize(in: $legendSize)
 					.highPriorityGesture(
 						DragGesture()
 							.onChanged { value in
-								let plotArea = CGSize(width: g.size.width-leadingWidth-trailingWidth, height: plotAreaHeight)
-								let gPosition =  gPos(newLegendPos, size: plotArea)
+								let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
+								//let gPosition =  CGPoint(x: newLegendPos.x*plotAreaWidth, y: newLegendPos.y*plotAreaHeight) //gPos(newLegendPos, size: g.size)
 								let position = maxmin(
-									CGPoint(x: value.translation.width + gPosition.x,
-											y: value.translation.height + gPosition.y),
-									size: plotArea )//CGSize(width: g.size.width-legendSize.width,
-												// height: g.size.height-legendSize.height))
-								xyLegendPos = xyPos(position, size: plotArea)
+									CGPoint(x: value.translation.width + newLegendPos.x*plotAreaWidth,
+											y: value.translation.height + newLegendPos.y*plotAreaHeight),
+									size: CGSize(width: g.size.width-legendSize.width,
+												 height: g.size.height-legendSize.height))
+								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight) //xyPos(position, size: plotArea)
 							}
 							.onEnded { value in
 								newLegendPos = xyLegendPos
@@ -287,6 +287,11 @@ public struct XYPlot: View {
 		}// end of ZStack
 	}// End of body
 	
+	private func legendOffset(_ p: CGPoint, size: CGSize) -> CGPoint {
+		let plotAreaWidth = size.width - leadingWidth - trailingWidth
+		//let plotArea = CGSize(width: size.width - leadingWidth - trailingWidth, height: plotAreaHeight)
+		return CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
+	}
 	private func gPos(_ p: CGPoint, size: CGSize) -> CGPoint {
 		let plotAreaWidth = size.width - leadingWidth - trailingWidth
 		let scaledPos = CGPoint(x: p.x*plotAreaWidth, y: p.y*plotAreaHeight)
@@ -302,7 +307,7 @@ public struct XYPlot: View {
 	}
 	
 	private func maxmin(_ point: CGPoint, size: CGSize) -> CGPoint {
-		CGPoint(x: max(min(point.x,size.width),0),y:max(min(point.y,size.height),0))
+		CGPoint(x: max(min(point.x,size.width),0),y: max(min(point.y,size.height),0))
 	}
 	/// Creates the path that is the axes with tic marks set using the parameters in settings: PlotSetting
 	///  size is from the GeometryReader that is the area in which the plot is made
