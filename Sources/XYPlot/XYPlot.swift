@@ -90,7 +90,6 @@ public struct XYPlot: View {
 	
 	@State public  var isPresented: Bool = false
 	@State private var xyLegendPos : CGPoint = .zero
-	@State private var newLegendPos : CGPoint = .zero
 	
 	// State vars used with captureWidth,Height,Size
 	@State private var plotAreaHeight: CGFloat = 0.0
@@ -273,12 +272,9 @@ public struct XYPlot: View {
 								data.settings.legendPos = xyLegendPos
 							}
 					)
-//					.onChange(of: newLegendPos) { newPos in
-//						data.settings.legendPos = newPos
-//					}
+				}
 					.onAppear {
 						xyLegendPos = data.settings.legendPos
-						//newLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
 			}
