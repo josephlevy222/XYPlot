@@ -92,16 +92,28 @@ public struct XYPlot: View {
 	@State private var xyLegendPos : CGPoint = .zero
 	
 	// State vars used with captureWidth,Height,Size
-	@State private var plotAreaHeight: CGFloat = 0.0
-	@State private var yLabelsWidth: CGFloat = 0.0
-	@State private var sLabelsWidth: CGFloat = 0.0
-	@State private var sTitleWidth: CGFloat = 0.0
-	@State private var xLabelsHeight: CGFloat = 0.0
-	@State private var lastXLabelWidth: CGFloat = 0.0
-	@State private var lastYLabelHeight: CGFloat = 0.0
-	@State private var legendSize: CGSize = .zero
+	struct Captures: Codable {
+		var plotAreaHeight: CGFloat = 0.0
+		var yLabelsWidth: CGFloat = 0.0
+		var sLabelsWidth: CGFloat = 0.0
+		var sTitleWidth: CGFloat = 0.0
+		var xLabelsHeight: CGFloat = 0.0
+		var lastXLabelWidth: CGFloat = 0.0
+		var lastYLabelHeight: CGFloat = 0.0
+		var legendSize: CGSize = .zero
+	}
+	@State private var captures = Captures()
+	var plotAreaHeight: CGFloat { get {captures.plotAreaHeight}}
+	var yLabelsWidth: CGFloat { captures.yLabelsWidth }
+	var sLabelsWidth: CGFloat { captures.sLabelsWidth }
+	var sTitleWidth: CGFloat { captures.sTitleWidth }
+	var xLabelsHeight: CGFloat { captures.xLabelsHeight }
+	var lastXLabelWidth: CGFloat { captures.lastXLabelWidth }
+	var lastYLabelHeight: CGFloat { captures.lastYLabelHeight}
+	var legendSize: CGSize { captures.legendSize }
 	
 	// Computed variables
+	
 	private var settings : PlotSettings { get { data.settings } set { data.settings = newValue } }
 	private var lines : [PlotLine] { data.plotLines }
 	private var selection : Int? { data.settings.selection }
@@ -170,11 +182,11 @@ public struct XYPlot: View {
 						VStack(spacing: 0) {
 							ForEach(yLabels.indices, id: \.self) { i in
 								Text(yLabels[i])
-									.captureHeight(in: $lastYLabelHeight)
+									.captureHeight(in: $captures.lastYLabelHeight)
 									.frame(height: plotAreaHeight/max(1.0,CGFloat(yAxis.majorTics)))
 							}
 						}
-					}.captureWidth(in: $yLabelsWidth)
+					}.captureWidth(in: $captures.yLabelsWidth)
 						.fixedSize()      // Avoid using the yLabels height to size //
 						.frame(height: 1) // plot area, 1 is arbitrary small no.    //
 					GeometryReader { geo in // the plotArea
@@ -212,15 +224,15 @@ public struct XYPlot: View {
 							HStack(spacing: 0) {
 								ForEach(xLabels.indices, id: \.self) { i in
 									Text(xLabels[i])
-										.captureWidth(in: $lastXLabelWidth)
+										.captureWidth(in: $captures.lastXLabelWidth)
 										.fixedSize()
 										.frame(width: max(1.0,size.width/max(1.0,CGFloat(xAxis.majorTics))))
 								}
 							}
-								.captureHeight(in: $xLabelsHeight)
+								.captureHeight(in: $captures.xLabelsHeight)
 								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
 						)
-					}.captureHeight(in: $plotAreaHeight) // End of GeometryReader geo
+					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 					
 					if showSecondary {
 						HStack(spacing: 0) {
@@ -229,10 +241,10 @@ public struct XYPlot: View {
 									Text(sLabels[i])
 										.frame(height: plotAreaHeight/CGFloat(sAxis.majorTics))
 								}
-							}.captureWidth(in: $sLabelsWidth)
+							}.captureWidth(in: $captures.sLabelsWidth)
 							XYPlotTitle($data.settings.sTitle)
 								.rotated(Angle(degrees: 90.0))
-								.captureWidth(in: $sTitleWidth)
+								.captureWidth(in: $captures.sTitleWidth)
 						}
 						.fixedSize()      // Don't use sTitle height //
 						.frame(height: 1) // to size plot area       //
@@ -256,7 +268,7 @@ public struct XYPlot: View {
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				LegendView(data: $data)
 					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
-					.captureSize(in: $legendSize)
+					.captureSize(in: $captures.legendSize)
 					.highPriorityGesture(
 						DragGesture()
 							.onChanged { value in
@@ -273,8 +285,19 @@ public struct XYPlot: View {
 							}
 					)
 					.onAppear {
+						let decoder = JSONDecoder()
+						if let savedData = UserDefaults.standard.data(forKey: data.plotName ?? "" + ".captures") {
+							captures = (try? decoder.decode(XYPlot.Captures.self, from: savedData)) ?? Captures()
+						}
+
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
+					}
+					.onDisappear {
+						let encoder = JSONEncoder()
+						if let encoded = try? encoder.encode(captures) {
+							UserDefaults.standard.setValue(encoded, forKey: (data.plotName ?? "") + ".captures")
+						}
 					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
