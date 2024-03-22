@@ -63,13 +63,13 @@ public struct XYPlotTitle: View {
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
 			
-			Text(text)// for sizing only in overlay mode, may not need since RichTextEditor sizes
-				.padding(.horizontal)
-				.captureSize(in: $textSize)
-				.hidden()
+//			Text(text)// for sizing only in overlay mode, may not need since RichTextEditor sizes
+//				.padding(.horizontal)
+//				.captureSize(in: $textSize)
+//				.hidden()
 			
 			RichTextEditor( $text)
-				.frame(width: textSize.width, height: textSize.height)
+				//.frame(width: textSize.width, height: textSize.height)
 				.padding(.leading)
 				.onTapGesture {
 					isPresented = !overlayEdit // don't use popover in overlay mode
