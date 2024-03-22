@@ -230,7 +230,7 @@ public struct XYPlot: View {
 								}
 							}
 								.captureHeight(in: $captures.xLabelsHeight)
-								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
+								.offset(y: (size.height+xLabelsHeight)+pad)
 						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 					
@@ -257,7 +257,7 @@ public struct XYPlot: View {
 					isPresented = true
 				}
 				// Invisible space holder for x Labels
-				Invisible(height: xLabelsHeight)
+				Invisible(height: xLabelsHeight*1.5)
 				XYPlotTitle($data.settings.xTitle, inPlaceEditing: true)
 					.padding(.top, xLabelsHeight/3.0)
 					.padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
@@ -285,20 +285,20 @@ public struct XYPlot: View {
 							}
 					)
 					.onAppear {
-						let decoder = JSONDecoder()
-						if let savedData = UserDefaults.standard.data(forKey: data.plotName ?? "" + ".captures") {
-							captures = (try? decoder.decode(XYPlot.Captures.self, from: savedData)) ?? Captures()
-						}
+//						let decoder = JSONDecoder()
+//						if let savedData = UserDefaults.standard.data(forKey: data.plotName ?? "" + ".captures") {
+//							captures = (try? decoder.decode(XYPlot.Captures.self, from: savedData)) ?? Captures()
+//						}
 
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
-					.onDisappear {
-						let encoder = JSONEncoder()
-						if let encoded = try? encoder.encode(captures) {
-							UserDefaults.standard.setValue(encoded, forKey: (data.plotName ?? "") + ".captures")
-						}
-					}
+//					.onDisappear {
+//						let encoder = JSONEncoder()
+//						if let encoded = try? encoder.encode(captures) {
+//							UserDefaults.standard.setValue(encoded, forKey: (data.plotName ?? "") + ".captures")
+//						}
+//					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
