@@ -230,7 +230,7 @@ public struct XYPlot: View {
 								}
 							}
 								.captureHeight(in: $captures.xLabelsHeight)
-								.offset(y: (size.height+xLabelsHeight*2)/2.0+pad)
+								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
 						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 					
@@ -257,7 +257,7 @@ public struct XYPlot: View {
 					isPresented = true
 				}
 				// Invisible space holder for x Labels
-				Invisible(height: xLabelsHeight*2)
+				Invisible(height: xLabelsHeight)
 				XYPlotTitle($data.settings.xTitle, inPlaceEditing: true)
 					.padding(.top, xLabelsHeight/3.0)
 					.padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
