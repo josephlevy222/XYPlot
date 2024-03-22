@@ -230,7 +230,7 @@ public struct XYPlot: View {
 								}
 							}
 								.captureHeight(in: $captures.xLabelsHeight)
-								.offset(y: (size.height+xLabelsHeight)+pad)
+								//.offset(y: (size.height+xLabelsHeight/2)+pad)
 						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 					
