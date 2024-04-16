@@ -45,7 +45,7 @@ extension View {
 public struct XYPlotTitle: View {
 	@Binding public var text: AttributedString
 	@State private var isPresented = false
-	@State private var textSize = CGSize.zero
+	
 	var hideAddTitleButton = false
 	let overlayEditor: Bool
 	public init(_ text: Binding<AttributedString>, inPlaceEditing: Bool = false, hideAddTitleButton: Bool = false) {
@@ -62,21 +62,14 @@ public struct XYPlotTitle: View {
 			}
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
-			
-//			Text(text)// for sizing only in overlay mode, may not need since RichTextEditor sizes
-//				.padding(.horizontal)
-//				.captureSize(in: $textSize)
-//				.hidden()
-			
+		
 			RichTextEditor( $text)
-				//.frame(width: textSize.width, height: textSize.height)
 				.padding(.leading)
 				.onTapGesture {
 					isPresented = !overlayEdit // don't use popover in overlay mode
 				}
 				.popover(isPresented: $isPresented) {
 					RichTextEditor( $text)
-						.frame(width: textSize.width, height: textSize.height)
 						.padding(.leading)
 				}
 		}
@@ -285,20 +278,9 @@ public struct XYPlot: View {
 							}
 					)
 					.onAppear {
-//						let decoder = JSONDecoder()
-//						if let savedData = UserDefaults.standard.data(forKey: data.plotName ?? "" + ".captures") {
-//							captures = (try? decoder.decode(XYPlot.Captures.self, from: savedData)) ?? Captures()
-//						}
-
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
-//					.onDisappear {
-//						let encoder = JSONEncoder()
-//						if let encoded = try? encoder.encode(captures) {
-//							UserDefaults.standard.setValue(encoded, forKey: (data.plotName ?? "") + ".captures")
-//						}
-//					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
