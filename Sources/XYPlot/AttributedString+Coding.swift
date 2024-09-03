@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import RichTextEditor
+//import RichTextEditor
+import EditableText
 func decodeToAttributedString(_ data: Data?) -> AttributedString {
 	guard let data else { return AttributedString("")}
 	if let output = data.attributedString {
@@ -26,7 +27,7 @@ extension Data {
 		let aString = try? NSAttributedString(data: self,
 											  options: options,
 											  documentAttributes: nil)
-		return aString?.attributedString
+		return aString?.attributedStringFromUIKit
 	}
 }
 
@@ -38,10 +39,10 @@ extension AttributedString {
 		]
 		let range = NSRange(location: 0, length: characters.count)
 		
-		return try? nsAttributedString.data(from: range, documentAttributes: options)
+		return try? nsAttributedString().data(from: range, documentAttributes: options)
 	}
 
-	var convertToNSFonts : AttributedString { convertToUIAttributes().attributedString }
+	var convertToNSFonts : AttributedString { nsAttributedString().attributedStringFromUIKit }
 }
 
 extension String {

@@ -16,9 +16,6 @@ public struct PlotLineDialog: View {
     init(plotData: Binding<PlotData>) { _plotData = plotData }
     @State private var i : Int = 0
     @State private var lineName : String = ""
-//    {
-//        didSet { plotData.plotLines[self.i].legend = lineName }
-//    }
     @State private var lineColor : Color = .black
     @State private var lineWidth : CGFloat = 1.0
     @State private var lineStyle : Int = 0
@@ -56,9 +53,9 @@ public struct PlotLineDialog: View {
 #else
                                 .frame(width: 100, height: 1.0)
 #endif
-							PointShapeView(shape: PointShape( {symbolShapes[pointStyle].path(in: $0)}, angle: symbolShapes[pointStyle].angle, fill: pointFill, color: pointColor))
+							PointShapeView(shape: PointShape( {symbolShapes[pointStyle].path(in: $0)}, angle: symbolShapes[pointStyle].angle, fill: pointFill, color: pointColor, size: pointSize))
 								.offset(x: -25.0, y: 0)
-							PointShapeView(shape: PointShape( {symbolShapes[pointStyle].path(in: $0)}, angle: symbolShapes[pointStyle].angle, fill: pointFill, color: pointColor))
+							PointShapeView(shape: PointShape( {symbolShapes[pointStyle].path(in: $0)}, angle: symbolShapes[pointStyle].angle, fill: pointFill, color: pointColor, size: pointSize))
                                 .offset(x:  25.0, y: 0)
                         }}
                     HStack { Text("Use with right axis"); Spacer(); CheckBoxView(checked: $useSecondary)}
@@ -115,7 +112,7 @@ public struct PlotLineDialog: View {
 								else {
 									PointShapeView(shape: PointShape(symbolShapes[pointStyle].shapePath.path,
 																angle: symbolShapes[pointStyle].angle,
-																fill: pointFill, color: pointColor))
+																	 fill: pointFill, color: pointColor, size: pointSize))
 								}
                             }
                             .popover(isPresented: $showDropdown, attachmentAnchor: .rect(.bounds), arrowEdge: .bottom) {
@@ -191,6 +188,7 @@ public struct PlotLineDialog: View {
                 pointSize = plotLine.pointShape.size
             }
         }
+		.fixedSize()
     }
 }
 

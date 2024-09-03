@@ -13,12 +13,13 @@
 //  Added Coredata support and
 //  Added TextView for editing titles 7/2/23
 //  Switched to RichTextEditor for titles 11/17/23
+//  Switched to EditableText for titles from RichTextEditor 08/30/24
 //  Modified to use UserDefaults rather than Coredata making PlotData Codable
 
 import SwiftUI
 import Utilities
-import RichTextEditor
-
+//import RichTextEditor
+import EditableText
 
 extension View {
 	/// Hide or show the view based on a boolean value.
@@ -63,15 +64,9 @@ public struct XYPlotTitle: View {
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
 		
-			RichTextEditor( $text)
+			EditableText($text).isRemoved(!overlayEdit)
+			EditableTextInPopover($text).isRemoved(overlayEdit)
 				.padding(.leading)
-				.onTapGesture {
-					isPresented = !overlayEdit // don't use popover in overlay mode
-				}
-				.popover(isPresented: $isPresented) {
-					RichTextEditor( $text)
-						.padding(.leading)
-				}
 		}
 	}
 }

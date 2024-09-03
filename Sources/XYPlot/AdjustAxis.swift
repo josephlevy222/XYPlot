@@ -76,14 +76,11 @@ func bestTics(min: inout Double, max: inout Double) -> MajorMinor {
 func adjustAxis( _ lower: inout Double, _ upper: inout Double) -> MajorMinor {
     /// Translated from C++. May need more work.
     /// An excellent autoscaler or close enough
-    /// Adjusts the upper and lower to round numbers that include
-    /// the called range.
-    /// Returns good choices for major and minor tics in
-    /// a tuple MajorMinor = (majortics,minortics)
+    /// Adjusts the upper and lower to round numbers that include the called range.
+    /// Returns good choices for major and minor tics in a tuple MajorMinor = (majortics,minortics)
     /// Makes good choices when min and max are opposite signs too
     /// MajorMinor(0,0) when bounds are infinity or the same value
-    /// February 2022.  Updated to alway make a 0 majorTic when min and max are
-    /// opposite signs
+    /// February 2022.  Updated to alway make a 0 majorTic when min and max are opposite signs
     if lower>upper { swap(&lower,&upper) }
     if lower.isNaN || upper.isNaN || lower.isInfinite || upper.isInfinite {
         upper = 1; lower = 0

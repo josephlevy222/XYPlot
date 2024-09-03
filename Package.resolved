@@ -1,21 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "editabletext",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/josephlevy222/EditableText.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "11a7a46f919b0648c3caddf4ef06e5a0157e3071"
+      }
+    },
+    {
       "identity" : "numerictextfield",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/josephlevy222/NumericTextField.git",
       "state" : {
         "branch" : "main",
         "revision" : "5df205350d35c4faa8b5f1daa50d623f39fe9f52"
-      }
-    },
-    {
-      "identity" : "richtexteditor",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/josephlevy222/RichTextEditor.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "ebbeef358ecfea7619a4dabc102bf69b6ad21c05"
       }
     },
     {
