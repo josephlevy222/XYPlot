@@ -64,9 +64,9 @@ public struct XYPlotTitle: View {
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
 		
-			EditableText($text).isRemoved(!overlayEdit)
-			EditableTextInPopover($text).isRemoved(overlayEdit)
-				.padding(.leading)
+			EditableText($text)//.isHidden(!overlayEdit)
+			//EditableTextInPopover($text).isHidden(overlayEdit)
+			//	.padding(.leading)
 		}
 	}
 }
@@ -221,7 +221,9 @@ public struct XYPlot: View {
 								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
 						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
-					
+						.onTapGesture {
+							isPresented = true
+						}
 					if showSecondary {
 						HStack(spacing: 0) {
 							VStack(spacing: 0) {
@@ -241,9 +243,7 @@ public struct XYPlot: View {
 					}
 					
 				} // End of HStack yAxis - Plot - sAxis
-				.onTapGesture {
-					isPresented = true
-				}
+				
 				// Invisible space holder for x Labels
 				Invisible(height: xLabelsHeight)
 				XYPlotTitle($data.settings.xTitle, inPlaceEditing: true)
