@@ -18,8 +18,7 @@ let package = Package(
 	],
 	dependencies: [.package(url: repo("Utilities"), branch: "main"),
 				   .package(url: repo("NumericTextField"), branch: "main"),
-				   .package(url: repo("EditableText"), branch: "test")
-				   //,.package(url: repo("RichTextEditor"), branch: "main")
+				   .package(url: repo("EditableText"), branch: "main")
 				   // Dependencies declare other packages that this package depends on.
 				   // .package(url: /* package url */, from: "1.0.0"),
 	],
