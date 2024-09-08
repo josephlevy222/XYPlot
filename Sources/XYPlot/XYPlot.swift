@@ -64,9 +64,9 @@ public struct XYPlotTitle: View {
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
 		
-			EditableText($text).isHidden(!overlayEdit)
-			EditableTextInPopover($text).isHidden(overlayEdit)
-				.padding(.leading)
+			EditableText($text)//.isHidden(!overlayEdit)
+			//EditableTextInPopover($text).isHidden(overlayEdit)
+			//	.padding(.leading)
 		}
 	}
 }
