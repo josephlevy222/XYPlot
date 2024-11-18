@@ -266,12 +266,11 @@ public struct XYPlot: View {
 											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
-								//xyLegendPos
-								data.settings.legendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
+								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
 							}
-//							.onEnded { value in
-//								data.settings.legendPos = xyLegendPos
-//							}
+							.onEnded { value in
+								data.settings.legendPos = xyLegendPos
+							}
 					)
 					.onAppear {
 						xyLegendPos = data.settings.legendPos
