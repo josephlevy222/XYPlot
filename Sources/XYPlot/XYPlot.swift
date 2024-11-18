@@ -267,7 +267,7 @@ public struct XYPlot: View {
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
 								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-								data.settings.legendPos = xyLegendPos
+								//data.settings.legendPos = xyLegendPos
 							}
 							.onEnded { value in
 								data.settings.legendPos = xyLegendPos
