@@ -59,14 +59,14 @@ public struct XYPlotTitle: View {
 		ZStack {
 			Button("Add a Title") {
 				text = AttributedString("Title").setFont(to: Font.title)
-				isPresented = !overlayEditor
+				withAnimation { isPresented = !overlayEditor }
 			}
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
 		
-			EditableText($text)//.isHidden(!overlayEdit)
-			//EditableTextInPopover($text).isHidden(overlayEdit)
-			//	.padding(.leading)
+			EditableText($text).isHidden(!overlayEdit)
+			EditableTextInPopover($text).isHidden(overlayEdit)
+				.padding(.leading)
 		}
 	}
 }
@@ -77,10 +77,11 @@ public struct XYPlot: View {
 	@Binding public var data : PlotData
 	
 	@State public  var isPresented: Bool = false
+	var _legendPos: CGPoint { get { data.settings.legendPos } set { data.settings.legendPos = newValue } }
 	@State private var xyLegendPos : CGPoint = .zero
 	
 	// State vars used with captureWidth,Height,Size
-	struct Captures: Codable {
+	private struct Captures: Codable {
 		var plotAreaHeight: CGFloat = 0.0
 		var yLabelsWidth: CGFloat = 0.0
 		var sLabelsWidth: CGFloat = 0.0
@@ -178,7 +179,7 @@ public struct XYPlot: View {
 						.fixedSize()      // Avoid using the yLabels height to size //
 						.frame(height: 1) // plot area, 1 is arbitrary small no.    //
 					GeometryReader { geo in // the plotArea
-						let size = CGSize(width: geo.size.width, height: geo.size.height)
+						let size = geo.size
 						ZStack { // This is the plot area
 							BackgroundView() /// add size to this view as parameter for gridlines
 							/// Display the axes on layer on top of Background of ZStack
@@ -241,7 +242,6 @@ public struct XYPlot: View {
 					} else { // leave room for last x axis label
 						Invisible(width: lastXLabelWidth/2.0)
 					}
-					
 				} // End of HStack yAxis - Plot - sAxis
 				
 				// Invisible space holder for x Labels
@@ -255,7 +255,7 @@ public struct XYPlot: View {
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				LegendView(data: $data)
-					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
+					.offset(x: _legendPos.x*plotAreaWidth, y: _legendPos.y*plotAreaHeight)
 					.captureSize(in: $captures.legendSize)
 					.highPriorityGesture(
 						DragGesture()
@@ -266,11 +266,12 @@ public struct XYPlot: View {
 											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
-								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
+								//xyLegendPos
+								data.settings.legendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
 							}
-							.onEnded { value in
-								data.settings.legendPos = xyLegendPos
-							}
+//							.onEnded { value in
+//								data.settings.legendPos = xyLegendPos
+//							}
 					)
 					.onAppear {
 						xyLegendPos = data.settings.legendPos
