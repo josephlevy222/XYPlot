@@ -16,7 +16,7 @@ public struct AxisParameters : Equatable, Codable  {
 		self.max = max
 		self.majorTics = majorTics
 		self.minorTics = minorTics
-		self.title = title
+		self.title = title.convertToNSFonts
 		self.show = show
 		self.hideTitle = hideTitle
 	}

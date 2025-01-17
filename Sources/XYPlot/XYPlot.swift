@@ -77,9 +77,9 @@ public struct XYPlot: View {
 	@Binding public var data : PlotData
 	
 	@State public  var isPresented: Bool = false
-	//var _legendPos: CGPoint { get { data.settings.legendPos } set { data.settings.legendPos = newValue } }
+	var _legendPos: CGPoint { get { data.settings.legendPos } set { data.settings.legendPos = newValue } }
 	@State private var xyLegendPos : CGPoint = .zero
-	
+	//func setLegendPos(_ position: CGPoint) { xyLegendPos = position }
 	// State vars used with captureWidth,Height,Size
 	private struct Captures: Codable {
 		var plotAreaHeight: CGFloat = 0.0
@@ -271,9 +271,12 @@ public struct XYPlot: View {
 							}
 							.onEnded { value in
 								data.settings.legendPos = xyLegendPos
+								data.saveToUserDefaults()
 							}
 					)
 					.onAppear {
+						debugPrint("XYPlot appears")
+						data.readFromUserDefaults()
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
