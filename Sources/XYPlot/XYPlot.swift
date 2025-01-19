@@ -77,8 +77,9 @@ public struct XYPlot: View {
 	@Binding public var data : PlotData
 	
 	@State public  var isPresented: Bool = false
-	var _legendPos: CGPoint { get { data.settings.legendPos } }//set { data.settings.legendPos = newValue } }
+	
 	@State private var xyLegendPos : CGPoint = .zero
+	
 	// State vars used with captureWidth,Height,Size
 	private struct Captures: Codable {
 		var plotAreaHeight: CGFloat = 0.0
@@ -253,7 +254,6 @@ public struct XYPlot: View {
 			}// end of VStack
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
-				//let legendPos =  xyLegendPos ?? _legendPos
 				LegendView(data: $data)
 					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
 					.captureSize(in: $captures.legendSize)
@@ -262,23 +262,22 @@ public struct XYPlot: View {
 							.onChanged { value in
 								let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
 								let position = maxmin(
-									CGPoint(x: value.translation.width + _legendPos.x*plotAreaWidth,
-											y: value.translation.height + _legendPos.y*plotAreaHeight),
+									CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
+											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
 								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-								//data.settings.legendPos = xyLegendPos
 							}
 							.onEnded { value in
 								data.settings.legendPos =  xyLegendPos
 								data.saveToUserDefaults()
 							}
 					)
-					.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
+					.onChange(of: data.settings.legendPos) { debugPrint("xyLegendPos Change"); xyLegendPos = $0 }
 					.onAppear {
 						debugPrint("XYPlot appears")
 						data.readFromUserDefaults()
-						//xyLegendPos = nil
+						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
 			}
