@@ -16,7 +16,7 @@ public struct AxisParameters : Equatable, Codable  {
 		self.max = max
 		self.majorTics = majorTics
 		self.minorTics = minorTics
-		self.title = title.convertToNSFonts
+		self.title = title//.convertToNSFonts
 		self.show = show
 		self.hideTitle = hideTitle
 	}
@@ -41,11 +41,11 @@ public struct PlotSettings : Equatable, Codable  {
 
 	// Computed properties for minimizing code changes when adding title to AxisParameters
 	public var xTitle : AttributedString { 	get { xAxis?.title ?? AttributedString()}
-											set { xAxis?.title = newValue.convertToNSFonts } }
+											set { xAxis?.title = newValue/*.convertToNSFonts*/ } }
 	public var yTitle : AttributedString { 	get { yAxis?.title ?? AttributedString()}
-											set { yAxis?.title = newValue.convertToNSFonts } }
+											set { yAxis?.title = newValue/*.convertToNSFonts*/ } }
 	public var sTitle : AttributedString { 	get { sAxis?.title ?? AttributedString()}
-											set { sAxis?.title = newValue.convertToNSFonts } }
+											set { sAxis?.title = newValue/*.convertToNSFonts*/ } }
 	// -----------------------------------------------------------------------------------
 	public var sizeMinor = 0.005
 	public var sizeMajor = 0.01
@@ -62,7 +62,7 @@ public struct PlotSettings : Equatable, Codable  {
 				format: String = "%g", showSecondaryAxis: Bool = false, autoScale: Bool = true,
 				independentTics: Bool = false, legendPos: CGPoint = .zero, legend: Bool = true, selection: Int? = nil,
 				savePoints: Bool = true) {
-		self.title = title.convertToNSFonts
+		self.title = title//.convertToNSFonts
 		self.xAxis = xAxis
 		self.yAxis = yAxis
 		self.sAxis = sAxis
