@@ -78,8 +78,7 @@ public struct XYPlot: View {
 	
 	@State public  var isPresented: Bool = false
 	var _legendPos: CGPoint { get { data.settings.legendPos } set { data.settings.legendPos = newValue } }
-	@State private var xyLegendPos : CGPoint = .zero
-	//func setLegendPos(_ position: CGPoint) { xyLegendPos = position }
+	@State private var xyLegendPos : CGPoint? = nil
 	// State vars used with captureWidth,Height,Size
 	private struct Captures: Codable {
 		var plotAreaHeight: CGFloat = 0.0
@@ -254,8 +253,9 @@ public struct XYPlot: View {
 			}// end of VStack
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
+				let legendPos =  xyLegendPos ?? _legendPos
 				LegendView(data: $data)
-					.offset(x: _legendPos.x*plotAreaWidth, y: _legendPos.y*plotAreaHeight)
+					.offset(x: legendPos.x*plotAreaWidth, y: legendPos.y*plotAreaHeight)
 					.captureSize(in: $captures.legendSize)
 					.highPriorityGesture(
 						DragGesture()
@@ -267,10 +267,10 @@ public struct XYPlot: View {
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
 								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-								data.settings.legendPos = xyLegendPos
+								//data.settings.legendPos = xyLegendPos
 							}
 							.onEnded { value in
-								data.settings.legendPos = xyLegendPos
+								data.settings.legendPos = xyLegendPos ?? _legendPos
 								data.saveToUserDefaults()
 							}
 					)
