@@ -255,7 +255,7 @@ public struct XYPlot: View {
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				LegendView(data: $data)
-					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
+					.offset(x: _legendPos.x*plotAreaWidth, y: _legendPos.y*plotAreaHeight)
 					.captureSize(in: $captures.legendSize)
 					.highPriorityGesture(
 						DragGesture()
@@ -267,7 +267,7 @@ public struct XYPlot: View {
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
 								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-								//data.settings.legendPos = xyLegendPos
+								data.settings.legendPos = xyLegendPos
 							}
 							.onEnded { value in
 								data.settings.legendPos = xyLegendPos
