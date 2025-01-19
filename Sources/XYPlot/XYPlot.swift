@@ -262,8 +262,8 @@ public struct XYPlot: View {
 							.onChanged { value in
 								let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
 								let position = maxmin(
-									CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
-											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
+									CGPoint(x: value.translation.width + legendPos.x*plotAreaWidth,
+											y: value.translation.height + legendPos.y*plotAreaHeight),
 									size: CGSize(width: g.size.width-legendSize.width,
 												 height: g.size.height-legendSize.height))
 								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
@@ -277,7 +277,7 @@ public struct XYPlot: View {
 					.onAppear {
 						debugPrint("XYPlot appears")
 						data.readFromUserDefaults()
-						xyLegendPos = data.settings.legendPos
+						xyLegendPos = nil
 						data.scaleAxes()
 					}
 			}
