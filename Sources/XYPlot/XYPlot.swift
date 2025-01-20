@@ -273,9 +273,8 @@ public struct XYPlot: View {
 								data.saveToUserDefaults()
 							}
 					)
-					.onChange(of: data.settings.legendPos) { debugPrint("xyLegendPos Change"); xyLegendPos = $0 }
+					.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
 					.onAppear {
-						debugPrint("XYPlot appears")
 						data.readFromUserDefaults()
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
