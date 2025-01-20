@@ -75,6 +75,10 @@ public struct XYPlot: View {
 	public init(data: Binding<PlotData>) {
 		self._data = data
 		print("-", terminator: "")
+		data.wrappedValue.settings.title = data.wrappedValue.settings.title.convertToNSFonts
+		if let axis = data.wrappedValue.settings.xAxis { data.wrappedValue.settings.xAxis?.title = axis.title.convertToNSFonts }
+		if let axis = data.wrappedValue.settings.yAxis { data.wrappedValue.settings.yAxis?.title = axis.title.convertToNSFonts }
+		if let axis = data.wrappedValue.settings.sAxis { data.wrappedValue.settings.sAxis?.title = axis.title.convertToNSFonts }
 	}
 	
 	@Binding public var data : PlotData
