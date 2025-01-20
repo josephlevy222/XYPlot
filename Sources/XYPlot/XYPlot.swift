@@ -72,7 +72,10 @@ public struct XYPlotTitle: View {
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
-	public init(data: Binding<PlotData>) { self._data = data }
+	public init(data: Binding<PlotData>) {
+		self._data = data
+		print("-", terminator: "")
+	}
 	
 	@Binding public var data : PlotData
 	
