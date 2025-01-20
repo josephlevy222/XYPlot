@@ -72,14 +72,14 @@ public struct XYPlotTitle: View {
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
-	public init(data: Binding<PlotData>) {
-		self._data = data
-		print("-", terminator: "")  // the following make endless loop or close to it?
-		print(data.wrappedValue.settings.title)
-		if let axis = data.wrappedValue.settings.xAxis { print( axis.title) }
-		if let axis = data.wrappedValue.settings.yAxis { print( axis.title) }
-		if let axis = data.wrappedValue.settings.sAxis { print( axis.title) }
-	}
+//	public init(data: Binding<PlotData>) {
+//		self._data = data
+//		print("-", terminator: "")  // the following make endless loop or close to it?
+//		print(data.wrappedValue.settings.title)
+//		if let axis = data.wrappedValue.settings.xAxis { print( axis.title) }
+//		if let axis = data.wrappedValue.settings.yAxis { print( axis.title) }
+//		if let axis = data.wrappedValue.settings.sAxis { print( axis.title) }
+//	}
 	
 	@Binding public var data : PlotData
 	
