@@ -174,6 +174,24 @@ extension PlotData {
                 }
             }
         }
+		
+		for band in plotBands {
+			let axis = band.secondary && settings.showSecondaryAxis
+			xMin = min(band.upper.map(\.x).min() ?? xMin, xMin)
+			xMax = max(band.upper.map(\.x).max() ?? xMax, xMax)
+			if axis {
+				sMin = min(band.upper.map(\.y).min() ?? sMin, sMin)
+				sMax = max(band.upper.map(\.y).max() ?? sMax, sMax)
+				sMin = min(band.lower.map(\.y).min() ?? sMin, sMin)
+				sMax = max(band.lower.map(\.y).max() ?? sMax, sMax)
+			} else {
+				yMin = min(band.upper.map(\.y).min() ?? yMin, yMin)
+				yMax = max(band.upper.map(\.y).max() ?? yMax, yMax)
+				yMin = min(band.lower.map(\.y).min() ?? yMin, yMin)
+				yMax = max(band.lower.map(\.y).max() ?? yMax, yMax)
+			}
+		}
+		
         if !hasPrimary && hasSecondary { yMax = max(yMax,sMax); yMin = min(yMin,sMin) }
         if hasPrimary && !hasSecondary { yMax = max(yMax,sMax); yMin = min(yMin,sMin) }
         var xTics = adjustAxis(&xMin, &xMax)

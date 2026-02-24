@@ -182,10 +182,18 @@ public struct XYPlot: View {
 						let size = geo.size
 						ZStack { // This is the plot area
 							BackgroundView() /// add size to this view as parameter for gridlines
-							/// Display the axes on layer on top of Background of ZStack
+							// Display the axes on layer on top of Background of ZStack
+							
+							// ── Bands (filled, drawn before lines) ──────────────────────
+							ForEach(data.plotBands.indices, id: \.self) { i in
+								transformBand(data.plotBands[i], size: size)
+									.fill(data.plotBands[i].color)
+									.clipShape(Rectangle().size(size))
+							}
+							// ── Lines ─────────────────────────
 							Path { path in path.addLines(axesPath(size))}
 								.stroke(.black, lineWidth: max(size.width, size.height)/500.0+0.5)
-							/// Display the plotLines
+							// Display the plotLines
 							ForEach(lines.indices, id: \.self) { i in
 								let line: PlotLine = lines[i]
 								if line.lineColor != .clear {
@@ -357,6 +365,30 @@ public struct XYPlot: View {
 			return p
 		}
 	}
+	
+	private func transformBand(_ band: PlotBand, size: CGSize) -> Path {
+		let xMin = xAxis.min, xMax = xAxis.max
+		let yMin = band.secondary && showSecondary ? sAxis.min : yAxis.min
+		let yMax = band.secondary && showSecondary ? sAxis.max : yAxis.max
+		
+		func toView(_ pt: PlotPoint) -> CGPoint {
+			CGPoint(
+				x: size.width  * (pt.x - xMin) / (xMax - xMin),
+				y: size.height * (1.0 - (pt.y - yMin) / (yMax - yMin))
+			)
+		}
+		
+		guard !band.upper.isEmpty && !band.lower.isEmpty else { return Path() }
+		
+		var path = Path()
+		path.move(to: toView(band.upper[0]))
+		for pt in band.upper.dropFirst() { path.addLine(to: toView(pt)) }
+		// trace lower in reverse to close the filled shape
+		for pt in band.lower.reversed()  { path.addLine(to: toView(pt)) }
+		path.closeSubpath()
+		return path
+	}
+
 }
 
 // Invisible space holder
@@ -442,5 +474,4 @@ public var testPlotLines = {
 	plotData.scaleAxes()
 	return plotData
 }()
-
 

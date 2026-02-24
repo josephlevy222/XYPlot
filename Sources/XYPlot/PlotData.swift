@@ -202,6 +202,7 @@ public struct PlotLine : RandomAccessCollection, MutableCollection, Equatable, C
 public struct PlotData : Equatable, Codable {
 	
 	public var plotLines: [PlotLine]
+	public var plotBands: [PlotBand] = []
 	public var settings : PlotSettings
 	public var plotName: String?
 	public init(plotLines: [PlotLine] = [], settings: PlotSettings, plotName: String? = nil) {
@@ -243,8 +244,9 @@ public struct PlotData : Equatable, Codable {
 		}
 	}
 	
+	
 	static public func == (lhs: PlotData, rhs: PlotData) -> Bool {
-		rhs.plotLines.count == lhs.plotLines.count && lhs.settings == rhs.settings && rhs.plotLines == lhs.plotLines
+		rhs.plotLines == lhs.plotLines && rhs.plotBands == lhs.plotBands &&  lhs.settings == rhs.settings
 	}
 	
 	subscript(_ position: Int) -> PlotLine {
@@ -255,4 +257,39 @@ public struct PlotData : Equatable, Codable {
 	var hasPrimaryLines : Bool { plotLines.reduce(false, { $0 || !$1.secondary })}
 	var hasSecondaryLines : Bool { plotLines.reduce(false, { $0 || $1.secondary})}
 	var noSecondary : Bool { !hasPrimaryLines || !hasSecondaryLines || !settings.showSecondaryAxis}
+}
+
+public struct PlotBand: Equatable, Codable {
+	public var upper: [PlotPoint]
+	public var lower: [PlotPoint]
+	public var color: Color
+	public var secondary: Bool
+	
+	public init(upper: [PlotPoint], lower: [PlotPoint],
+				color: Color = Color.blue.opacity(0.15),
+				secondary: Bool = false) {
+		self.upper = upper
+		self.lower = lower
+		self.color = color
+		self.secondary = secondary
+	}
+	
+	// Codable support — same pattern as PlotLine's lineColorInt
+	enum CodingKeys: CodingKey { case upper, lower, colorInt, secondary }
+	
+	public init(from decoder: Decoder) throws {
+		let v = try decoder.container(keyedBy: CodingKeys.self)
+		upper     = try v.decode([PlotPoint].self, forKey: .upper)
+		lower     = try v.decode([PlotPoint].self, forKey: .lower)
+		color     = Color(sARGB: try v.decode(Int.self, forKey: .colorInt))
+		secondary = try v.decode(Bool.self, forKey: .secondary)
+	}
+	
+	public func encode(to encoder: Encoder) throws {
+		var c = encoder.container(keyedBy: CodingKeys.self)
+		try c.encode(upper,          forKey: .upper)
+		try c.encode(lower,          forKey: .lower)
+		try c.encode(color.sARGB,    forKey: .colorInt)
+		try c.encode(secondary,      forKey: .secondary)
+	}
 }
