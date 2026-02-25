@@ -283,10 +283,17 @@ public struct XYPlot: View {
 					)
 					.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
 					.onAppear {
+						let savedLegend = data.settings.legend
 						data.readFromUserDefaults()
+						data.settings.legend = savedLegend
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
 					}
+//					.onAppear {
+//						data.readFromUserDefaults()
+//						xyLegendPos = data.settings.legendPos
+//						data.scaleAxes()
+//					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
