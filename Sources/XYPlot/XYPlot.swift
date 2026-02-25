@@ -97,8 +97,8 @@ public struct XYPlot: View {
 	var sLabelsWidth: CGFloat { captures.sLabelsWidth }
 	var sTitleWidth: CGFloat { captures.sTitleWidth }
 	public var xLabelsHeight: CGFloat { captures.xLabelsHeight }
-	public var lastXLabelWidth: CGFloat { captures.lastXLabelWidth }
-	var lastYLabelHeight: CGFloat { captures.lastYLabelHeight}
+	var lastXLabelWidth: CGFloat { captures.lastXLabelWidth }
+	public var lastYLabelHeight: CGFloat { captures.lastYLabelHeight}
 	var legendSize: CGSize { captures.legendSize }
 	
 	// Computed variables
