@@ -93,11 +93,11 @@ public struct XYPlot: View {
 	}
 	@State private var captures = Captures()
 	var plotAreaHeight: CGFloat { get {captures.plotAreaHeight}}
-	var yLabelsWidth: CGFloat { captures.yLabelsWidth }
+	public var yLabelsWidth: CGFloat { captures.yLabelsWidth }
 	var sLabelsWidth: CGFloat { captures.sLabelsWidth }
 	var sTitleWidth: CGFloat { captures.sTitleWidth }
-	var xLabelsHeight: CGFloat { captures.xLabelsHeight }
-	var lastXLabelWidth: CGFloat { captures.lastXLabelWidth }
+	public var xLabelsHeight: CGFloat { captures.xLabelsHeight }
+	public var lastXLabelWidth: CGFloat { captures.lastXLabelWidth }
 	var lastYLabelHeight: CGFloat { captures.lastYLabelHeight}
 	var legendSize: CGSize { captures.legendSize }
 	
@@ -292,11 +292,6 @@ public struct XYPlot: View {
 						data.scaleAxes()
 						data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
 					}
-//					.onAppear {
-//						data.readFromUserDefaults()
-//						xyLegendPos = data.settings.legendPos
-//						data.scaleAxes()
-//					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
