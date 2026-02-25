@@ -284,10 +284,13 @@ public struct XYPlot: View {
 					.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
 					.onAppear {
 						let savedLegend = data.settings.legend
+						let savedBands  = data.plotBands
 						data.readFromUserDefaults()
 						data.settings.legend = savedLegend
+						data.plotBands = savedBands
 						xyLegendPos = data.settings.legendPos
 						data.scaleAxes()
+						data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
 					}
 //					.onAppear {
 //						data.readFromUserDefaults()
