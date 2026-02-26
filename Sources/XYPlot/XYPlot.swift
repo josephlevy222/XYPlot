@@ -72,7 +72,18 @@ public struct XYPlotTitle: View {
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
-	public init(data: Binding<PlotData>) { self._data = data }
+	public init(data: Binding<PlotData>,
+				yLabelsWidth: Binding<CGFloat> = .constant(0),
+				xLabelsHeight: Binding<CGFloat> = .constant(0),
+				lastYLabelHeight: Binding<CGFloat> = .constant(0)) {
+		self._data = data
+		self._yLabelsWidthOut = yLabelsWidth
+		self._xLabelsHeightOut = xLabelsHeight
+		self._lastYLabelHeightOut = lastYLabelHeight
+	}
+	@Binding private var yLabelsWidthOut: CGFloat
+	@Binding private var xLabelsHeightOut: CGFloat
+	@Binding private var lastYLabelHeightOut: CGFloat
 	
 	@Binding public var data : PlotData
 	
@@ -295,6 +306,9 @@ public struct XYPlot: View {
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
+		.onChange(of: captures.yLabelsWidth)     { v in yLabelsWidthOut = v }
+		.onChange(of: captures.xLabelsHeight)    { v in xLabelsHeightOut = v }
+		.onChange(of: captures.lastYLabelHeight) { v in lastYLabelHeightOut = v }
 	}// End of body
 	
 	private func maxmin(_ point: CGPoint, size: CGSize) -> CGPoint {
