@@ -14,10 +14,11 @@ public struct AnnotationView: View {
 		if let text = data.settings.annotation, !text.isEmpty {
 			Text(text)
 				.font(.system(.caption, design: .monospaced))
+				.multilineTextAlignment(.leading)
 				.padding(6)
-				.background(Color.white)
-				.border(Color.black)
-				.contentShape(Rectangle())
-		} else { EmptyView() }
+				.background(Color(.systemBackground))
+				.border(Color.primary)
+				.fixedSize()
+		}
 	}
 }
