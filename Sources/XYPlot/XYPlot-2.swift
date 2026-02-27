@@ -72,9 +72,7 @@ public struct XYPlotTitle: View {
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
-	public init(data: Binding<PlotData>) {
-		self._data = data
-	}
+	public init(data: Binding<PlotData>) { self._data = data }
 	
 	@Binding public var data : PlotData
 	
@@ -152,6 +150,8 @@ public struct XYPlot: View {
 	private var topMostLabelHeight: CGFloat { lastYLabelHeight/2.0}
 	
 	private let pad : CGFloat = 4 // Make platform dependent?
+	
+	@State private var xyAnnotationPos: CGPoint = .zero
 	
 	public var body: some View {
 		ZStack {
@@ -264,36 +264,58 @@ public struct XYPlot: View {
 			}// end of VStack
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
-				LegendView(data: $data)
-					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
-					.captureSize(in: $captures.legendSize)
-					.highPriorityGesture(
-						DragGesture()
-							.onChanged { value in
-								let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
-								let position = maxmin(
-									CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
-											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
-									size: CGSize(width: g.size.width-legendSize.width,
-												 height: g.size.height-legendSize.height))
-								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-							}
-							.onEnded { value in
-								data.settings.legendPos =  xyLegendPos
-								data.saveToUserDefaults()
-							}
-					)
-					.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
-					.onAppear {
-						let savedLegend = data.settings.legend
-						let savedBands  = data.plotBands
-						data.readFromUserDefaults()
-						data.settings.legend = savedLegend
-						data.plotBands = savedBands
-						xyLegendPos = data.settings.legendPos
-						data.scaleAxes()
-						data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
-					}
+				ZStack(alignment: .topLeading) {
+					LegendView(data: $data)
+						.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
+						.captureSize(in: $captures.legendSize)
+						.highPriorityGesture(
+							DragGesture()
+								.onChanged { value in
+									//let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
+									let position = maxmin(
+										CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
+												y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
+										size: CGSize(width: g.size.width-legendSize.width,
+													 height: g.size.height-legendSize.height))
+									xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
+								}
+								.onEnded { value in
+									data.settings.legendPos =  xyLegendPos
+									data.saveToUserDefaults()
+								}
+						)
+						.onChange(of: data.settings.legendPos) {  v in xyLegendPos = v }
+						.onAppear {
+							let savedLegend = data.settings.legend
+							let savedBands  = data.plotBands
+							data.readFromUserDefaults()
+							data.settings.legend = savedLegend
+							data.plotBands = savedBands
+							xyLegendPos = data.settings.legendPos
+							data.scaleAxes()
+							data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
+						}
+					
+					AnnotationView(data: $data)
+						.offset(x: xyAnnotationPos.x * plotAreaWidth, y: xyAnnotationPos.y * plotAreaHeight)
+						.highPriorityGesture(
+							DragGesture()
+								.onChanged { value in
+									let position = maxmin(
+										CGPoint(x: value.translation.width + data.settings.annotationPos.x * plotAreaWidth,
+												y: value.translation.height + data.settings.annotationPos.y * plotAreaHeight),
+										size: CGSize(width: g.size.width, height: g.size.height))
+									xyAnnotationPos = CGPoint(x: position.x / plotAreaWidth, y: position.y / plotAreaHeight)
+								}
+								.onEnded { _ in
+									data.settings.annotationPos = xyAnnotationPos
+									data.saveToUserDefaults()
+								}
+						)
+						.onChange(of: data.settings.annotationPos) {  v in xyAnnotationPos = v }
+						.onChange(of: data.settings.annotation)    { _ in } // trigger redraw on text change
+						.onAppear { xyAnnotationPos = data.settings.annotationPos }
+				}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
@@ -418,6 +440,7 @@ public struct BackgroundView: View {
 		// Could put grid line paths here
 	}
 }
+
 #if DEBUG
 // From Jim Dovey on Apple Developers Forum
 // used this allow the use of State var in preview
