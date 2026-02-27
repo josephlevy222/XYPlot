@@ -15,8 +15,8 @@ struct fieldViewModifier : ViewModifier {
 			.padding(.trailing, 5)
 			.multilineTextAlignment(.trailing)
 			.frame(width: 100)
-			.border(.black)
-			.foregroundColor(disable ? .gray : .black)
+			.border(Color.primary)
+			.foregroundColor(disable ? Color.secondary : Color.primary)
 			.disabled(disable)
 	}
 }
@@ -126,10 +126,10 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 						}
 					}
 				Spacer()
-				Text("Use Secondary Tics").foregroundColor(vm.settings.showSecondaryAxis ? .black : .gray)
+				Text("Use Secondary Tics").foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
 				CheckBoxView(checked:  $vm.settings.independentTics )
 					.disabled(!vm.settings.showSecondaryAxis)
-					.foregroundColor(vm.settings.showSecondaryAxis ? .black : .gray)
+					.foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
 					.opacity(vm.settings.showSecondaryAxis ? 1.0 : 0.5)
 					.onChange(of: vm.settings.independentTics) { isOn in
 						if vm.settings.autoScale { return }
@@ -186,31 +186,31 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 			}.font(.body)
 		}
 		.textFieldStyle(.plain)
-		.buttonStyle(RoundedCorners(color: .white.opacity(0.1), shadow: 2 ))
+		.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
 		.frame(width: 550)
-		.background(Color.white)
+		.background(Color(.systemBackground))
 	}
 }
 
 public struct RoundedCorners: ButtonStyle {
 	var color: Color
-	var lineColor: Color = .black
+	var lineColor: Color = Color.primary
 	var shadow: CGFloat = 0
 	var radius: CGFloat = 4
-	let selectedColor: Color = .white
+	let selectedColor: Color = Color(.systemBackground)
 	public func makeBody(configuration: Self.Configuration) -> some View {
 		let backgroundColor = configuration.isPressed ? selectedColor : color
 		configuration.label
 			.horizontalFill()
 			.background(backgroundColor
 				.clipShape(RoundedRectangle(cornerRadius: radius))
-				.background(Color.white // so opacity < 1 does not let shadow thru
+				.background(Color(.systemBackground) // so opacity < 1 does not let shadow thru
 					.clipShape(RoundedRectangle(cornerRadius: radius))
 				)
 			)
 			.background(RoundedRectangle(cornerRadius: radius)
 				.stroke(lineColor, lineWidth: 1)
-				.shadow(color: .black, radius: shadow, x: shadow, y: shadow)
+				.shadow(color: Color.primary.opacity(0.4), radius: shadow, x: shadow, y: shadow)
 			)
 			.padding()
 	}

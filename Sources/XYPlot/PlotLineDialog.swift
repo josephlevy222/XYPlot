@@ -63,7 +63,7 @@ public struct PlotLineDialog: View {
                         HStack {
                             Text("Line Name")
                             TextField("Name", text: $lineName)
-                                .background(Color.white ).border( Color.black )
+                                .background(Color(.secondarySystemBackground)).border(Color.primary)
                         }
                         HStack(spacing: 0) {
                             ColorPicker("Line Color     ",selection: $lineColor).disabled(lineOff)
@@ -126,7 +126,7 @@ public struct PlotLineDialog: View {
 												PointShapeView(shape: PointShape(symbolShapes[i].path, 
 																			angle: symbolShapes[i].angle))
 												.padding().contentShape(Rectangle()) }
-											.background(Color.white)
+											.background(Color(.systemBackground))
 											Divider()
                                         }
                                         .textFieldStyle(.automatic)
@@ -158,9 +158,9 @@ public struct PlotLineDialog: View {
                         plotData.scaleAxes()
                         dismiss()
 					}) { Text("Ok").foregroundColor(.accentColor).contentShape(Rectangle())}
-                }.buttonStyle(RoundedCorners(color: .white.opacity(0.1), shadow: 2 ))
+                }.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
             }
-            .background(Color.white)
+            .background(Color(.systemBackground))
             .frame(width: 300, height: 620)
             .padding()
             .onAppear {
@@ -170,10 +170,10 @@ public struct PlotLineDialog: View {
                 useSecondary = plotLine.secondary
                 if plotLine.lineColor == .clear { 
 					lineOff = true;
-					savedLineColor = (plotLine.pointColor == .clear ? .black : plotLine.pointColor) } else { lineOff = false }
+					savedLineColor = (plotLine.pointColor == .clear ? Color.primary : plotLine.pointColor) } else { lineOff = false }
                 if plotLine.pointColor == .clear { 
 					pointOff = true;
-					savedPointColor = (plotLine.lineColor == .clear ? .black : plotLine.lineColor) } else { pointOff = false }
+					savedPointColor = (plotLine.lineColor == .clear ? Color.primary : plotLine.lineColor) } else { pointOff = false }
                 lineColor = plotLine.lineColor
                 pointColor = plotLine.pointColor
                 lineWidth = plotLine.lineStyle.lineWidth

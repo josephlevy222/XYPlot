@@ -72,7 +72,9 @@ public struct XYPlotTitle: View {
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
 public struct XYPlot: View {
-	public init(data: Binding<PlotData>) { self._data = data }
+	public init(data: Binding<PlotData>) {
+		self._data = data
+	}
 	
 	@Binding public var data : PlotData
 	
@@ -151,8 +153,6 @@ public struct XYPlot: View {
 	
 	private let pad : CGFloat = 4 // Make platform dependent?
 	
-	@State private var xyAnnotationPos: CGPoint = .zero
-	
 	public var body: some View {
 		ZStack {
 			VStack(spacing: 0) {
@@ -194,7 +194,7 @@ public struct XYPlot: View {
 							}
 							// ── Lines ─────────────────────────
 							Path { path in path.addLines(axesPath(size))}
-								.stroke(.black, lineWidth: max(size.width, size.height)/500.0+0.5)
+								.stroke(Color.primary, lineWidth: max(size.width, size.height)/500.0+0.5)
 							// Display the plotLines
 							ForEach(lines.indices, id: \.self) { i in
 								let line: PlotLine = lines[i]
@@ -264,57 +264,36 @@ public struct XYPlot: View {
 			}// end of VStack
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
-				ZStack(alignment: .topLeading) {
-					LegendView(data: $data)
-						.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
-						.captureSize(in: $captures.legendSize)
-						.highPriorityGesture(
-							DragGesture()
-								.onChanged { value in
-									//let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
-									let position = maxmin(
-										CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
-												y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
-										size: CGSize(width: g.size.width-legendSize.width,
-													 height: g.size.height-legendSize.height))
-									xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-								}
-								.onEnded { value in
-									data.settings.legendPos =  xyLegendPos
-									data.saveToUserDefaults()
-								}
-						)
-						.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
-						.onAppear {
-							let savedLegend = data.settings.legend
-							let savedBands  = data.plotBands
-							data.readFromUserDefaults()
-							data.settings.legend = savedLegend
-							data.plotBands = savedBands
-							xyLegendPos = data.settings.legendPos
-							data.scaleAxes()
-							data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
-						}
-					
-					AnnotationView(data: $data)
-						.position(x: xyAnnotationPos.x * plotAreaWidth + leadingWidth,
-								  y: xyAnnotationPos.y * plotAreaHeight)
-						.gesture(
-							DragGesture()
-								.onChanged { value in
-									xyAnnotationPos = CGPoint(
-										x: (value.location.x - leadingWidth) / plotAreaWidth,
-										y: value.location.y / plotAreaHeight
-									)
-								}
-								.onEnded { _ in
-									data.settings.annotationPos = xyAnnotationPos
-									data.saveToUserDefaults()
-								}
-						)
-						.onChange(of: data.settings.annotationPos) { v in xyAnnotationPos = v }
-						.onAppear { xyAnnotationPos = data.settings.annotationPos }
-				}
+				LegendView(data: $data)
+					.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
+					.captureSize(in: $captures.legendSize)
+					.highPriorityGesture(
+						DragGesture()
+							.onChanged { value in
+								let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
+								let position = maxmin(
+									CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
+											y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
+									size: CGSize(width: g.size.width-legendSize.width,
+												 height: g.size.height-legendSize.height))
+								xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
+							}
+							.onEnded { value in
+								data.settings.legendPos =  xyLegendPos
+								data.saveToUserDefaults()
+							}
+					)
+					.onChange(of: data.settings.legendPos) { xyLegendPos = $0 }
+					.onAppear {
+						let savedLegend = data.settings.legend
+						let savedBands  = data.plotBands
+						data.readFromUserDefaults()
+						data.settings.legend = savedLegend
+						data.plotBands = savedBands
+						xyLegendPos = data.settings.legendPos
+						data.scaleAxes()
+						data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
+					}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 		}// end of ZStack
@@ -434,7 +413,7 @@ public struct Invisible: View {
 
 public struct BackgroundView: View {
 	public var body: some View {
-		Color.white
+		Color(.systemBackground)
 		//Rectangle().foregroundColor(.white)
 		// Could put grid line paths here
 	}

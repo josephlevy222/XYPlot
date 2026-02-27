@@ -17,7 +17,7 @@ public struct LegendView: View {
     
     @ViewBuilder public func arrow(show: Bool, left: Bool = true) -> some View {
         if !data.noSecondary {
-			PointShapeView(shape: PointShape(Arrow(left: left).path, color: show ? .black : .white))}
+			PointShapeView(shape: PointShape(Arrow(left: left).path, color: show ? Color.primary : Color(.systemBackground)))}
         else { EmptyView() }
     }
     
@@ -58,7 +58,7 @@ public struct LegendView: View {
                         }.contentShape(Rectangle()).buttonStyle(.plain)
                     }
                     Color.clear.frame(width: 50, height: 10)
-                }.background(Color.white).contentShape(Rectangle()).border(Color.black)
+                }.background(Color(.systemBackground)).contentShape(Rectangle()).border(Color.primary)
             }.popover(isPresented: $isPresented, attachmentAnchor: .rect(.bounds) ) { PlotLineDialog(plotData: $data)  }
         } else { EmptyView() }
     }
