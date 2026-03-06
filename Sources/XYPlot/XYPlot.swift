@@ -286,14 +286,20 @@ public struct XYPlot: View {
 						)
 						.onChange(of: data.settings.legendPos) {  v in xyLegendPos = v }
 						.onAppear {
-							let savedLegend = data.settings.legend
-							let savedBands  = data.plotBands
-							data.readFromUserDefaults()
-							data.settings.legend = savedLegend
-							data.plotBands = savedBands
+							// If PlotData was prepared by the caller (has plotLines and a valid
+							// axis range), skip readFromUserDefaults/scaleAxes — they were
+							// already done off the main actor before this view appeared.
+							// Only re-read when appearing with empty/stub data (e.g. previews).
+							if data.plotLines.isEmpty || data.settings.xAxis == nil {
+								let savedLegend = data.settings.legend
+								let savedBands  = data.plotBands
+								data.readFromUserDefaults()
+								data.settings.legend = savedLegend
+								data.plotBands = savedBands
+								data.scaleAxes()
+								data.plotBands = savedBands
+							}
 							xyLegendPos = data.settings.legendPos
-							data.scaleAxes()
-							data.plotBands = savedBands   // scaleAxes() doesn't touch bands, but be safe
 						}
 					
 					AnnotationView(data: $data)
