@@ -261,7 +261,7 @@ public struct XYPlot: View {
 					.padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
 					.fixedSize()     // Don't use xTitle width //
 					.frame(width: 1) // to size plot area       //
-			}// end of VStack
+			}.zIndex(1) // end of VStack with priority hit testing
 			GeometryReader { g in // topmost of ZStack the whole frame
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				ZStack(alignment: .topLeading) {
