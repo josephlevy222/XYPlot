@@ -18,7 +18,7 @@
 
 import SwiftUI
 import Utilities
-//import RichTextEditor
+
 import EditableText
 
 extension View {
@@ -233,7 +233,13 @@ public struct XYPlot: View {
 						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 						.onTapGesture {
+							// On macCatalyst don't open PlotSettings when the formatting
+							// palette is visible — the tap may be intended for the palette.
+							#if targetEnvironment(macCatalyst)
+							if !FormattingPalette.shared.isVisible { isPresented = true }
+							#else
 							isPresented = true
+							#endif
 						}
 					if showSecondary {
 						HStack(spacing: 0) {
@@ -261,10 +267,14 @@ public struct XYPlot: View {
 					.padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
 					.fixedSize()     // Don't use xTitle width //
 					.frame(width: 1) // to size plot area       //
-			}.zIndex(1) // end of VStack with priority hit testing
-			GeometryReader { g in // topmost of ZStack the whole frame
+			}// end of VStack
+			.zIndex(1) // axis titles hit-tested before the legend/annotation GR
+			GeometryReader { g in // legend + annotation; zIndex(0) = below VStack for hit testing
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				ZStack(alignment: .topLeading) {
+					// Transparent Color so the ZStack has a defined hit-test area,
+					// but passes through touches that don't land on a child view.
+					Color.clear.allowsHitTesting(false)
 					LegendView(data: $data)
 						.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
 						.captureSize(in: $captures.legendSize)
@@ -284,7 +294,7 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.legendPos) {  v in xyLegendPos = v }
+						.onChange(of: data.settings.legendPos) {  _, v in xyLegendPos = v }
 						.onAppear {
 							// If PlotData was prepared by the caller (has plotLines and a valid
 							// axis range), skip readFromUserDefaults/scaleAxes — they were
@@ -318,8 +328,8 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.annotationPos) {  v in xyAnnotationPos = v }
-						.onChange(of: data.settings.annotation)    { _ in } // trigger redraw on text change
+						.onChange(of: data.settings.annotationPos) {  _, v in xyAnnotationPos = v }
+						.onChange(of: data.settings.annotation)    {  } // trigger redraw on text change
 						.onAppear { xyAnnotationPos = data.settings.annotationPos }
 				}
 			}
