@@ -231,6 +231,64 @@ public struct XYPlot: View {
 								.captureHeight(in: $captures.xLabelsHeight)
 								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
 						)
+						.overlay( // Legend and annotation always above plot content
+							GeometryReader { g in
+								let pw = g.size.width
+								let ph = g.size.height
+								ZStack(alignment: .topLeading) {
+									Color.clear.allowsHitTesting(false)
+									LegendView(data: $data)
+										.offset(x: xyLegendPos.x*pw, y: xyLegendPos.y*ph)
+										.captureSize(in: $captures.legendSize)
+										.highPriorityGesture(
+											DragGesture()
+												.onChanged { value in
+													let position = maxmin(
+														CGPoint(x: value.translation.width + data.settings.legendPos.x*pw,
+																y: value.translation.height + data.settings.legendPos.y*ph),
+														size: CGSize(width: pw-legendSize.width, height: ph-legendSize.height))
+													xyLegendPos = CGPoint(x: position.x/pw, y: position.y/ph)
+												}
+												.onEnded { _ in
+													data.settings.legendPos = xyLegendPos
+													data.saveToUserDefaults()
+												}
+										)
+										.onChange(of: data.settings.legendPos) { v in xyLegendPos = v }
+										.onAppear {
+											if data.plotLines.isEmpty || data.settings.xAxis == nil {
+												let savedLegend = data.settings.legend
+												let savedBands  = data.plotBands
+												data.readFromUserDefaults()
+												data.settings.legend = savedLegend
+												data.plotBands = savedBands
+												data.scaleAxes()
+												data.plotBands = savedBands
+											}
+											xyLegendPos = data.settings.legendPos
+										}
+									AnnotationView(data: $data)
+										.offset(x: xyAnnotationPos.x*pw, y: xyAnnotationPos.y*ph)
+										.highPriorityGesture(
+											DragGesture()
+												.onChanged { value in
+													let position = maxmin(
+														CGPoint(x: value.translation.width + data.settings.annotationPos.x*pw,
+																y: value.translation.height + data.settings.annotationPos.y*ph),
+														size: CGSize(width: pw, height: ph))
+													xyAnnotationPos = CGPoint(x: position.x/pw, y: position.y/ph)
+												}
+												.onEnded { _ in
+													data.settings.annotationPos = xyAnnotationPos
+													data.saveToUserDefaults()
+												}
+										)
+										.onChange(of: data.settings.annotationPos) { v in xyAnnotationPos = v }
+										.onChange(of: data.settings.annotation)    { _ in }
+										.onAppear { xyAnnotationPos = data.settings.annotationPos }
+								}
+							}
+						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 						.onTapGesture {
 							// On macCatalyst don't open PlotSettings when the formatting
@@ -268,73 +326,7 @@ public struct XYPlot: View {
 					.fixedSize()     // Don't use xTitle width //
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
-			.zIndex(1) // above default tap layer but below legend/annotation
-			GeometryReader { g in // legend + annotation float above everything
-				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
-				ZStack(alignment: .topLeading) {
-					// Transparent Color so the ZStack has a defined hit-test area,
-					// but passes through touches that don't land on a child view.
-					Color.clear.allowsHitTesting(false)
-					LegendView(data: $data)
-						.offset(x: xyLegendPos.x*plotAreaWidth, y: xyLegendPos.y*plotAreaHeight)
-						.captureSize(in: $captures.legendSize)
-						.highPriorityGesture(
-							DragGesture()
-								.onChanged { value in
-									//let plotAreaWidth = g.size.width-leadingWidth-trailingWidth
-									let position = maxmin(
-										CGPoint(x: value.translation.width + data.settings.legendPos.x*plotAreaWidth,
-												y: value.translation.height + data.settings.legendPos.y*plotAreaHeight),
-										size: CGSize(width: g.size.width-legendSize.width,
-													 height: g.size.height-legendSize.height))
-									xyLegendPos = CGPoint(x: position.x/plotAreaWidth, y: position.y/plotAreaHeight)
-								}
-								.onEnded { value in
-									data.settings.legendPos =  xyLegendPos
-									data.saveToUserDefaults()
-								}
-						)
-						.onChange(of: data.settings.legendPos) {  v in xyLegendPos = v }
-						.onAppear {
-							// If PlotData was prepared by the caller (has plotLines and a valid
-							// axis range), skip readFromUserDefaults/scaleAxes — they were
-							// already done off the main actor before this view appeared.
-							// Only re-read when appearing with empty/stub data (e.g. previews).
-							if data.plotLines.isEmpty || data.settings.xAxis == nil {
-								let savedLegend = data.settings.legend
-								let savedBands  = data.plotBands
-								data.readFromUserDefaults()
-								data.settings.legend = savedLegend
-								data.plotBands = savedBands
-								data.scaleAxes()
-								data.plotBands = savedBands
-							}
-							xyLegendPos = data.settings.legendPos
-						}
-					
-					AnnotationView(data: $data)
-						.offset(x: xyAnnotationPos.x * plotAreaWidth, y: xyAnnotationPos.y * plotAreaHeight)
-						.highPriorityGesture(
-							DragGesture()
-								.onChanged { value in
-									let position = maxmin(
-										CGPoint(x: value.translation.width + data.settings.annotationPos.x * plotAreaWidth,
-												y: value.translation.height + data.settings.annotationPos.y * plotAreaHeight),
-										size: CGSize(width: g.size.width, height: g.size.height))
-									xyAnnotationPos = CGPoint(x: position.x / plotAreaWidth, y: position.y / plotAreaHeight)
-								}
-								.onEnded { _ in
-									data.settings.annotationPos = xyAnnotationPos
-									data.saveToUserDefaults()
-								}
-						)
-						.onChange(of: data.settings.annotationPos) {  v in xyAnnotationPos = v }
-						.onChange(of: data.settings.annotation)    { _ in } // trigger redraw on text change
-						.onAppear { xyAnnotationPos = data.settings.annotationPos }
-				}
-			}
-			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
-			.zIndex(2) // above VStack(1) so legend and annotation render on top
+			.zIndex(1)
 		}// end of ZStack
 	}// End of body
 	
