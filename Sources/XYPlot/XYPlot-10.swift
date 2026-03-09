@@ -164,6 +164,19 @@ public struct XYPlot: View {
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
+							.onAppear {
+								// On iPad, popovers run in a separate UIWindow that is not
+								// key, so tapping a NumericTextField inside doesn't show the
+								// keyboard. Find the topmost non-hidden window and make it key.
+								DispatchQueue.main.async {
+									UIApplication.shared.connectedScenes
+										.compactMap { $0 as? UIWindowScene }
+										.flatMap { $0.windows }
+										.filter { !$0.isHidden }
+										.max(by: { $0.windowLevel < $1.windowLevel })?
+										.makeKeyAndVisible()
+								}
+							}
 					}
 				HStack(spacing: 0) {
 					HStack(spacing: 0) { // the yAxis Title and Labels
