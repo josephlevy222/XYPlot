@@ -18,7 +18,7 @@
 
 import SwiftUI
 import Utilities
-
+//import RichTextEditor
 import EditableText
 
 extension View {
@@ -268,8 +268,8 @@ public struct XYPlot: View {
 					.fixedSize()     // Don't use xTitle width //
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
-			.zIndex(1) // axis titles hit-tested before the legend/annotation GR
-			GeometryReader { g in // legend + annotation; zIndex(0) = below VStack for hit testing
+			.zIndex(1) // above default tap layer but below legend/annotation
+			GeometryReader { g in // legend + annotation float above everything
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				ZStack(alignment: .topLeading) {
 					// Transparent Color so the ZStack has a defined hit-test area,
@@ -294,7 +294,7 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.legendPos) {  _, v in xyLegendPos = v }
+						.onChange(of: data.settings.legendPos) {  v in xyLegendPos = v }
 						.onAppear {
 							// If PlotData was prepared by the caller (has plotLines and a valid
 							// axis range), skip readFromUserDefaults/scaleAxes — they were
@@ -328,12 +328,13 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.annotationPos) {  _, v in xyAnnotationPos = v }
-						.onChange(of: data.settings.annotation)    {  } // trigger redraw on text change
+						.onChange(of: data.settings.annotationPos) {  v in xyAnnotationPos = v }
+						.onChange(of: data.settings.annotation)    { _ in } // trigger redraw on text change
 						.onAppear { xyAnnotationPos = data.settings.annotationPos }
 				}
 			}
 			.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
+			.zIndex(2) // above VStack(1) so legend and annotation render on top
 		}// end of ZStack
 	}// End of body
 	
