@@ -232,11 +232,9 @@ public struct XYPlot: View {
 								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
 						)
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
-						.onTapGesture {
-							// On macCatalyst don't open PlotSettings when the formatting
-							// palette is visible — the tap may be intended for the palette.
+						.onTapGesture(coordinateSpace: .global) { point in
 							#if targetEnvironment(macCatalyst)
-							if !FormattingPalette.shared.isVisible { isPresented = true }
+							if !FormattingPalette.shared.contains(windowPoint: point) { isPresented = true }
 							#else
 							isPresented = true
 							#endif
@@ -268,8 +266,7 @@ public struct XYPlot: View {
 					.fixedSize()     // Don't use xTitle width //
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
-			//.zIndex(1)
-			GeometryReader { g in // legend + annotation — zIndex(2) keeps them above VStack
+			GeometryReader { g in // legend + annotation layer
 				let plotAreaWidth = g.size.width - leadingWidth - trailingWidth
 				ZStack(alignment: .topLeading) {
 					Color.clear.allowsHitTesting(false)
@@ -291,7 +288,7 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.legendPos) { _, v in xyLegendPos = v }
+						.onChange(of: data.settings.legendPos) { v in xyLegendPos = v }
 						.onAppear {
 							if data.plotLines.isEmpty || data.settings.xAxis == nil {
 								let savedLegend = data.settings.legend
@@ -320,14 +317,12 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.annotationPos) { _,v in xyAnnotationPos = v }
-						.onChange(of: data.settings.annotation)    { _, _ in }
+						.onChange(of: data.settings.annotationPos) { v in xyAnnotationPos = v }
+						.onChange(of: data.settings.annotation)    { _ in }
 						.onAppear { xyAnnotationPos = data.settings.annotationPos }
-					// debounce save here so zIndex(2) applies directly to the GeometryReader
 					Color.clear.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 				}
 			}
-			//.zIndex(2) // directly on GeometryReader — no intervening modifiers
 		}// end of ZStack
 	}// End of body
 	
