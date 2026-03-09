@@ -46,7 +46,8 @@ extension View {
 public struct XYPlotTitle: View {
 	@Binding public var text: AttributedString
 	@State private var isPresented = false
-	
+	@State private var naturalSize: CGSize = .zero
+
 	var hideAddTitleButton = false
 	let overlayEditor: Bool
 	public init(_ text: Binding<AttributedString>, inPlaceEditing: Bool = false, hideAddTitleButton: Bool = false) {
@@ -55,6 +56,7 @@ public struct XYPlotTitle: View {
 		self.hideAddTitleButton = hideAddTitleButton
 	}
 	private var overlayEdit : Bool { overlayEditor && text.characters.count != 0}
+
 	public var body: some View {
 		ZStack {
 			Button("Add a Title") {
@@ -63,11 +65,22 @@ public struct XYPlotTitle: View {
 			}
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
-		
+
 			EditableText($text).isHidden(!overlayEdit)
 			EditableTextInPopover($text).isHidden(overlayEdit)
 				.padding(.leading)
 		}
+		.captureSize(in: $naturalSize)
+		// When the caller collapses this view to frame(width:1) for layout
+		// purposes, SwiftUI clips the hit-test area to 1pt. Use contentShape
+		// with a path built from the natural size so taps reach the visible title
+		// regardless of the collapsed layout frame.
+		.contentShape(Path(CGRect(
+			x: -naturalSize.width / 2,
+			y: -naturalSize.height / 2,
+			width: naturalSize.width,
+			height: naturalSize.height
+		)))
 	}
 }
 /// XYPlot is a view that creates an XYPlot of PlotData with optional
@@ -164,19 +177,6 @@ public struct XYPlot: View {
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
-							.onAppear {
-								// On iPad, popovers run in a separate UIWindow that is not
-								// key, so tapping a NumericTextField inside doesn't show the
-								// keyboard. Find the topmost non-hidden window and make it key.
-								DispatchQueue.main.async {
-									UIApplication.shared.connectedScenes
-										.compactMap { $0 as? UIWindowScene }
-										.flatMap { $0.windows }
-										.filter { !$0.isHidden }
-										.max(by: { $0.windowLevel < $1.windowLevel })?
-										.makeKeyAndVisible()
-								}
-							}
 					}
 				HStack(spacing: 0) {
 					HStack(spacing: 0) { // the yAxis Title and Labels
