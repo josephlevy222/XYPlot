@@ -50,7 +50,7 @@ extension String {
 		do {
 			return try AttributedString(styledMarkdown: self)
 		} catch {
-			return AttributedString("Error parsing markdown \(error)")
+			return AttributedString("Error parsing markdown \(error)",font: .body)
 		}
 	}
 }
