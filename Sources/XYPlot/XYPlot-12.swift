@@ -64,7 +64,7 @@ public struct XYPlotTitle: View {
 			.font(.footnote)
 			.isHidden(hideAddTitleButton || text.characters.count != 0)
 		
-			EditableText($text,isPopover: !overlayEdit)
+			EditableText($text,isPopover: !overlayEditor)
 				.padding(.leading)
 		}
 	}
@@ -233,7 +233,7 @@ public struct XYPlot: View {
 					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
 						.onTapGesture(coordinateSpace: .global) { point in
 							#if targetEnvironment(macCatalyst)
-//							if !FormattingPalette.shared.contains(windowPoint: point) { isPresented = true }
+							isPresented = true
 							#else
 							isPresented = true
 							#endif
