@@ -230,14 +230,10 @@ public struct XYPlot: View {
 								.captureHeight(in: $captures.xLabelsHeight)
 								.offset(y: (size.height+xLabelsHeight)/2.0+pad)
 						)
-					}.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
-						.onTapGesture(coordinateSpace: .global) { point in
-							#if targetEnvironment(macCatalyst)
-							isPresented = true
-							#else
-							isPresented = true
-							#endif
-						}
+					}
+					.captureHeight(in: $captures.plotAreaHeight) // End of GeometryReader geo
+					.onTapGesture { isPresented = true }//(coordinateSpace: .global) { point in // only in iOS 17
+
 					if showSecondary {
 						HStack(spacing: 0) {
 							VStack(spacing: 0) {
