@@ -93,6 +93,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 	public init(data: Binding<PlotData>) {
 		_data = data
 		_vm = State(initialValue: PlotSettingsViewModel(data: data.wrappedValue))
+		UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 	}
 	
 	public var body: some View {
@@ -105,7 +106,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 				Spacer()
 				Text("Use Secondary")
 				CheckBoxView(checked: $vm.settings.showSecondaryAxis)
-					.onChange(of: vm.settings.showSecondaryAxis) { isOn in
+					.onChange(of: vm.settings.showSecondaryAxis) { _, isOn in
 						if vm.settings.autoScale { return }
 						if !isOn {
 							if !vm.settings.independentTics {
@@ -131,7 +132,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 					.disabled(!vm.settings.showSecondaryAxis)
 					.foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
 					.opacity(vm.settings.showSecondaryAxis ? 1.0 : 0.5)
-					.onChange(of: vm.settings.independentTics) { isOn in
+					.onChange(of: vm.settings.independentTics) { _, isOn in
 						if vm.settings.autoScale { return }
 						if isOn && vm.settings.showSecondaryAxis {
 							var vMax = Double(vm.s.max)!

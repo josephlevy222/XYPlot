@@ -103,7 +103,10 @@ public extension PlotPoint { /// Makes x: and y: designation unnecessary
 }
 
 /// Make  StrokeStyle Codable
-extension StrokeStyle: Codable {
+
+extension StrokeStyle: @retroactive Decodable {}
+extension StrokeStyle: @retroactive Encodable {}
+extension StrokeStyle/*: Codable*/ {
 	
 	enum CodingKeys : CodingKey {
 		case lineWidth, lineCap, lineJoin, miterLimit, dash, dashPhase
