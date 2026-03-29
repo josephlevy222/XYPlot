@@ -16,8 +16,9 @@ struct fieldViewModifier : ViewModifier {
 			.multilineTextAlignment(.trailing)
 			.frame(width: 100)
 			.border(Color.primary)
-			.foregroundColor(disable ? Color.secondary : Color.primary)
 			.disabled(disable)
+			.foregroundStyle(disable ? .secondary : .primary)
+			.opacity(disable ? 0.6 : 1.0)
 	}
 }
 
