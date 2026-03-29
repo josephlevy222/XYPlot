@@ -93,7 +93,7 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 	public init(data: Binding<PlotData>) {
 		_data = data
 		_vm = State(initialValue: PlotSettingsViewModel(data: data.wrappedValue))
-		UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+		//UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 	}
 	
 	public var body: some View {
