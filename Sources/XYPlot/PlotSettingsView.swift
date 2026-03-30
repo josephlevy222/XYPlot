@@ -17,8 +17,8 @@ struct fieldViewModifier : ViewModifier {
 			.frame(width: 100)
 			.border(Color.primary)
 			.disabled(disable)
-			.foregroundStyle(disable ? .secondary : .primary)
-			.opacity(disable ? 0.6 : 1.0)
+			.foregroundStyle(disable ? .tertiary : .primary)
+			.opacity(disable ? 0.4 : 1.0)
 	}
 }
 
