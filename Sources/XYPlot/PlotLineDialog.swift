@@ -188,7 +188,7 @@ public struct PlotLineDialog: View {
 			pointFill = plotLine.pointShape.fill
 			pointSize = plotLine.pointShape.size
 		}
-		.fixedSize()
+		//.fixedSize()
 	}
 }
 
