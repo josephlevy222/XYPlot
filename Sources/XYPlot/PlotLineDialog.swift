@@ -159,7 +159,7 @@ public struct PlotLineDialog: View {
 			}.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
 		} // new end of List
 		.background(Color(.systemBackground))
-		.frame(width: 300/*, height: 620*/)
+		.frame(width: 300, height: 720)
 		.padding()
 		.onAppear {
 			i = plotData.settings.selection ?? 0
