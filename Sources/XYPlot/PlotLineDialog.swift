@@ -40,7 +40,7 @@ public struct PlotLineDialog: View {
 	@State private var savedPointColor: Color = .red
 	@State private var useSecondary = false
 	public var body: some View {
-		//ScrollView { //VStack(alignment: .leading, spacing: 0) {
+		ScrollView { //VStack(alignment: .leading, spacing: 0) {
 		List {
 			HStack {
 				Text("\(legend)"); Spacer()
@@ -159,8 +159,8 @@ public struct PlotLineDialog: View {
 			}.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
 				//.scrollDisabled(true)
 				.background(Color(.systemBackground))
-		}.frame(width: 300, height: 750)
-		//}// \ScrollView
+		}.scrollDisabled(true).frame(width: 300, height: 750)
+		}// \ScrollView
 		
 		.padding()
 		.onAppear {
