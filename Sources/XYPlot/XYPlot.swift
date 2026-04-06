@@ -15,7 +15,7 @@
 //  Switched to RichTextEditor for titles 11/17/23
 //  Switched to EditableText for titles from RichTextEditor 08/30/24
 //  Modified to use UserDefaults rather than Coredata making PlotData Codable
-#if false
+
 import SwiftUI
 import Utilities
 //import RichTextEditor
@@ -163,6 +163,8 @@ public struct XYPlot: View {
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
+							.presentationDetents([.medium, .large])
+							.presentationDragIndicator(.visible)
 					}
 				HStack(spacing: 0) {
 					HStack(spacing: 0) { // the yAxis Title and Labels
@@ -504,4 +506,4 @@ public var testPlotLines = {
 	plotData.scaleAxes()
 	return plotData
 }()
-#endif
+
