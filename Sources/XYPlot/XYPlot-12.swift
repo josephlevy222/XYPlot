@@ -163,6 +163,8 @@ public struct XYPlot: View {
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
+							.presentationDetents([.medium, .large])
+							.presentationDragIndicator(.visible)
 					}
 				HStack(spacing: 0) {
 					HStack(spacing: 0) { // the yAxis Title and Labels
