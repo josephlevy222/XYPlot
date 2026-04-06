@@ -160,8 +160,9 @@ public struct PlotLineDialog: View {
 			} // new end of List
 			.scrollDisabled(true)
 			.background(Color(.systemBackground))
+			.frame(width: 300, height: 736)
 		}}// \ScrollView
-		.frame(width: 300, height: 736)
+		
 		.padding()
 		.onAppear {
 			i = plotData.settings.selection ?? 0
