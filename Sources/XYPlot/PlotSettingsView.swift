@@ -36,13 +36,28 @@ struct HorizontalPair : View {
 	var disable : Bool = false
 	var disableTic : Bool = false
 	var body: some View {
-		HStack {
-			Text(caption1).padding(.horizontal).frame(width: 150)
-			NumericTextField("", numericText: $entry1)
-				.fieldViewStyle(disable: disable)
-			Text(caption2).padding(.horizontal).frame(width: 150)
-			NumericTextField("", numericText: $entry2, style: intStyle)
-				.fieldViewStyle(disable: disable || disableTic)
+		ViewThatFits(in: .horizontal) {
+			HStack {
+				Text(caption1).padding(.horizontal).frame(width: 150)
+				NumericTextField("", numericText: $entry1)
+					.fieldViewStyle(disable: disable)
+				Text(caption2).padding(.horizontal).frame(width: 150)
+				NumericTextField("", numericText: $entry2, style: intStyle)
+					.fieldViewStyle(disable: disable || disableTic)
+			}
+			VStack(alignment: .leading, spacing: 4) {
+				HStack {
+					Text(caption1).padding(.horizontal)
+					NumericTextField("", numericText: $entry1)
+						.fieldViewStyle(disable: disable)
+				}
+				HStack {
+					Text(caption2).padding(.horizontal)
+					NumericTextField("", numericText: $entry2, style: intStyle)
+						.fieldViewStyle(disable: disable || disableTic)
+				}
+			}
+			.padding(.vertical, 2)
 		}
 	}
 }
@@ -85,11 +100,14 @@ struct PlotSettingsViewModel {
 	}
 }
 
-public struct PlotSettingsView: View {  // Not for smaller screens
+public struct PlotSettingsView: View {
 	@Binding var data: PlotData
 	
 	@Environment(\.dismiss) var dismiss
+	@Environment(\.horizontalSizeClass) private var hSizeClass
 	@State private var vm : PlotSettingsViewModel
+	
+	private var isCompact: Bool { hSizeClass == .compact }
 	
 	public init(data: Binding<PlotData>) {
 		_data = data
@@ -98,57 +116,124 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 	}
 	
 	public var body: some View {
+		Group {
+			if isCompact {
+				ScrollView { content.padding(.horizontal) }
+			} else {
+				content
+			}
+		}
+		.textFieldStyle(.plain)
+		.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
+		.background(Color(.systemBackground))
+	}
+
+	private var content: some View {
 		VStack {
 			Text("Plot Parameters").font(.title2).padding() // 1
-			HStack {//2
-				Spacer()//1
-				Text("Auto Scale")
-				CheckBoxView(checked: $vm.settings.autoScale)
-				Spacer()
-				Text("Use Secondary")
-				CheckBoxView(checked: $vm.settings.showSecondaryAxis)
-					.onChange(of: vm.settings.showSecondaryAxis) { _, isOn in
-						if vm.settings.autoScale { return }
-						if !isOn {
-							if !vm.settings.independentTics {
-								var vMax = max(Double(vm.y.max)!,Double(vm.s.max)!)
-								var vMin = min(Double(vm.y.min)!,Double(vm.s.min)!)
-								let tics = adjustAxis(&vMin, &vMax)
-								vm.y.max = String(vMax); vm.y.max = String(vMin)
-								vm.s.max = vm.y.max; vm.s.min = vm.y.min
-								vm.y.majorTics = String(tics.0); vm.y.minorTics = String(tics.1)
+			ViewThatFits(in: .horizontal) {
+				HStack {//2
+					Spacer()//1
+					Text("Auto Scale")
+					CheckBoxView(checked: $vm.settings.autoScale)
+					Spacer()
+					Text("Use Secondary")
+					CheckBoxView(checked: $vm.settings.showSecondaryAxis)
+						.onChange(of: vm.settings.showSecondaryAxis) { _, isOn in
+							if vm.settings.autoScale { return }
+							if !isOn {
+								if !vm.settings.independentTics {
+									var vMax = max(Double(vm.y.max)!,Double(vm.s.max)!)
+									var vMin = min(Double(vm.y.min)!,Double(vm.s.min)!)
+									let tics = adjustAxis(&vMin, &vMax)
+									vm.y.max = String(vMax); vm.y.min = String(vMin)
+									vm.s.max = vm.y.max; vm.s.min = vm.y.min
+									vm.y.majorTics = String(tics.0); vm.y.minorTics = String(tics.1)
+								}
+								else {
+									var vMax = Double(vm.s.max)!
+									var vMin = Double(vm.s.min)!
+									let tics = adjustAxis(&vMin, &vMax)
+									vm.s.max = String(vMax); vm.s.min = String(vMin)
+									vm.s.majorTics = String(tics.0); vm.s.minorTics = String(tics.1)
+								}
 							}
-							else {
+						}
+					Spacer()
+					Text("Use Secondary Tics").foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
+					CheckBoxView(checked:  $vm.settings.independentTics )
+						.disabled(!vm.settings.showSecondaryAxis)
+						.foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
+						.opacity(vm.settings.showSecondaryAxis ? 1.0 : 0.5)
+						.onChange(of: vm.settings.independentTics) { _, isOn in
+							if vm.settings.autoScale { return }
+							if isOn && vm.settings.showSecondaryAxis {
 								var vMax = Double(vm.s.max)!
 								var vMin = Double(vm.s.min)!
 								let tics = adjustAxis(&vMin, &vMax)
 								vm.s.max = String(vMax); vm.s.min = String(vMin)
 								vm.s.majorTics = String(tics.0); vm.s.minorTics = String(tics.1)
 							}
+							if isOn && !vm.settings.showSecondaryAxis {
+								vm.s.majorTics = vm.y.majorTics
+								vm.s.minorTics = vm.y.minorTics
+							}
 						}
+					Spacer()//10
+				}
+				VStack(alignment: .leading, spacing: 8) {
+					HStack {
+						Text("Auto Scale")
+						CheckBoxView(checked: $vm.settings.autoScale)
 					}
-				Spacer()
-				Text("Use Secondary Tics").foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
-				CheckBoxView(checked:  $vm.settings.independentTics )
-					.disabled(!vm.settings.showSecondaryAxis)
-					.foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
-					.opacity(vm.settings.showSecondaryAxis ? 1.0 : 0.5)
-					.onChange(of: vm.settings.independentTics) { _, isOn in
-						if vm.settings.autoScale { return }
-						if isOn && vm.settings.showSecondaryAxis {
-							var vMax = Double(vm.s.max)!
-							var vMin = Double(vm.s.min)!
-							let tics = adjustAxis(&vMin, &vMax)
-							vm.s.max = String(vMax); vm.s.min = String(vMin)
-							vm.s.majorTics = String(tics.0); vm.s.minorTics = String(tics.1)
-						}
-						if isOn && !vm.settings.showSecondaryAxis {
-							vm.s.majorTics = vm.y.majorTics
-							vm.s.minorTics = vm.y.minorTics
-						}
+					HStack {
+						Text("Use Secondary")
+						CheckBoxView(checked: $vm.settings.showSecondaryAxis)
+							.onChange(of: vm.settings.showSecondaryAxis) { _, isOn in
+								if vm.settings.autoScale { return }
+								if !isOn {
+									if !vm.settings.independentTics {
+										var vMax = max(Double(vm.y.max)!,Double(vm.s.max)!)
+										var vMin = min(Double(vm.y.min)!,Double(vm.s.min)!)
+										let tics = adjustAxis(&vMin, &vMax)
+										vm.y.max = String(vMax); vm.y.min = String(vMin)
+										vm.s.max = vm.y.max; vm.s.min = vm.y.min
+										vm.y.majorTics = String(tics.0); vm.y.minorTics = String(tics.1)
+									}
+									else {
+										var vMax = Double(vm.s.max)!
+										var vMin = Double(vm.s.min)!
+										let tics = adjustAxis(&vMin, &vMax)
+										vm.s.max = String(vMax); vm.s.min = String(vMin)
+										vm.s.majorTics = String(tics.0); vm.s.minorTics = String(tics.1)
+									}
+								}
+							}
 					}
-				Spacer()//10
-			}.frame(width: 500)
+					HStack {
+						Text("Use Secondary Tics").foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
+						CheckBoxView(checked:  $vm.settings.independentTics )
+							.disabled(!vm.settings.showSecondaryAxis)
+							.foregroundColor(vm.settings.showSecondaryAxis ? Color.primary : Color.secondary)
+							.opacity(vm.settings.showSecondaryAxis ? 1.0 : 0.5)
+							.onChange(of: vm.settings.independentTics) { _, isOn in
+								if vm.settings.autoScale { return }
+								if isOn && vm.settings.showSecondaryAxis {
+									var vMax = Double(vm.s.max)!
+									var vMin = Double(vm.s.min)!
+									let tics = adjustAxis(&vMin, &vMax)
+									vm.s.max = String(vMax); vm.s.min = String(vMin)
+									vm.s.majorTics = String(tics.0); vm.s.minorTics = String(tics.1)
+								}
+								if isOn && !vm.settings.showSecondaryAxis {
+									vm.s.majorTics = vm.y.majorTics
+									vm.s.minorTics = vm.y.minorTics
+								}
+							}
+					}
+				}
+				.padding(.horizontal)
+			}
 			
 			HorizontalPair(caption1: "Minimum x", entry1: $vm.x.min,
 						   caption2: "Major Tics x", entry2: $vm.x.majorTics,
@@ -187,10 +272,6 @@ public struct PlotSettingsView: View {  // Not for smaller screens
 					.frame(width: 100).padding(.horizontal)
 			}.font(.body)
 		}
-		.textFieldStyle(.plain)
-		.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
-		.frame(width: 550)
-		.background(Color(.systemBackground))
 	}
 }
 
