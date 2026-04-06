@@ -160,8 +160,7 @@ public struct PlotLineDialog: View {
 				.background(Color(.systemBackground))
 		}
 		.background(Color(.systemBackground))
-		.frame(width: 320)
-		.frame(height: 750)
+		.frame(width: 320).frame(idealHeight: 760)
 		// Sheet presentation modifiers (active when popover adapts to sheet on iPhone)
 		.presentationDetents([.medium, .large])
 		.presentationDragIndicator(.visible)
