@@ -62,7 +62,7 @@ public struct LegendView: View {
 			}.popover(isPresented: $isPresented, attachmentAnchor: .rect(.bounds)) {
 				GeometryReader { geo in
 					PlotLineDialog(plotData: $data)
-						.frame(maxHeight: geo.size.height * 0.9) // forces internal List to scroll when needed
+						.frame(idealHeight: 754, maxHeight: geo.size.height * 0.9) // forces internal List to scroll when needed
 						.presentationDetents([.medium, .large])   // applies when popover adapts to sheet
 						.presentationDragIndicator(.visible)
 				}
