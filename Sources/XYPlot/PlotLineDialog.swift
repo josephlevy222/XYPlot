@@ -41,7 +41,7 @@ public struct PlotLineDialog: View {
 	@State private var useSecondary = false
 	public var body: some View {
 		ScrollView { //VStack(alignment: .leading, spacing: 0) {
-		List {
+			List {
 			HStack {
 				Text("\(legend)"); Spacer()
 				ZStack(alignment: .center) { // line sample
@@ -159,7 +159,7 @@ public struct PlotLineDialog: View {
 			}.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
 				//.scrollDisabled(true)
 				.background(Color(.systemBackground))
-		}.scrollDisabled(true).frame(width: 300, height: 750)
+		}.scrollDisabled(true).frame(width: 300).frame(maxHeight: 750)
 		}// \ScrollView
 		
 		.padding()
@@ -187,7 +187,7 @@ public struct PlotLineDialog: View {
 			pointFill = plotLine.pointShape.fill
 			pointSize = plotLine.pointShape.size
 		}
-		.fixedSize()
+		//.fixedSize()
 	}
 }
 
