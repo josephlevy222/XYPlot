@@ -40,8 +40,8 @@ public struct PlotLineDialog: View {
     @State private var savedPointColor: Color = .red
     @State private var useSecondary = false
     public var body: some View {
-        ScrollView  {
-			VStack {
+        //ScrollView  {
+			//VStack {
 				List {
 					HStack {
 						Text("\(legend)"); Spacer()
@@ -160,7 +160,7 @@ public struct PlotLineDialog: View {
 						}) { Text("Ok").foregroundColor(.accentColor).contentShape(Rectangle())}
 					}.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
 				} // new end of List
-			}
+			//}
             .background(Color(.systemBackground))
             .frame(width: 300, height: 620)
             .padding()
@@ -188,7 +188,7 @@ public struct PlotLineDialog: View {
                 pointFill = plotLine.pointShape.fill
                 pointSize = plotLine.pointShape.size
             }
-        }
+        //}
 		.fixedSize()
     }
 }
