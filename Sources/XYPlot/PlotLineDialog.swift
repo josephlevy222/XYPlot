@@ -41,7 +41,7 @@ public struct PlotLineDialog: View {
 	@State private var useSecondary = false
 	public var body: some View {
 		ScrollView { //VStack(alignment: .leading, spacing: 0) {
-			Form {
+			List {
 				HStack {
 					Text("\(legend)"); Spacer()
 					ZStack(alignment: .center) { // line sample
@@ -157,11 +157,11 @@ public struct PlotLineDialog: View {
 						dismiss()
 					}) { Text("Ok").foregroundColor(.accentColor).contentShape(Rectangle())}
 				}.buttonStyle(RoundedCorners(color: Color.primary.opacity(0.1), shadow: 2 ))
-			//} // new end of List
-			//.scrollDisabled(true)
-			.background(Color(.systemBackground))
-			.frame(width: 300, height: 750)
-		}}// \ScrollView
+					.scrollDisabled(true)
+					.background(Color(.systemBackground))
+				
+			}.frame(width: 300, height: 750)
+		}// \ScrollView
 		
 		.padding()
 		.onAppear {
