@@ -44,15 +44,16 @@ struct HorizontalPair : View {
 				Text(caption2).padding(.horizontal).frame(width: 150)
 				NumericTextField("", numericText: $entry2, style: intStyle)
 					.fieldViewStyle(disable: disable || disableTic)
+				
 			}
 			VStack(alignment: .leading, spacing: 4) {
 				HStack {
-					Text(caption1).padding(.horizontal)
+					Text(caption1).padding(.horizontal).frame(width: 150)
 					NumericTextField("", numericText: $entry1)
 						.fieldViewStyle(disable: disable)
 				}
 				HStack {
-					Text(caption2).padding(.horizontal)
+					Text(caption2).padding(.horizontal).frame(width: 150)
 					NumericTextField("", numericText: $entry2, style: intStyle)
 						.fieldViewStyle(disable: disable || disableTic)
 				}
@@ -62,7 +63,7 @@ struct HorizontalPair : View {
 	}
 }
 
-let intStyle = NumericStringStyle(decimalSeparator: false, negatives: false, exponent: false)
+let intStyle = NumericStringStyle(decimalSeparator: false, negatives: false, exponent: false, range: 0...10)
 
 struct PlotSettingsViewModel {
 	var settings: PlotSettings
