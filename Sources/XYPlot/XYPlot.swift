@@ -57,7 +57,8 @@ public struct XYPlotTitle: View {
 	public var body: some View {
 		ZStack {
 			Button("Add a Title") {
-				text = AttributedString("Title").setFont(to: Font.title)
+				text = AttributedString("Title")
+				text.font = .title
 				withAnimation { isPresented = !overlayEditor }
 			}
 			.font(.footnote)
