@@ -18,9 +18,8 @@
 
 import SwiftUI
 import Utilities
-//import RichTextEditor
 import EditableText
-
+import NumericTextField
 extension View {
 	/// Hide or show the view based on a boolean value.
 	/// Example for visibility:
@@ -163,6 +162,7 @@ public struct XYPlot: View {
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
+							.modalOverlayRoot()
 							.presentationDetents([.medium, .large])
 							.presentationDragIndicator(.visible)
 					}
