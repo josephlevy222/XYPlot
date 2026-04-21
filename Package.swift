@@ -16,7 +16,7 @@ let package = Package(
 			name: "XYPlot",
 			targets: ["XYPlot"]),
 	],
-	dependencies: [.package(url: repo("Utilities"), branch: "main"),
+	dependencies: [//.package(url: repo("Utilities"), branch: "main"),
 				   .package(url: repo("NumericTextField"), branch: "main"),
 				   .package(url: repo("EditableText"), branch: "test")
 				   // Dependencies declare other packages that this package depends on.
@@ -27,7 +27,7 @@ let package = Package(
 		// Targets can depend on other targets in this package, and on products in packages this package depends on.
 		.target(
 			name: "XYPlot",
-			dependencies: ["Utilities","NumericTextField","EditableText"/*,"RichTextEditor"*/]
+			dependencies: [/*"Utilities",*/"NumericTextField","EditableText"/*,"RichTextEditor"*/]
 			//,resources: [.process("Resources")]
 		),
 		//        .testTarget(
