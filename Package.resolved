@@ -6,7 +6,7 @@
       "location" : "https://github.com/josephlevy222/EditableText.git",
       "state" : {
         "branch" : "test",
-        "revision" : "cb62b320d030d343019c3636e7492f60f36d5bd8"
+        "revision" : "ce562a6a564abd2575c1848be57fff763d727153"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/josephlevy222/NumericTextField.git",
       "state" : {
         "branch" : "main",
-        "revision" : "47964bf5ae73a049263ddf01de5dd99bb8460886"
+        "revision" : "b2951e9726d90005a00e57c955191d84b13f43bc"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/josephlevy222/Utilities.git",
       "state" : {
         "branch" : "main",
-        "revision" : "d08a63eaa7ea95857a272f8412e8c6d36286099e"
+        "revision" : "770c059056d843008859440a0730a0d19b4330d1"
       }
     }
   ],
