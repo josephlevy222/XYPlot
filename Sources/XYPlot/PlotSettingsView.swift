@@ -63,7 +63,7 @@ struct HorizontalPair : View {
 	}
 }
 
-let intStyle = NumericStringStyle(decimalSeparator: false, negatives: false, exponent: false, range: 0...10)
+let intStyle = NumericStringStyle(decimalSeparator: false, negatives: false, exponent: false, range: 1...12)
 
 struct PlotSettingsViewModel {
 	var settings: PlotSettings
