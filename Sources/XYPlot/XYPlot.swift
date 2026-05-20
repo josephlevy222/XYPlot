@@ -20,6 +20,7 @@ import SwiftUI
 import Utilities
 import EditableText
 import NumericTextField
+
 extension View {
 	/// Hide or show the view based on a boolean value.
 	/// Example for visibility:
@@ -160,6 +161,7 @@ public struct XYPlot: View {
 					.padding(.leading, leadingWidth)
 					.padding(.trailing, trailingWidth)
 					.fixedSize().frame(width: 1)
+					.trackFocus()
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
@@ -172,6 +174,7 @@ public struct XYPlot: View {
 						XYPlotTitle($data.settings.yTitle)
 							.rotated()
 							.padding(.trailing, pad)
+							.trackFocus()
 						VStack(spacing: 0) {
 							ForEach(yLabels.indices, id: \.self) { i in
 								Text(yLabels[i])
@@ -248,6 +251,7 @@ public struct XYPlot: View {
 							XYPlotTitle($data.settings.sTitle)
 								.rotated(Angle(degrees: 90.0))
 								.captureWidth(in: $captures.sTitleWidth)
+								.trackFocus()
 						}
 						.fixedSize()      // Don't use sTitle height //
 						.frame(height: 1) // to size plot area       //
@@ -262,6 +266,7 @@ public struct XYPlot: View {
 					.padding(.top, xLabelsHeight/3.0)
 					.padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
 					.fixedSize()     // Don't use xTitle width //
+					.trackFocus()
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
 			GeometryReader { g in // legend + annotation layer
@@ -286,7 +291,7 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.legendPos) { v in xyLegendPos = v }
+						.onChange(of: data.settings.legendPos) { _, v in xyLegendPos = v }
 						.onAppear {
 							if data.plotLines.isEmpty || data.settings.xAxis == nil {
 								let savedLegend = data.settings.legend
@@ -315,8 +320,8 @@ public struct XYPlot: View {
 									data.saveToUserDefaults()
 								}
 						)
-						.onChange(of: data.settings.annotationPos) { v in xyAnnotationPos = v }
-						.onChange(of: data.settings.annotation)    { _ in }
+						.onChange(of: data.settings.annotationPos) { _, v in xyAnnotationPos = v }
+						.onChange(of: data.settings.annotation)    { _,_ in }
 						.onAppear { xyAnnotationPos = data.settings.annotationPos }
 					Color.clear.onChange(of: data, debounceTime: 0.4) { $0.saveToUserDefaults() }
 				}
