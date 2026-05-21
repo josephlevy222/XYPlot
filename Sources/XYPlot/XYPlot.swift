@@ -161,7 +161,7 @@ public struct XYPlot: View {
 					.padding(.leading, leadingWidth)
 					.padding(.trailing, trailingWidth)
 					.fixedSize().frame(width: 1)
-					.trackFocus()
+					//.trackFocus()
 				Invisible(height: topMostLabelHeight)
 					.popover(isPresented: $isPresented) {
 						PlotSettingsView(data: $data)
@@ -174,7 +174,7 @@ public struct XYPlot: View {
 						XYPlotTitle($data.settings.yTitle)
 							.rotated()
 							.padding(.trailing, pad)
-							.trackFocus()
+							//.trackFocus()
 						VStack(spacing: 0) {
 							ForEach(yLabels.indices, id: \.self) { i in
 								Text(yLabels[i])
@@ -251,7 +251,7 @@ public struct XYPlot: View {
 							XYPlotTitle($data.settings.sTitle)
 								.rotated(Angle(degrees: 90.0))
 								.captureWidth(in: $captures.sTitleWidth)
-								.trackFocus()
+								//.trackFocus()
 						}
 						.fixedSize()      // Don't use sTitle height //
 						.frame(height: 1) // to size plot area       //
@@ -266,7 +266,7 @@ public struct XYPlot: View {
 					.padding(.top, xLabelsHeight/3.0)
 					.padding(.leading, leadingWidth).padding(.trailing, trailingWidth)
 					.fixedSize()     // Don't use xTitle width //
-					.trackFocus()
+					//.trackFocus()
 					.frame(width: 1) // to size plot area       //
 			}// end of VStack
 			GeometryReader { g in // legend + annotation layer
