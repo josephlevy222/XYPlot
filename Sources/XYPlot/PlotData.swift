@@ -38,7 +38,8 @@ public struct PlotSettings : Equatable, Codable  {
 	public var xAxis : AxisParameters?
 	public var yAxis : AxisParameters?
 	public var sAxis : AxisParameters?
-	public var annotation: String? = nil
+	
+	public var annotation: AttributedString? = nil
 	public var annotationPos = CGPoint(x: 0, y: 0)
 	
 	// Computed properties for minimizing code changes when adding title to AxisParameters
